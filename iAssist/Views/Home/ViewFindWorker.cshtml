@@ -45,7 +45,7 @@
                         </div>
                         @if (User.Identity.Name != Model.viewprofile.Userid)
                         {
-                            <button class="btn btn-primary btn-round">@Html.ActionLink("Request Now", "FindWorkerRequestBooking", "Task", new { id = Model.viewprofile.WorkerId, task = Model.viewprofile.taskdet }, new { @style = "text-decoration: none; color:white;" })</button>
+                            <div class="py-3"><button class="btn btn-primary btn-round">@Html.ActionLink("Request Now", "FindWorkerRequestBooking", "Task", new { id = Model.viewprofile.WorkerId, task = Model.viewprofile.taskdet }, new { @style = "text-decoration: none; color:white;" })</button></div>
                         }
                         @if (User.Identity.Name != Model.viewprofile.Userid)
                         {

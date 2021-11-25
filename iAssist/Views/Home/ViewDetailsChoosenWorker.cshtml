@@ -46,9 +46,9 @@
                         </div>
                         @if (User.Identity.Name != Model.viewprofile.Userid)
                         {
-                    <div class="py-3">
-                        @Html.ActionLink("Request Now", "RequestBooking", "Task", new { id = @Model.viewprofile.WorkerId, jobid = @Model.viewprofile.Jobid }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })
-                    </div>
+                            <div class="py-3">
+                                @Html.ActionLink("Request Now", "RequestBooking", "Task", new { id = @Model.viewprofile.WorkerId, jobid = @Model.viewprofile.Jobid }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })
+                            </div>
                         }
                         @if (User.Identity.Name != Model.viewprofile.Userid)
                         {

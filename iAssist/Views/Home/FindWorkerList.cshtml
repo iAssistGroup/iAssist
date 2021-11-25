@@ -126,7 +126,10 @@
                                 <div>
                                     @if (User.Identity.Name != item.UserId)
                                     {
-                                       @Html.ActionLink("Request Now", "FindWorkerRequestBooking", "Task", new { id = item.WorkerId, task = item.Taskdet }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })
+                                    <div class="py-3">
+                                        @Html.ActionLink("Request Now", "FindWorkerRequestBooking", "Task", new { id = item.WorkerId, task = item.Taskdet }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })
+
+                                    </div>
                                     }
                                     @Html.ActionLink("View Details", "ViewFindWorker", new { id = item.WorkerId, task = item.Taskdet }, new { @style = "text-decoration: none; color:white;" })
                                 </div>
