@@ -1,0 +1,73 @@
+﻿@model IEnumerable<iAssist.Models.complaintViewModel>
+
+@{
+    ViewBag.Title = "ManageUserComplaints";
+}
+<div class="container py-3">
+    <h3>User Complaints</h3>
+    <hr />
+    <div class="card">
+        <div class="card-header" style="background-color: #e65c00;">
+            <h5 style="color:white;">Manage UserComplaints</h5>
+        </div>
+        <div class="card-body">
+            <div style="overflow-x:auto;">
+                <table class="table table-striped">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ComplaintTitle)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Desc)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.compimage)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Username)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Workerusername)
+                        </th>
+                        <th></th>
+                    </tr>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ComplaintTitle)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Desc)
+                            </td>
+                            <td>
+                                <img style="width:50px; height:50px;" src="@Url.Content("~/image/"+item.compimage)" />
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Username)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Workerusername)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                            </td>
+                        </tr>
+                    }
+                    @if (Model.Any() == false)
+                    {
+                        <tr class="text-center">
+                            <td colspan="6">
+                                <h6>There is no complaints</h6>
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>

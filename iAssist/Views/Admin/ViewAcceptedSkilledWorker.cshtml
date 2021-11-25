@@ -1,0 +1,92 @@
+﻿@using iAssist.Models
+@model dynamic
+@{
+    ViewBag.Title = "ViewAcceptedSkilledWorker";
+}
+
+<div class="container py-3">
+    <div class="card">
+        <div class="card-header" style="background-color: #e65c00;">
+            <h5 style="color:white;">List of SkilledWorker</h5>
+        </div>
+        <div class="card-body">
+            <div>
+                <dl class="dl-horizontal">
+                    <dt>
+                        @if (Model.ViewDetailsRegSkilledWorker.ProfilePicture == null)
+                        {
+                            <img src="~/image/defaultprofilepic.jpg" style="height: 150px; width: 150px;" />
+                        }
+                        else
+                        {
+                            <img class="profile-photo" src="@Url.Content("~/image/"+Model.ViewDetailsRegSkilledWorker.ProfilePicture)" style="height: 150px; width: 150px;" />
+                        }
+                    </dt>
+                    <dt>
+                        Id
+                    </dt>
+
+                    <dd>
+                        @Model.ViewDetailsRegSkilledWorker.Id
+                    </dd>
+
+                    <dt>
+                        Firstname
+                    </dt>
+
+                    <dd>
+                        @Model.ViewDetailsRegSkilledWorker.Firstname
+                    </dd>
+
+                    <dt>
+                        LastName
+                    </dt>
+
+                    <dd>
+                        @Model.ViewDetailsRegSkilledWorker.Lastname
+                    </dd>
+
+                    <dt>
+                        Phone Number
+                    </dt>
+
+                    <dd>
+                        @Model.ViewDetailsRegSkilledWorker.Phonenumber
+                    </dd>
+
+                    <dt>
+                        Email Address
+                    </dt>
+
+                    <dd>
+                        @Model.ViewDetailsRegSkilledWorker.EmailAdd
+                    </dd>
+
+                    <dt>
+                        Work Overview
+                    </dt>
+
+                    <dd>
+                        @Model.ViewDetailsRegSkilledWorker.workoverview
+                    </dd>
+
+                    <dt>
+                        Job Name
+                    </dt>
+
+                    <dd>
+                        @Model.ViewDetailsRegSkilledWorker.JobName
+                    </dd>
+                </dl>
+                <h4>Submitted Image Files</h4>
+                @foreach (ViewFileRegSkilledWorker file in Model.ViewFileRegSkilledWorker)
+                {
+                    <a href="@Url.Content("~/image/RegisterSkilledFile/Thumbnails" +file.FileName)"><img class="profile-photo" src="@Url.Content("~/image/RegisterSkilledFile/" +file.FileName)" style=padding:5px /></a>
+                }
+            </div>
+            <p>
+                @Html.ActionLink("Back to List", "ViewSkilledWorker")
+            </p>
+        </div>
+    </div>
+</div>

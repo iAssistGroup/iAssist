@@ -1,0 +1,153 @@
+﻿@model iAssist.Models.TaskDetailsViewModel
+
+@{
+    ViewBag.Title = "CreateTaskIndex";
+    if (ViewBag.r != null)
+    {
+        Model.JobId = ViewBag.r;
+    }
+}
+
+<div class="container py-3">
+    <h2>Create Task</h2>
+    <hr />
+    @using (Html.BeginForm("CreateTaskIndex", "Task", FormMethod.Get))
+    {
+        <div class="container py-3">
+            <div class="card">
+                <div class="card-header" style="background-color: #e65c00;">
+                    <h5 style="color:white;">Job Category</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.JobId, htmlAttributes: new { @class = "control-label" })
+                        <div class="col-md-8 inputGroupContainer">
+                            @Html.DropDownListFor(vm => vm.JobId, Model.JobList, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.JobId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="py-3">
+                        <button type="submit" class="btn btn-default" style="background-color: #e65c00; border:none; color:white;">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @using (Html.BeginForm("CreateTaskIndex", "Task", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="container py-3">
+            <div class="card">
+                <div class="card-header" style="background-color: #e65c00;">
+                    <h5 style="color:white;">Task Information</h5>
+                </div>
+                <div class="card-body">
+                    @Html.AntiForgeryToken()
+                    <div style="overflow-x:auto;">
+                            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                                        <form class="well form-horizontal">
+                                            <fieldset>
+                                                @if (Model.check == 1)
+                                                {
+                                                    <div class="form-group">
+                                                        @Html.LabelFor(model => model.TaskTitle, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                        <div class="col-md-8 inputGroupContainer">
+                                                            @Html.EditorFor(model => model.TaskTitle, new { htmlAttributes = new { @class = "form-control" } })
+                                                            @Html.ValidationMessageFor(model => model.TaskTitle, "", new { @class = "text-danger" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        @Html.LabelFor(model => model.TaskDesc, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                        <div class="col-md-8 inputGroupContainer">
+                                                            @Html.TextAreaFor(model => model.TaskDesc, 10, 98, new { htmlAttributes = new { @class = "form-control" } })
+                                                            @Html.ValidationMessageFor(model => model.TaskDesc, "", new { @class = "text-danger" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        @Html.LabelFor(model => model.taskdet_sched, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                        <div class="col-md-8 inputGroupContainer">
+                                                            @Html.TextBoxFor(model => model.taskdet_sched, new { htmlAttributes = new { @class = "form-control", @Value = Model.taskdet_sched.ToString("dd.MM.yyyy") } })
+                                                            @Html.ValidationMessageFor(model => model.taskdet_sched, "", new { @class = "text-danger" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                        <div class="col-md-8 inputGroupContainer">
+                                                            @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                                                            @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                                                        </div>
+                                                    </div>
+                                                    @Html.HiddenFor(model => model.Latitude, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.HiddenFor(model => model.JobId, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.HiddenFor(model => model.Longitude, new { htmlAttributes = new { @class = "form-control" } })
+                                                    <div class="form-group">
+                                                        <label class="col-md-2 control-label">
+                                                            Select Service
+                                                        </label>
+                                                            @foreach (var item in (SelectList)ViewBag.SkillsSelect)
+                                                            {<div class="col-md- inputGroupContainer">
+                                                                <input type="checkbox" name="selectedSkills" value="@item.Text"
+                                                                       class="checkbox-inline" />
+                                                                @Html.Label(item.Text, new { @class = "control-label" })</div>
+                                                            }
+                                                        
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-md-8 inputGroupContainer">
+                                                            <input type="file" name="ImageFile" style="margin: auto; margin-top: 20px;" accept="image/png, image/gif, image/jpeg" size="23" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-10">
+                                                        <div class="form-group">
+                                                            <div class="col-md-offset-2 col-md-10 py-3">
+                                                                <input type="submit" value="Create" class="btn btn-primary" style="background-color: #e65c00; border:none; color:white;" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </fieldset>
+                                        </form>
+                    </div>            
+                </div>
+            </div>
+        </div>
+    }
+    <div>
+        @Html.ActionLink("View My Task", "ShowMyTaskPost")
+    </div>
+</div>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCCnmMReV03W96lvqJVwbG7nFOTkuUDaX8"></script>
+<script type="text/javascript">
+
+    google.maps.event.addDomListener(window, 'load', function () {
+        var options = {
+            componentRestrictions: { country: "ph" }
+        };
+
+        var input = document.getElementById('Address');
+        var places = new google.maps.places.Autocomplete(input, options);
+        google.maps.event.addListener(places, 'place_changed', function () {
+            var place = places.getPlace();
+            $("#Longitude").val("" + place.geometry.location.lng());
+            $("#Latitude").val("" + place.geometry.location.lat());
+        });
+
+    });
+</script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script>
+    $(function () {
+        $("#taskdet_sched").datepicker({
+            format: "dd/mm/yy",
+            autoclose: true,
+            todayHighlight: true,
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            autoclose: true,
+            changeMonth: true,
+            changeYear: true,
+            minDate: -0,
+        });
+    });
+</script>

@@ -1,0 +1,70 @@
+﻿@model iAssist.Models.profile
+
+@{
+    ViewBag.Title = "EditUserProfile";
+}
+<link rel="stylesheet" href="~/Content/profilecss/profile.css" />
+<div class="container py-3">
+    <div class="card">
+        <div class="card-header" style="background-color: #e65c00;">
+            <h5 style="color:white;">Edit profile</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                @using (Html.BeginForm("EditUserProfile", "Manage", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="col-md-6">
+                        <div class="form-group text-center">
+                            @if (Model.ProfilePicture == null)
+                            {
+                                <img class="profile-photo" src="~/image/defaultprofilepic.jpg" />
+                            }
+                            else
+                            {
+                                <img class="profile-photo" src="@Url.Content(Model.ProfilePicture)" />
+                            }
+                            <input type="file" name="ImageFile" style="margin: auto; margin-top: 20px;" accept="image/png, image/gif, image/jpeg" size="23" />
+                        </div>
+                    </div>
+                    <div class="space-20"></div>
+                    <div class="col-md-6">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Email)
+                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @Value = Model.Email } })
+                            @Html.ValidationMessageFor(model => model.userid, "", new { @class = "text-danger" })
+                        </div>
+                        @Html.HiddenFor(model => model.ProfilePicture, Model.ProfilePicture)
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Firstname)
+                            @Html.EditorFor(model => model.Firstname, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Firstname, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Lastname)
+                            @Html.EditorFor(model => model.Lastname, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Lastname, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Phonenumber)
+                            @Html.EditorFor(model => model.Phonenumber, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Phonenumber, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="space-10"></div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10 py-3">
+                                <input type="submit" value="Save" class="btn btn-primary" style="background-color: #e65c00; border:none; color:white;" />
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div>
+                @Html.ActionLink("Back to Settings", "Index")
+            </div>
+        </div>
+    </div>
+</div>

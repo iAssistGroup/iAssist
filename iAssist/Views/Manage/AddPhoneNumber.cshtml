@@ -1,0 +1,37 @@
+﻿@model iAssist.Models.AddPhoneNumberViewModel
+@{
+    ViewBag.Title = "Phone Number";
+}
+
+<div class="container py-3">
+    <div class="card">
+        <div class="card-header" style="background-color: #e65c00;">
+            <h5 style="color:white;">Add a Phone Number</h5>
+        </div>
+        <div class="card-body">
+            <div>
+                <h2>@ViewBag.Title.</h2>
+
+                @using (Html.BeginForm("AddPhoneNumber", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary("", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Number, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Number, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10 py-3">
+                            <input type="submit" class="btn btn-default" value="Submit" style="background-color: #e65c00; border:none; color:white;" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,33 @@
+﻿@model iAssist.Models.Wallet
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col">
+            <div class="container">
+                <div class="card">
+                    <div class="card-body py-5" style="width:100%;">
+                        <h1 class="">
+                            Balance: @Html.DisplayFor(model => Model.Money).ToString()
+                        </h1>
+                        <div class="py-3">
+                            <p class="card-text">You can add your balance using Paypal</p>
+                        </div>
+                        <div class="py-2">
+                            <a href="@Url.Action("AddBalance","Balance")" class="btn btn-primary" style="background-color: #e65c00; height:50px; font-size:100%;">Add Balance with <i class="fab fa-paypal"></i> Paypal</a>
+                        </div>
+                        @if (User.IsInRole("Worker"))
+                        {
+                            <div class="py-2">
+                                <a href="@Url.Action("WithdrawBalance","Balance")" class="btn btn-primary" style="background-color: #e65c00; height:50px; font-size:100%;">Withdraw</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,124 @@
+﻿@model iAssist.Models.SearchNearSkilledWorkerView
+@{
+    ViewBag.Title = "";
+}
+
+<section class="main py-5">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="container">
+                    @using (Html.BeginForm("SearchNearSkilledView", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <h1>Find A Skilled Worker Near You</h1>
+                        <div class="row mt-3">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", @style = "height: 70px; width: 100%; border: none; outline: none; padding: 15px;" } })
+                                    @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    @Html.DropDownListFor(vm => vm.JobId, Model.JobList, htmlAttributes: new { @class = "form-control", @style = "height: 70px; width: 100%; border: none; outline: none; padding: 15px;" })
+                                    @Html.ValidationMessageFor(model => model.JobId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-lg">
+                                <div class="form-group">
+                                    <input type="submit" value="Find" class="btn btn-primary" id="bt" style="height: 70px; width: 50%; background-color: rgba(4, 26,100,0.73); color: white; border: none; outline: none; cursor: pointer; transition: all 0.4s; margin-left: -4px; font-size: 20px; " />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.HiddenFor(model => model.Latitude, new { htmlAttributes = new { @class = "form-control", @style = "display: none;" } })
+                            @Html.ValidationMessageFor(model => model.Latitude, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.HiddenFor(model => model.Longitude, new { htmlAttributes = new { @class = "form-control", @style = "display: none;" } })
+                            @Html.ValidationMessageFor(model => model.Longitude, "", new { @class = "text-danger" })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="ceta">
+    <div class="container-fluid py-5 text-center">
+        <h1>How It Works</h1>
+        <h6 style="color: #e65c00;" class="pt-3">This is how iAssist works</h6>
+        <ul class="cards">
+            <li class="cards_item">
+                <div class="card">
+                    <div class="card-body py-5">
+                        <i class="fas fa-search" style="font-size: 100px; color: #e65c00;"></i>
+                        <h5 class="pt-5">
+                            Search Worker / Post Task
+                        </h5>
+                        <p class="card-text pt-5">You can have a choice if you want to search a specific worker near you or you can post a task</p>
+                    </div>
+                </div>
+            </li>
+            <li class="cards_item">
+                <div class="card">
+                    <div class="card-body py-5">
+                        <i class="fas fa-balance-scale-right" style="font-size: 100px; color: #e65c00;"></i>
+                        <h5 class="pt-5">
+                            Bidding
+                        </h5>
+                        <p class="card-text pt-5">There is a bidding part where you can choose the best bid and worker for you</p>
+                    </div>
+                </div>
+            </li>
+            <li class="cards_item">
+                <div class="card">
+                    <div class="card-body py-5">
+                        <i class="fas fa-briefcase" style="font-size: 100px; color: #e65c00;"></i>
+                        <h5 class="pt-5">
+                            Wait for Worker
+                        </h5>
+                        <p class="pt-5">Wait for the worker to come into your house and do the service or task you need</p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</section>
+<section class="resume py-5 text-center text-white">
+    <div class="container py-5">
+        <div class="row py-5">
+            <div class="col-lg-10 m-auto">
+                <p class="pb-3">BE PART OF IASSIST WORKERS</p>
+                <h1>Be a Worker in iAssist and Start Earning!</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5 m-auto">
+                <button onclick="location.href='@Url.Action("ApplySkilledWorker","User")'" class="btn3">REGISTER AS WORKER</button>
+            </div>
+        </div>
+    </div>
+</section>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCCnmMReV03W96lvqJVwbG7nFOTkuUDaX8"></script>
+<script type="text/javascript">
+
+    google.maps.event.addDomListener(window, 'load', function () {
+        var options = {
+            componentRestrictions: { country: "ph" }
+        };
+
+        var input = document.getElementById('Address');
+        var places = new google.maps.places.Autocomplete(input, options);
+        google.maps.event.addListener(places, 'place_changed', function () {
+            var place = places.getPlace();
+            $("#Longitude").val("" + place.geometry.location.lng());
+            $("#Latitude").val("" + place.geometry.location.lat());
+        });
+
+    });
+</script>

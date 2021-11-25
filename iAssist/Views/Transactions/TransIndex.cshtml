@@ -1,0 +1,81 @@
+﻿@model IEnumerable<iAssist.Models.TransactionHistory>
+
+@{
+    ViewBag.Title = "TransIndex";
+}
+<div class="container py-3">
+    <div class="card">
+        <div class="card-header" style="background-color: #e65c00;">
+            <h5 style="color:white;">Transaction history</h5>
+        </div>
+        <div class="card-body">
+            <div style="overflow-x:auto">
+                <table class="table table-striped">
+                    <tr>
+                        <th>
+                            Transaction ID
+                        </th>
+                        <th>
+                            Description
+                        </th>
+                        <th>
+                            Payment
+                        </th>
+                        <th>
+                            Total Amount
+                        </th>
+                        <th>
+                            Commission
+                        </th>
+                        <th>
+                            Payer
+                        </th>
+                        <th>
+                            Reciever
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                        <th></th>
+                    </tr>
+                    @if (Model.Any() == false)
+                    {
+                        <p>There is no Transaction History</p>
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.tasktitle)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.BidAmount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalAmount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Commission)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Payer)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Reciever)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Created_At)
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+

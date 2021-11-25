@@ -1,0 +1,243 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iAssist @ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="~/Content/mystyle.css" />
+    <link rel="stylesheet" href="~/Content/styles.css" />
+    <link rel="stylesheet" href="~/Content/Styleown.css" />
+    <link rel="stylesheet" href="~/Content/SidebarStyleSheets.css" />
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="~/Scripts/scripts.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.4.2.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+</head>
+<body style="background-color:#EEEEEE">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" style="background-image: linear-gradient(to right, #E0EAFC 0%, #CFDEF3 51%, #E0EAFC 100%); ">
+        <div class="container-fluid">
+            @if (Request.IsAuthenticated)
+            {
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#sidebar"
+                        aria-controls="offcanvasExample">
+                    <span class="navbar-toggler-icon" data-bs-target="#sidebar"></span>
+                </button>
+            }
+            <a class="navbar-brand" href="@Url.Action("Index","Home")"><img src="~/image/logo.png" style="width:150px; height:50px;" /></a>
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#topNavBar"
+                    aria-controls="topNavBar"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="topNavBar">
+                <ul class="navbar-nav m-auto">
+                    <li class="nav-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                    @*<li class="nav-item">@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>*@
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </nav>
+    @if (Request.IsAuthenticated)
+    {
+        <div class="offcanvas offcanvas-start sidebar-nav py-3"
+             tabindex="-1"
+             id="sidebar">
+            <div class="offcanvas-body p-0">
+                <nav class="navbar-light">
+                    <ul class="navbar-nav">
+                        @if (User.IsInRole("admin"))
+                        {
+                            <li>
+                                <div class="text-muted small fw-bold text-uppercase px-3">
+                                    CORE
+                                </div>
+                            </li>
+                            <li>
+                                <a class="nav-link px-3 sidebar-link" href="@Url.Action("AdminDashboard","Admin", new { area = "" })">
+                                    <span class="me-2"><i class="fas fa-tachometer-alt"></i></span>
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li class="my-4"><hr class="dropdown-divider bg-dark" /></li>
+                            <li>
+                                <div class="text-muted small fw-bold text-uppercase px-3">
+                                    MANAGEMENT
+                                </div>
+                            </li>
+                            <li>
+                                <a class="nav-link px-3 sidebar-link" href="@Url.Action("ListJobCategory","Admin", new { area = "" })">
+                                    <span class="me-2"><i class="fas fa-columns"></i></span>
+                                    Job Category
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-3 sidebar-link"
+                                   data-bs-toggle="collapse"
+                                   href="#layouts">
+                                    <span class="me-2"><i class="fas fa-users"></i></span>
+                                    <span>Skilled Worker</span>
+                                    <span class="ms-auto">
+                                        <span class="right-icon">
+                                            <i class="fas fa-angle-down"></i>
+                                        </span>
+                                    </span>
+                                </a>
+                                <div class="collapse" id="layouts">
+                                    <ul class="navbar-nav ps-3">
+                                        <li>
+                                            <a class="nav-link px-3" href="@Url.Action("ManageSkilledWorker","Admin", new { area = "" })"><span class="me-2"><i class="fas fa-tools"></i></span>Pending Skilled Worker</a>
+                                        </li>
+                                        <li>
+                                            <a class="nav-link px-3" href="@Url.Action("ViewSkilledWorker","Admin", new { area = "" })"><span class="me-2"><i class="fas fa-hard-hat"></i></span>View Skilled Worker</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <a class="nav-link px-3 sidebar-link" href="@Url.Action("ManageUserComplaints","Admin", new { area = "" })">
+                                    <span class="me-2"><i class="fas fa-columns"></i></span>
+                                    User complaints
+                                </a>
+                            </li>
+                            <li class="my-4"><hr class="dropdown-divider bg-light" /></li>
+                            <li>
+                                <div class="text-muted small fw-bold text-uppercase px-3 mb-3">
+                                    Reports
+                                </div>
+                            </li>
+                            <li>
+                                <a class="nav-link px-3 sidebar-link" href="@Url.Action("ViewUsers","Admin", new { area = "" })">
+                                    <span class="me-2"><i class="fas fa-users"></i></span>
+                                    View Users
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-3 sidebar-link" href="@Url.Action("TransIndex","Transactions", new { area = "" })">
+                                    <span class="me-2"><i class="fas fa-file-invoice"></i></span>
+                                    List of Transaction
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-3 sidebar-link" href="@Url.Action("RequestWithdraw","Admin", new { area = "" })">
+                                    <span class="me-2"><i class="fas fa-file-invoice"></i></span>
+                                    List of Withdraw Request
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("User") || User.IsInRole("Worker"))
+                        {
+                            <li>
+                                <a class="nav-link px-3" href="@Url.Action("Index","Home", new { area = "" })">
+                                    <span class="me-2"><i class="fas fa-users"></i></span>
+                                    Search Skilled Worker
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-3 sidebar-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                                    <span class="me-2"><i class="fas fa-columns"></i></span>
+                                    Task
+                                    <span class="ms-auto">
+                                        <span class="right-icon">
+                                            <i class="fas fa-angle-down"></i>
+                                        </span>
+                                    </span>
+                                </a>
+                                <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                    <ul class="navbar-nav ps-3">
+                                        <a class="nav-link px-3" href="@Url.Action("CreateTaskIndex","Task", new { area = "" })">Create a Task</a>
+                                        <a class="nav-link px-3" href="@Url.Action("ShowMyTaskPost","Task", new { area = "" })">My Tasks</a>
+                                        @if (User.IsInRole("Worker"))
+                                        {
+                                            <a class="nav-link px-3" href="@Url.Action("TaskScheduler","Task", new { area = "" })">Tasks Schedule</a>
+                                            <a class="nav-link px-3" href="@Url.Action("ViewUserRequestedTask","Task", new { area = "" })">Requested / Posted Tasks</a>
+                                            <a class="nav-link px-3" href="@Url.Action("ViewBiddedRequestTask","Task", new { area = "" })">Bidded Tasks</a>
+                                            <a class="nav-link px-3" href="@Url.Action("ViewContractTask","Task", new { area = "" })">Contract Tasks</a>
+                                            <a class="nav-link px-3" href="@Url.Action("ViewCompletedTask","Task", new { area = "" })">Completed Tasks</a>
+                                        }
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <a class="nav-link px-3" href="@Url.Action("TransIndex","Transactions", new { area = "" })">
+                                    <span class="me-2"><i class="fas fa-users"></i></span>
+                                    Report
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <main class="mt-5 pt-3">
+            @RenderBody()
+            <hr />
+            <div class="container">
+                <footer>
+                    <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+                </footer>
+            </div>
+        </main>
+    }
+    @if (!Request.IsAuthenticated)
+    {
+        <div class="py-5">
+            @RenderBody()
+            <hr />
+            <div class="container">
+                <footer>
+                    <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+                </footer>
+            </div>
+        </div>
+       
+    }
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            function setTotalNotification(totalNotif) {
+                console.log(totalNotif);
+                $("#numOfNotifications").html(+ totalNotif);
+            }
+
+            var hub = $.connection.notificationHub;
+
+            //Client Call
+            hub.client.broadcaastNotif = function (totalNotif) {
+                setTotalNotification(totalNotif)
+            };
+
+            //$.connection.hub.start().done(function () { });
+
+            $.connection.hub.start()
+                .done(function () {
+                    console.log("Hub Connected!");
+
+                    //Server Call
+                    hub.server.getNotification();
+
+                })
+                .fail(function () {
+                    console.log("Could not Connect!");
+                });
+        });
+    </script>
+
+</body>
+</html>

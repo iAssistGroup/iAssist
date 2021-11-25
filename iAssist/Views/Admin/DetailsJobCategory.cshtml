@@ -1,0 +1,60 @@
+﻿@model iAssist.Models.Job
+
+@{
+    ViewBag.Title = "DetailsJobCategory";
+}
+<div class="container py-3">
+    <div class="card">
+        <div class="card-header" style="background-color: #e65c00;">
+            <h5 style="color:white;">Job Category Detail</h5>
+        </div>
+        <div class="card-body">
+            <div>
+
+                <div>
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.JobName)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.JobName)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.JobDescription)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.JobDescription)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Created_At)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Created_At)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Updated_At)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Updated_At)
+                        </dd>
+
+                    </dl>
+                </div>
+                <p>
+                    @Html.ActionLink("Edit", "EditJobCategory", new { id = Model.Id }) |
+                    @Html.ActionLink("Delete", "DeleteJobCategory", new { id = Model.Id }) |
+                    @Html.ActionLink("Types of Service", "TypeofService", new { id = Model.Id }) |
+                    @Html.ActionLink("Back to List", "ListJobCategory")
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>

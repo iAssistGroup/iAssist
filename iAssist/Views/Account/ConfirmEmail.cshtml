@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Confirm Email";
+}
+
+<div class="container py-5">
+    <h2 class="py-5">@ViewBag.Title.</h2>
+    <div>
+        <p>
+            Thank you for confirming your email. Please @Html.ActionLink("Click here to Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @style="border: none;" })
+        </p>
+    </div>
+</div>

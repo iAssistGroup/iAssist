@@ -1,0 +1,130 @@
+﻿@model iAssist.Models.taskViewPost
+
+@{
+    ViewBag.Title = "ViewCompletedTask";
+}
+<div class="container py-5">
+    <h2>My Completed Task</h2>
+    <div class="container">
+        <div class="row">
+            @if (Model.Taskpostlistview.Any() == false)
+            {
+                <p>There is no Completed Task</p>
+            }
+            @foreach (var item in Model.Taskpostlistview)
+            {
+                <div class="col-xl-4 col-md-12">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            @if (item.workerid != null)
+                            {
+                                <i class="fas fa-user"></i>
+                            }
+                            @if (item.workerid == null)
+                            {
+                                <i class="fas fa-users"></i>
+                            }
+                            <h5 class="card-title">@Html.DisplayFor(modelItem => item.taskdet_name)</h5>
+                            @if (item.Taskbook_Status == 0)//0 means pending and the task can be edit
+                            {
+                                <h6 style="color:red;"><strong>Pending</strong></h6>
+                            }
+                            @if (item.Taskbook_Status == 1)//1 means Posted and can`t be edit
+                            {
+                                <h6 style="color:Orange;"><strong>Posted</strong></h6>
+                            }
+                            @if (item.Taskbook_Status == 2)//2 means ge sugdan na ang trabaho
+                            {
+                                <h6 class="text-warning"><strong>Ongoing</strong></h6>
+                            }
+                            @if (item.Taskbook_Status == 3)//3 if complete na ang task or mana
+                            {
+                                <h6 style="color:green;"><strong>Completed</strong></h6>
+                            }
+                            @if (item.Taskbook_Status == 4)// 4 if cancelled by the Creator of the task
+                            {
+                                <h6 style="color:green;"><strong>User cancelled this Task</strong></h6>
+                            }
+                            @if (item.Taskbook_Status == 5)// 4 if cancelled by the specific worker
+                            {
+                                <h6 style="color:Red;"><strong>You cancelled this Task</strong></h6>
+                            }
+                            @if (item.taskedstatus != null)
+                            {
+                                if (item.taskedstatus == 1)
+                                {
+                                    <p class="text-warning">Worker Status: Worker is ongoing</p>
+                                }
+                                if (item.taskedstatus == 2)
+                                {
+                                    <p class="text-danger">Cancelled</p>
+                                }
+                                if (item.taskedstatus == 3)
+                                {
+                                    <p class="text-danger">Worker is working the Task</p>
+                                }
+                                if (item.taskedstatus == 4)
+                                {
+                                    <p class="text-danger">Worker is done</p>
+                                }
+                            }
+                            <span class="job_post">@Html.DisplayFor(modelItem => item.Jobname)</span> <br />
+                            <span class="job_post">Schedule: @Html.DisplayFor(modelItem => item.taskdet_sched)</span>
+                            <p>Address: @Html.DisplayFor(modelItem => item.Loc_Address)</p>
+                            <p>Task Description: @Html.DisplayFor(modelItem => item.taskdet_desc)</p>
+                            <p>Service Need:</p>
+                            @foreach (var items in Model.TaskViewPost)
+                            {
+                                if (items.Taskdet == item.Id)
+                                {
+                                    <span class="border border-info">@items.Skillname</span>
+                                }
+                                <text>&nbsp;</text>
+                            }
+                            @if (item.taskedTaskPayable != null)
+                            {
+                                <p>Payable Amount: @Html.DisplayFor(modelItem => item.taskedTaskPayable)</p>
+                            }
+                            @if (item.taskedWorkerfname != null && item.taskedWorkerlname != null)
+                            {
+                                <p>Worker Name: @Html.DisplayFor(modelItem => item.taskedWorkerfname) @Html.DisplayFor(modelItem => item.taskedWorkerlname) </p>
+                            }
+                            <p>Image: </p>
+                            @if (item.TaskImage != null)
+                            {
+                                <a href="@Url.Content("~/image/"+item.TaskImage)">
+                                    <img class="card-img-top" src="@Url.Content("~/image/"+item.TaskImage)" alt="Card image cap" />
+                                </a>
+                            }
+                            <div style="margin-top: 20px;">
+                                @*@if (item.Taskbook_Status == 0)
+                                    {
+                                        <button class="btn btn-primary btn-round btn-simple">@Html.ActionLink("Post", "PostTheTask", new { id = item.Id }, new { @style = "text-decoration: none; color:white;" })</button>
+                                        <button class="btn btn-primary btn-round">@Html.ActionLink("Edit", "EditMyPostTask", new { id = item.Id }, new { @style = "text-decoration: none; color:white;" })</button>
+                                    }
+                                    @if (item.Taskbook_Status == 1)
+                                    {
+                                        <button class="btn btn-primary btn-round btn-simple">@Html.ActionLink("View Bidding", "ViewBidding", "Bidded", new { id = item.Id, user = 1 }, new { @style = "text-decoration: none; color:white;" })</button>
+                                    }*@
+                                @if (item.Taskbook_Status != 4 && item.Taskbook_Status != 5 && item.Taskbook_Status != 3 && item.taskedstatus == 1)
+                                {
+                                    <button class="btn btn-primary btn-round btn-simple">@Html.ActionLink("Mark as Working", "MarkasWorking", new { id = item.taskedid }, new { @style = "text-decoration: none; color:white;" })</button>
+                                }
+                                @if (item.Taskbook_Status != 4 && item.Taskbook_Status != 5 && item.Taskbook_Status != 3 && item.taskedstatus == 3)
+                                {
+                                    <button class="btn btn-primary btn-round btn-simple">@Html.ActionLink("Mark as Done", "MarkasDone", new { id = item.taskedid }, new { @style = "text-decoration: none; color:white;" })</button>
+                                }
+                                @if (item.Taskbook_Status != 4 && item.Taskbook_Status != 5 && item.Taskbook_Status != 3 && item.taskedstatus != 2 && item.taskedstatus != 3 && item.taskedstatus != 4)
+                                {
+                                    <button class="btn btn-primary btn-round btn-simple">@Html.ActionLink("Cancel", "CancelMyPostTask", new { id = item.Id, cancel = 2 }, new { @style = "text-decoration: none; color:white;" })</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+
+</div>

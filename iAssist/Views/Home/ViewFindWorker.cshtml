@@ -1,0 +1,135 @@
+﻿@using iAssist.Models
+@model dynamic
+@{
+    ViewBag.Title = "ViewFindWorker";
+}
+<link rel="stylesheet" href="~/Content/profilecss/profile.css" />
+<div class="container py-3">
+    <div class="card">
+        <div class="card-header" style="background-color: #e65c00;">
+            <h5 style="color:white;">Details of Choosen Worker</h5>
+        </div>
+        <div class="card-body">
+            <div class="container-fluid" id="profileInfoContainer">
+                <div class="row">
+                    <h2 class="col-xs-12 col-md-offset-2 col-md-8 page-title" style="text-align:center;">Worker Details</h2>
+                </div>
+                <div class="space-30"></div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-4">
+                        <div class="row ">
+                            <div class="col-xs-12 text-center">
+                                @if (@Model.viewprofile.ProfilePicture == null)
+                                {
+                                    <img class="profile-photo" src="~/image/defaultprofilepic.jpg" />
+                                }
+                                else
+                                {
+                                    <img class="profile-photo" src="@Url.Content("~/image/"+@Model.viewprofile.ProfilePicture)" />
+                                }
+                            </div>
+                            <div class="space-10"></div>
+                            <div class="space-20"></div>
+                            <h4 class="text-center">@Model.viewprofile.Lastname , @Model.viewprofile.Firstname</h4>
+                            <h4 class="text-center">
+                                @Model.viewprofile.Jobname
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-8">
+                        <div class="row">
+                            <h2 class="user-fullname">@Model.viewprofile.Lastname , @Model.viewprofile.Firstname</h2>
+                            <h4 class="user-role cyan-color text-capitalize">@Model.viewprofile.Jobname</h4>
+                            <div class="space-10"></div>
+                            <p class="user-role cyan-color text-capitalize">Overview: @Model.viewprofile.worker_overview)</p>
+                        </div>
+                        @if (User.Identity.Name != Model.viewprofile.Userid)
+                        {
+                            <button class="btn btn-primary btn-round">@Html.ActionLink("Request Now", "FindWorkerRequestBooking", "Task", new { id = Model.viewprofile.WorkerId, task = Model.viewprofile.taskdet }, new { @style = "text-decoration: none; color:white;" })</button>
+                        }
+                        @if (User.Identity.Name != Model.viewprofile.Userid)
+                        {
+                            <button class="btn btn-primary btn-round">@Html.ActionLink("Report Worker", "ReportWorker", "Complain", new { id = @Model.viewprofile.WorkerId }, new { @style = "text-decoration: none; color:white;" })</button>
+                        }
+                    </div>
+                    <div class="col">
+                        <h3 class="text-center">Reviews</h3>
+                        <div class="card">
+                            <div class="card-body">
+                                @foreach (RateandFeedback file in Model.rate)
+                                {
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <p>
+                                                @file.Username
+                                                @for (int i = 1; i <= file.Rate; i++)
+                                                {
+                                                    <span class="float-right"><i class="text-warning fa fa-star"></i></span>
+                                                }
+                                            </p>
+                                            <div class="clearfix"></div>
+                                            <p>@file.Feedback</p>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @Html.ActionLink("Back", "FindWorkerList", routeValues: new { id = Model.viewprofile.taskdet }, new { @style = "text-decoration: none; color:white;" })
+
+        </div>
+    </div>
+</div>
+
+@*<div>
+        <h4>ProfileViewOfSkilledWorker</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Firstname)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Firstname)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Lastname)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Lastname)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ProfilePicture)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ProfilePicture)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.worker_overview)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.worker_overview)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Jobname)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Jobname)
+            </dd>
+
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>*@

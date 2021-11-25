@@ -1,0 +1,92 @@
+﻿@model iAssist.Models.ExternalLoginConfirmationViewModel
+@{
+    ViewBag.Title = "| Register";
+    ViewBag.Message = "Register";
+}
+<div id="layoutAuthentication">
+    <div id="layoutAuthentication_content">
+        <main>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-7">
+                        <div class="card shadow-lg border-0 rounded-lg mt-5">
+                            <div class="card-header"><h3 class="text-center font-weight-light my-4">@ViewBag.Message</h3></div>
+                            <div class="card-body">
+                                @using (Html.BeginForm("ExternalLoginConfirmation", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                {
+                                    @Html.AntiForgeryToken()
+
+                                    <h4>Association Form</h4>
+                                    <hr />
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    <p class="text-info">
+                                        You've successfully authenticated with <strong>@ViewBag.LoginProvider</strong>.
+                                        Please enter some important details for this site below and click the Register button to finish
+                                        logging in.
+                                    </p>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3 mb-md-0">
+                                                @Html.TextBoxFor(m => m.Firstname, new { @class = "form-control" })
+                                                @Html.LabelFor(m => m.Firstname)
+                                                @Html.ValidationMessageFor(m => m.Firstname, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                @Html.TextBoxFor(m => m.Lastname, new { @class = "form-control" })
+                                                @Html.LabelFor(m => m.Lastname)
+                                                @Html.ValidationMessageFor(m => m.Lastname, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
+                                        @Html.LabelFor(m => m.PhoneNumber)
+                                        @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                                        @Html.LabelFor(m => m.Address)
+                                        @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                                    </div>
+                                    @Html.HiddenFor(m => m.Latitude, new { @class = "form-control" })
+                                    @Html.HiddenFor(m => m.Longitude, new { @class = "form-control" })
+                                    <div class="form-floating mb-3">
+                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                        @Html.LabelFor(m => m.Email)
+                                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="mt-4 mb-0">
+                                        <input type="submit" class="btn btn-primary" value="Register" />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCCnmMReV03W96lvqJVwbG7nFOTkuUDaX8"></script>
+<script type="text/javascript">
+
+            google.maps.event.addDomListener(window, 'load', function () {
+                var options = {
+                    componentRestrictions: { country: "ph" }
+                };
+
+                var input = document.getElementById('Address');
+                var places = new google.maps.places.Autocomplete(input, options);
+                google.maps.event.addListener(places, 'place_changed', function () {
+                    var place = places.getPlace();
+                    $("#Longitude").val("" + place.geometry.location.lng());
+                    $("#Latitude").val("" + place.geometry.location.lat());
+                });
+
+            });
+</script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

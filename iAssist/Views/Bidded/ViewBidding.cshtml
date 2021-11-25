@@ -1,0 +1,206 @@
+﻿@model IEnumerable<iAssist.Models.BidViewModel>
+
+@{
+    ViewBag.Title = "ViewBidding";
+    var i = 0;
+}
+<style type="text/css">
+    a {
+        color: #f96332;
+    }
+
+    .m-t-5 {
+        margin-top: 5px;
+    }
+
+    .card {
+        background: #fff;
+        margin-bottom: 30px;
+        transition: .5s;
+        border: 0;
+        border-radius: .1875rem;
+        display: inline-block;
+        position: relative;
+        width: 100%;
+        box-shadow: none;
+    }
+
+        .card .body {
+            font-size: 14px;
+            color: #424242;
+            padding: 20px;
+            font-weight: 400;
+        }
+
+    .profile-page .profile-header {
+        position: relative
+    }
+
+        .profile-page .profile-header .profile-image img {
+            border-radius: 50%;
+            width: 140px;
+            height: 140px;
+            border: 3px solid #fff;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23)
+        }
+
+        .profile-page .profile-header .social-icon a {
+            margin: 0 5px
+        }
+
+    .profile-page .profile-sub-header {
+        min-height: 60px;
+        width: 100%
+    }
+
+        .profile-page .profile-sub-header ul.box-list {
+            display: inline-table;
+            table-layout: fixed;
+            width: 100%;
+            background: #eee
+        }
+
+            .profile-page .profile-sub-header ul.box-list li {
+                border-right: 1px solid #e0e0e0;
+                display: table-cell;
+                list-style: none
+            }
+
+                .profile-page .profile-sub-header ul.box-list li:last-child {
+                    border-right: none
+                }
+
+                .profile-page .profile-sub-header ul.box-list li a {
+                    display: block;
+                    padding: 15px 0;
+                    color: #424242
+                }
+</style>
+
+<div class="container py-3">
+    <div class="card">
+        <div class="card-header" style="background-color: #e65c00;">
+            <h5 style="color:white;">Bid</h5>
+        </div>
+        <div class="card-body">
+            <div class="container profile-page">
+                <div class="row">
+                    @if (!Model.Any())
+                    {
+                        <p>No Worker Bided Yet</p>
+                    }
+                    @foreach (var item in Model)
+                    {
+                        if (i == 0)
+                        {
+                            <h3>@Html.DisplayFor(modelItem => item.Tasktitle)</h3>
+                            i = 1;
+                        }
+
+                        <div class="col-xl-6 col-lg-7 col-md-12 py-3">
+                            <div class="card profile-header">
+                                <div class="body">
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-12">
+                                            @if (item.ProfilePicture == null)
+                                            {
+                                                <div class="profile-image float-md-right"><img src="~/image/defaultprofilepic.jpg" /></div>
+                                            }
+                                            else
+                                            {
+                                                <div class="profile-image float-md-right"><img src="@Url.Content("~/image/"+item.ProfilePicture)" /></div>
+                                            }
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-12">
+                                            <h4 class="m-t-0 m-b-0"><strong>@Html.DisplayFor(modelItem => item.Firstname)</strong> @Html.DisplayFor(modelItem => item.Lastname)@if (item.Rate != 0)
+                                            {
+                                                for (var c = 0; c <= item.Rate; c++)
+                                                {<i class="text-warning fa fa-star"></i> }
+                                            }
+                                            else
+                                            {<span>No Ratings</span>}</h4>
+                                            @if (item.bookstatus == 1 && item.user == 2)
+                                            {
+                                                <span class="job_post">The owner of the task Cancel your bid</span>
+                                            }
+                                            <span class="job_post">Bid Amount: @Html.DisplayFor(modelItem => item.Bid_Amount)</span>
+                                            <p>Bid Description: @Html.DisplayFor(modelItem => item.Bid_Description)</p>
+                                            <div>
+                                                @if (item.user == 1)
+                                                {
+                                                    <div class="py-3">
+                                                        @Html.ActionLink("Accept Bid", "AcceptBid", new { id = item.Bidid, taskid = item.TaskdetId }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })
+                                                    </div>
+                                                }
+                                                @if (User.Identity.Name == item.Username)
+                                                {
+                                                    <div class="py-3">
+                                                        @Html.ActionLink("Edit", "EditBidding", new { id = item.Bidid }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })
+                                                    </div>
+                                                }
+                                                @if (item.workerid != null && User.Identity.Name != item.Username || item.workerid == null && User.Identity.Name == item.Username)
+                                                {
+                                                    if (item.workerid != null && User.Identity.Name != item.Username)//user cancelling task and bid
+                                                    {
+                                                        <div class="py-3">
+                                                            @Html.ActionLink("Cancel Bid", "CancelMyPostTask", "Task", new { id = item.TaskdetId }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })
+                                                        </div>
+                                                    }
+                                                    if (item.workerid == null && User.Identity.Name == item.Username)// worker cancelling bid
+                                                    {
+                                                        <div class="py-3">
+                                                            @Html.ActionLink("Cancel", "CancelBidding", new { id = item.Bidid, taskid = item.TaskdetId }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @*<tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Bid_Amount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Bid_Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TaskdetId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Firstname)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Lastname)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProfilePicture)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Tasktitle)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                        </td>
+                    </tr>*@
+                    }
+
+                </div>
+                <div>
+                    @if (ViewBag.checkuser == 1)
+                    {
+                        @Html.ActionLink("Back to List", "ShowMyTaskPost", "Task")
+                    }
+                    @if (ViewBag.checkuser == 2)
+                    {
+                        @Html.ActionLink("Back to List", "ViewBiddedRequestTask", "Task")
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

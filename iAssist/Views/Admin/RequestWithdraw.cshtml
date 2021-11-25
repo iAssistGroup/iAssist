@@ -1,0 +1,71 @@
+﻿@model IEnumerable<iAssist.Models.WithDrawRequest>
+
+@{
+    ViewBag.Title = "RequestWithdraw";
+}
+
+<div class="container py-3">
+    <h3>Withdraw Request</h3>
+    <hr />
+    <div class="card">
+        <div class="card-header" style="background-color: #e65c00;">
+            <h5 style="color:white;">Withdraw Request List</h5>
+        </div>
+        <div class="card-body">
+            <div style="overflow-x:auto;">
+                <table class="table table-striped">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Money)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Username)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.status)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.UserId)
+                        </th>
+                        <th>Action</th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Money)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Username)
+                            </td>
+                            <td>
+                                @if(item.status == false)
+                                {
+                                    <p>Requesting</p>
+                                }
+                                else
+                                {
+                                    <p>Done</p>
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UserId)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Mark as Done", "MarkasDoneReq","Admin", new { id = item.Id }) |
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

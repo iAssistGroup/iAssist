@@ -1,0 +1,118 @@
+﻿@model iAssist.Models.ViewSubmittedWorker
+
+@{
+    ViewBag.Title = "ViewSubmittedWorker";
+}
+
+<div class="container py-5">
+    <h2>View My Submitted Form</h2>
+    <hr />
+    <div>
+        <dl class="dl-horizontal">
+            <dd>
+                @if (Model.ProfilePicture == null)
+                {
+                    <img class="profile-photo" src="~/image/defaultprofilepic.jpg" style="height:150px; width:150px;" />
+                }
+                else
+                {
+                    <img class="profile-photo" src="@Url.Content("~/image/"+Model.ProfilePicture)" style="height:150px; width:150px;" />
+                }
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Firstname)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Firstname)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Lastname)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Lastname)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Phonenumber)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Phonenumber)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Overview)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Overview)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Address)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Address)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Jobname)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Jobname)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Workerstatus)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Workerstatus)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Created_at)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Created_at)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Updated_at)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Updated_at)
+            </dd>
+            <dd>
+                <p><b>Worker Skills / Service</b></p>
+            </dd>
+            <dd>
+                @foreach (var items in Model.workerskills)
+                {
+                    <p>@items.Skillname</p>
+                }
+            </dd>
+            <dd>
+                <p><b>Worker Image File</b></p>
+            </dd>
+            <dd>
+                @foreach (var items in Model.SkilledWorkerImageFile)
+                {
+                    <img class="profile-photo" src="@Url.Content("~/image/RegisterSkilledFile/" +items.FileName)" style=padding:5px />
+                }
+            </dd>
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "EditRegisterSkilledWorker", new { id = Model.JobId }) |
+        @Html.ActionLink("Back", "Index", "Home")
+    </p>
+
+</div>

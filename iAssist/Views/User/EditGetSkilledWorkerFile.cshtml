@@ -1,0 +1,28 @@
+﻿@model IEnumerable<iAssist.Models.SkilledWorkerFileImage>
+
+@{
+    ViewBag.Title = "EditGetSkilledWorkerFile";
+}
+
+<h2>Step 2: In this Section Please Upload Valid Id and Proof that you are a Skilled Worker</h2>
+<p style="color:red;">@TempData["Error"]</p>
+<p>
+    @Html.ActionLink("Upload Image", "EditUploadWorkerFile")
+</p>
+
+<table class="table">
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <img class="profile-photo" src="@Url.Content("~/image/RegisterSkilledFile/" +item.FileName)" />
+                @Html.ActionLink("Delete", "EditDeleteSkilledWorkerFiles", new { id = item.id })
+            </td>
+        </tr>
+    }
+
+</table>
+@using (Html.BeginForm("EditGetSkilledWorkerFiles", "User", FormMethod.Post))
+{
+    <input type="submit" value="Submit" class="btn btn-primary" />
+}

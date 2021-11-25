@@ -1,0 +1,57 @@
+﻿@model IEnumerable<iAssist.Models.NotificationViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="container py-5">
+    <div class="row">
+        <div class="col">
+            <div class="box shadow-sm rounded bg-white mb-3">
+                <div class="box-title border-bottom p-3">
+                    <h6 class="m-0">Notification</h6>
+                </div>
+                
+                    <div class="box-body p-0">
+                        <ul class="list-group">
+                            @foreach (var item in Model)
+                            {
+                                <li class="list-group-item">
+                                    <div class="font-weight-bold mr-3">
+                                        <div><strong>@Html.DisplayFor(modelItem => item.Title) </strong></div>
+                                        <div class="small">@Html.DisplayFor(modelItem => item.Details)</div>
+                                        <br />
+                                        <div class="text-muted">@item.Date</div>
+                                    </div>
+                                </li>
+                            }
+                         </ul>
+                    </div>
+                @*<tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Details)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DetailsURL)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Receiver)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Date)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsRead)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                        </td>
+                    </tr>*@
+            </div>
+        </div>
+    </div>
+</div>

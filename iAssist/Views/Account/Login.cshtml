@@ -1,0 +1,59 @@
+﻿@using iAssist.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "| Log in";
+    ViewBag.Message = "Sign In";
+}
+<main class="py-0">
+    <div class="container-fluid py-5">
+        <div class="row justify-content-md-evenly">
+            <div class="col-lg-5">
+                <div class="text-success" role="alert">
+                    @ViewBag.Confirm
+                </div>
+                <div class="card shadow-lg border-0 rounded-lg mt-lg-5">
+                    <div class="card-body">
+                        <h3 class="text-center font-weight-light my-4">@ViewBag.Message</h3>
+                        @*<div class="row">
+                            <div class="col-md-12">@Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })</div>
+                        </div>*@
+                        <div class="or-container">
+                            <div class="line-separator"></div>
+                            <div class="or-label">or</div>
+                            <div class="line-separator"></div>
+                        </div>
+                        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="form-floating mb-3">
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                @Html.LabelFor(m => m.Email)
+                                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-floating mb-3">
+                                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                                @Html.LabelFor(m => m.Password)
+                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="mt-4 mb-0">
+                                <input type="submit" value="Log in" class="btn btn-primary" style="background-color: blue;" />
+                            </div>
+                            <div class="py-3">
+                                @Html.ActionLink("Forgot your password?", "ForgotPassword", new { @class = "small" })
+                            </div>
+                        }
+                        <div class="text-center py-3">
+                            @Html.ActionLink("New to iAssist? Register Account", "Register", new { @class = "small" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+

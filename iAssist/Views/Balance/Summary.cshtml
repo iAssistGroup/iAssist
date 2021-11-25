@@ -1,0 +1,7 @@
+﻿@model iAssist.Models.Wallet
+
+<li class="nav-item">
+    <a class="nav-link" href="@Url.Action("Index","Balance")">
+        Balance: @Html.DisplayFor(model => Model.Money).ToString()
+    </a>
+</li>

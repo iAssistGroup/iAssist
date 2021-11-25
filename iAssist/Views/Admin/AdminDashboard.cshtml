@@ -1,0 +1,106 @@
+﻿@model iAssist.Models.AdminReportModelView
+
+@{
+    ViewBag.Title = "AdminDashboard";
+}
+<div class="container bootstrap snippet py-4">
+    <h3>Dashboard</h3>
+    <hr />
+    <div class="row">
+        <div class="col-lg-3 col-sm-6">
+            <div class="circle-tile ">
+                <a href="#"><div class="circle-tile-heading dark-blue"><i class="fas fa-hard-hat fa-fw fa-3x py-3"></i></div></a>
+                <div class="circle-tile-content dark-blue">
+                    <div class="circle-tile-description text-faded">Total Worker</div>
+                    <div class="circle-tile-number text-faded ">@Html.DisplayFor(model => model.TotalWorker)</div>
+                    <a class="circle-tile-footer" href="@Url.Content("ViewSkilledWorker")">More Info<i class="fa fa-chevron-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="circle-tile ">
+                <a href="#"><div class="circle-tile-heading red"><i class="fa fa-users fa-fw fa-3x"></i></div></a>
+                <div class="circle-tile-content red">
+                    <div class="circle-tile-description text-faded">Total Users</div>
+                    <div class="circle-tile-number text-faded ">@Html.DisplayFor(model => model.Totaluser)</div>
+                    <a class="circle-tile-footer" href="@Url.Content("ViewUsers")">More Info<i class="fa fa-chevron-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="circle-tile ">
+                <a href="#"><div class="circle-tile-heading orange"><i class="fas fa-columns fa-fw fa-3x py-3"></i></div></a>
+                <div class="circle-tile-content orange">
+                    <div class="circle-tile-description text-faded">Total Complaints</div>
+                    <div class="circle-tile-number text-faded ">@Html.DisplayFor(model => model.TotalComplaint)</div>
+                    <a class="circle-tile-footer" href="@Url.Content("ManageUserComplaints")">More Info<i class="fa fa-chevron-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="circle-tile ">
+                <a href="#"><div class="circle-tile-heading blue"><i class="fas fa-tools fa-fw fa-3x py-3"></i></div></a>
+                <div class="circle-tile-content blue">
+                    <div class="circle-tile-description text-faded">Total List of Task</div>
+                    <div class="circle-tile-number text-faded ">@Html.DisplayFor(model => model.TotalListOfTask)</div>
+                    <p class="circle-tile-footer py-3" href=""> </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="circle-tile ">
+                <a href="#"><div class="circle-tile-heading yellow"><i class="fas fa-columns fa-fw fa-3x py-3"></i></div></a>
+                <div class="circle-tile-content yellow">
+                    <div class="circle-tile-description text-faded">Job Category</div>
+                    <div class="circle-tile-number text-faded ">@Html.DisplayFor(model => model.TotalJobCategory)</div>
+                    <a class="circle-tile-footer" href="@Url.Content("ListJobCategory")">More Info<i class="fa fa-chevron-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<h2>AdminDashboard</h2>
+
+    <div>
+        <h4>AdminReportModelView</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.TotalWorker)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.TotalWorker)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Totaluser)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Totaluser)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.TotalComplaint)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.TotalComplaint)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.TotalListOfTask)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.TotalListOfTask)
+            </dd>
+
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>*@
