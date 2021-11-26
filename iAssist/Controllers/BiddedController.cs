@@ -99,7 +99,7 @@ namespace iAssist.Controllers
                     Receiver = username.UserName,
                     Title = $"Worker bid the task you post/requested",
                     Details = $"A worker bidded your task post/requested",
-                    DetailsURL = "",
+                    DetailsURL = $"/Bidded/ViewBidding/{model.TaskdetId}?user=1",
                     Date = DateTime.Now,
                     IsRead = false
                 };
