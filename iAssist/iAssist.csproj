@@ -283,6 +283,7 @@
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utility\SendEmail.cs" />
     <Compile Include="WebApiController\AccountController.cs" />
     <Compile Include="WebApiController\AccountMobileController.cs" />
     <Compile Include="WebApiController\BiddedController.cs" />
@@ -334,6 +335,8 @@
     <Content Include="image\defaultprofilepic.jpg" />
     <Content Include="image\iAssistBackgroundJumb.jpg" />
     <Content Include="image\logo.png" />
+    <Content Include="MailTemplate\AccountConfirmation.html" />
+    <Content Include="MailTemplate\ResettingPassword.html" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />

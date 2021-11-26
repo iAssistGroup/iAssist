@@ -11,6 +11,8 @@ using Microsoft.Owin.Security;
 using iAssist.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity.Spatial;
+using iAssist.Utility;
+using System.IO;
 
 namespace iAssist.Controllers
 {
@@ -208,9 +210,21 @@ namespace iAssist.Controllers
 
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                    ViewBag.Confirm = "Please confirm your account. We sent Email to confirm your account before you log in";
-                    return RedirectToAction("Login",new { s = ViewBag.Confirm });
+                    //await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    
+                    string body = string.Empty;
+                    using (StreamReader reader = new StreamReader(Server.MapPath("~/MailTemplate/AccountConfirmation.html")))
+                    {
+                        body = reader.ReadToEnd();
+                    }
+                    body = body.Replace("{ConfirmationLink}", callbackUrl);
+                    body = body.Replace("{UserName}", model.Email);
+                    bool IsSendEmail = SendEmail.EmailSend(model.Email, "Confirm your account", body, true);
+                    if (IsSendEmail)
+                    {
+                        ViewBag.Confirm = "Please confirm your account. We sent Email to confirm your account before you log in";
+                        return RedirectToAction("Login", new { s = ViewBag.Confirm });
+                    }
                 }
                 AddErrors(result);
             }
@@ -265,8 +279,17 @@ namespace iAssist.Controllers
 
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                //await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                string body = string.Empty;
+                using (StreamReader reader = new StreamReader(Server.MapPath("~/MailTemplate/ResettingPassword.html")))
+                {
+                    body = reader.ReadToEnd();
+                }
+                body = body.Replace("{ConfirmationLink}", callbackUrl);
+                body = body.Replace("{UserName}", model.Email);
+                bool IsSendEmail = SendEmail.EmailSend(model.Email, "Reset your account", body, true);
+                if (IsSendEmail)
+                    return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // If we got this far, something failed, redisplay form
