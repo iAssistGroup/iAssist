@@ -136,6 +136,12 @@ namespace iAssist.Controllers
                         db.SaveChanges();
                     }
                 }
+                if(selectedSkills == null)
+                {
+                    ModelState.AddModelError("", "Please select service needed");
+                    model.JobList = new SelectList(db.JobCategories, "Id", "JobName");
+                    return View(model);
+                }
                 return RedirectToAction("ShowMyTaskPost");
             }
             model.JobList = new SelectList(db.JobCategories, "Id", "JobName");
@@ -555,6 +561,12 @@ namespace iAssist.Controllers
                         db.SaveChanges();
                     }
                 }
+                if (selectedSkills == null)
+                {
+                    ModelState.AddModelError("", "Please Select Service Needed");
+                    model.JobList = new SelectList(db.JobCategories, "Id", "JobName");
+                    return View(model);
+                }
                 db.SaveChanges();
                 return RedirectToAction("ShowMyTaskPost");
             }
@@ -654,7 +666,7 @@ namespace iAssist.Controllers
             return View("Error");
         }
         //Request Booking
-        public ActionResult RequestBooking(int? id, int? jobid)
+        public ActionResult RequestBooking(int? id, int? jobid, int? a)
         {
             if(id == null || jobid == null)
             {
@@ -665,6 +677,14 @@ namespace iAssist.Controllers
             if(workerid != null &&id == workerid.Id)
             {
                 return View("Error");
+            }
+            if(a == 1)
+            {
+                ModelState.AddModelError("", "Please Fill up the form correctly");
+            }
+            if(a == 2)
+            {
+                ModelState.AddModelError("", "Please select Service ");
             }
             var taskposting = new TaskDetailsViewModel();
             ViewBag.id = id;
@@ -681,6 +701,11 @@ namespace iAssist.Controllers
         {
             if (ModelState.IsValid)
             {
+                var checkdate = model.taskdet_sched.ToString();
+                if (checkdate == "1/1/0001 12:00:00 AM")
+                {
+                    return RedirectToAction("RequestBooking", new { id = model.workerid, jobid = model.JobId, a = 1 });
+                }
                 var taskbook = new Task_Book();
                 var user = User.Identity.GetUserId();
                 var username = db.Users.Where(x => x.Id == user).FirstOrDefault();
@@ -736,6 +761,10 @@ namespace iAssist.Controllers
                         db.SaveChanges();
                     }
                 }
+                if(selectedSkills == null)
+                {
+                    return RedirectToAction("RequestBooking", new { id = model.workerid, jobid = model.JobId, a = 2 });
+                }
                 var userworkid = db.RegistWork.Where(x => x.Id == model.workerid).FirstOrDefault();
                 var usernameid = db.Users.Where(x => x.Id == userworkid.Userid).FirstOrDefault();
                 var notification = new NotificationModel
@@ -753,9 +782,7 @@ namespace iAssist.Controllers
                 objNotifHub.SendNotification(notification.Receiver);
                 return RedirectToAction("ShowMyTaskPost");
             }
-            ModelState.AddModelError("", "Please Fill up the form correctly");
-            model.JobList = new SelectList(db.JobCategories, "Id", "JobName");
-            return View(model);
+            return RedirectToAction("RequestBooking", new { id = model.workerid, jobid = model.JobId, a = 1 });
         }
 
         public ActionResult FindWorkerRequestBooking(int? id, int? task)
