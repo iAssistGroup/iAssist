@@ -702,6 +702,10 @@ namespace iAssist.Controllers
             if (ModelState.IsValid)
             {
                 var checkdate = model.taskdet_sched.ToString();
+                if (selectedSkills == null)
+                {
+                    return RedirectToAction("RequestBooking", new { id = model.workerid, jobid = model.JobId, a = 2 });
+                }
                 if (checkdate == "1/1/0001 12:00:00 AM")
                 {
                     return RedirectToAction("RequestBooking", new { id = model.workerid, jobid = model.JobId, a = 1 });
@@ -760,10 +764,6 @@ namespace iAssist.Controllers
                         db.SkillServiceTasks.Add(skillofservice);
                         db.SaveChanges();
                     }
-                }
-                if(selectedSkills == null)
-                {
-                    return RedirectToAction("RequestBooking", new { id = model.workerid, jobid = model.JobId, a = 2 });
                 }
                 var userworkid = db.RegistWork.Where(x => x.Id == model.workerid).FirstOrDefault();
                 var usernameid = db.Users.Where(x => x.Id == userworkid.Userid).FirstOrDefault();
