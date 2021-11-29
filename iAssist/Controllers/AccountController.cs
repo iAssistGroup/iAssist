@@ -87,7 +87,7 @@ namespace iAssist.Controllers
                 if (!await UserManager.IsEmailConfirmedAsync(users.Id))
                 {
                     ViewBag.errorMessage = "You must have a confirmed email to log on.";
-                    return View("Error");
+                    return View(model);
                 }
             }
             var user = await UserManager.FindAsync(model.Email, model.Password);
