@@ -7,6 +7,15 @@
     <h2>Bidded / RequestTask</h2>
     <hr />
     <div class="row">
+        @using (Html.BeginForm("ViewBiddedRequestTask", "Task", FormMethod.Get))
+        {
+            <div class="py-2">
+                <label>Filter by category:</label> <div class="py-1">@Html.DropDownList("Category", "All")</div>
+                <div class="py-1">
+                    <input type="submit" class="btn btn-primary" style="background-color: #e65c00; border:none; color:white;" value="Filter" />
+                </div>
+            </div>
+        }
         @if (Model.Taskpostlistview.Any() == false)
         {
             <p>There is no Task Bidded </p>
@@ -62,7 +71,7 @@
                                 </a>
                             }
                             <div style="margin-top: 20px;">
-                                @Html.ActionLink("View my Bid details", "ViewBidding", "Bidded", new { id = item.Id, user = 2 }, new { @class="btn btn-default", @style="background-color: #e65c00; border:none; color:white;" })
+                                @Html.ActionLink("View my Bid details", "ViewBidding", "Bidded", new { id = item.Id, user = 2 }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })
                             </div>
                         </div>
                     </div>

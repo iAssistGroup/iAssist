@@ -817,7 +817,7 @@ namespace iAssist.Controllers
 
         //User Requested Tasks
         [Authorize(Roles = "Worker")]
-        public ActionResult ViewUserRequestedTask()
+        public ActionResult ViewUserRequestedTask(string category)
         {
             //Note para di ko kalimot: echeck ni if ang bid is nana or wala pa.. ang bidded ID basihan sa worker
             var user = User.Identity.GetUserId();
@@ -825,88 +825,134 @@ namespace iAssist.Controllers
             var worker = db.Locations.Where(x => x.UserId == user).FirstOrDefault();
             var currentlocation = DbGeography.FromText("POINT( " + worker.Geolocation.Longitude + " " + worker.Geolocation.Latitude + " )");
             var taskpostlist1 = (from u in db.TaskDetails
-                                where u.UserId != user && u.JobId == work.JobId
-                                join d in db.Users on u.UserId equals d.Id
-                                join
-                                tu in db.TaskBook on u.Id equals tu.TaskDetId
-                                where tu.Taskbook_Status == 1
-                                join
-                                job in db.JobCategories on u.JobId equals job.Id
-                                orderby u.Geolocation.Distance(currentlocation)
-                                select new
-                                {
-                                    id = u.Id,
-                                    taskbookstatus = tu.Taskbook_Status,
-                                    taskname = u.taskdet_name,
-                                    taskdesc = u.taskdet_desc,
-                                    tasksched = u.taskdet_sched,
-                                    taskimage = u.TaskImage,
-                                    taskaddress = u.Loc_Address,
-                                    jobname = job.JobName,
-                                    userid = u.UserId,
-                                    username = d.UserName,
-                                    workerid = tu.workerId
-                                }).ToList().Select(p => new TaskPostListView
-                                {
-                                    Id = p.id,
-                                    Taskbook_Status = p.taskbookstatus,
-                                    taskdet_name = p.taskname,
-                                    taskdet_desc = p.taskdesc,
-                                    taskdet_sched = p.tasksched,
-                                    TaskImage = p.taskimage,
-                                    Loc_Address = p.taskaddress,
-                                    Jobname = p.jobname,
-                                    UserId = p.userid,
-                                    Username = p.username,
-                                    workerid = p.workerid,
-                                });
+                                 where u.UserId != user && u.JobId == work.JobId
+                                 join d in db.Users on u.UserId equals d.Id
+                                 join
+                                 tu in db.TaskBook on u.Id equals tu.TaskDetId
+                                 where tu.Taskbook_Status == 1
+                                 join
+                                 job in db.JobCategories on u.JobId equals job.Id
+                                 orderby u.Geolocation.Distance(currentlocation)
+                                 select new
+                                 {
+                                     id = u.Id,
+                                     taskbookstatus = tu.Taskbook_Status,
+                                     taskname = u.taskdet_name,
+                                     taskdesc = u.taskdet_desc,
+                                     tasksched = u.taskdet_sched,
+                                     taskimage = u.TaskImage,
+                                     taskaddress = u.Loc_Address,
+                                     jobname = job.JobName,
+                                     userid = u.UserId,
+                                     username = d.UserName,
+                                     workerid = tu.workerId
+                                 }).ToList().Select(p => new TaskPostListView
+                                 {
+                                     Id = p.id,
+                                     Taskbook_Status = p.taskbookstatus,
+                                     taskdet_name = p.taskname,
+                                     taskdet_desc = p.taskdesc,
+                                     taskdet_sched = p.tasksched,
+                                     TaskImage = p.taskimage,
+                                     Loc_Address = p.taskaddress,
+                                     Jobname = p.jobname,
+                                     UserId = p.userid,
+                                     Username = p.username,
+                                     workerid = p.workerid,
+                                 });
             var taskpostlist2 = (from u in db.TaskDetails
-                                where u.UserId != user
-                                join d in db.Users on u.UserId equals d.Id
-                                join
-                                tu in db.TaskBook on u.Id equals tu.TaskDetId
-                                where tu.Taskbook_Status == 1
-                                join
-                                bu in db.Bids on u.Id equals bu.TaskDetId
+                                 where u.UserId != user
+                                 join d in db.Users on u.UserId equals d.Id
+                                 join
+                                 tu in db.TaskBook on u.Id equals tu.TaskDetId
+                                 where tu.Taskbook_Status == 1
+                                 join
+                                 bu in db.Bids on u.Id equals bu.TaskDetId
                                  where bu.WorkerId == work.Id && bu.bid_status != 1 && bu.bid_status != 2
                                  join
                                 job in db.JobCategories on u.JobId equals job.Id
-                                orderby u.Geolocation.Distance(currentlocation)
-                                select new
-                                {
-                                    id = u.Id,
-                                    taskbookstatus = tu.Taskbook_Status,
-                                    taskname = u.taskdet_name,
-                                    taskdesc = u.taskdet_desc,
-                                    tasksched = u.taskdet_sched,
-                                    taskimage = u.TaskImage,
-                                    taskaddress = u.Loc_Address,
-                                    jobname = job.JobName,
-                                    userid = u.UserId,
-                                    username = d.UserName,
-                                    workerid = tu.workerId
-                                }).ToList().Select(p => new TaskPostListView
-                                {
-                                    Id = p.id,
-                                    Taskbook_Status = p.taskbookstatus,
-                                    taskdet_name = p.taskname,
-                                    taskdet_desc = p.taskdesc,
-                                    taskdet_sched = p.tasksched,
-                                    TaskImage = p.taskimage,
-                                    Loc_Address = p.taskaddress,
-                                    Jobname = p.jobname,
-                                    UserId = p.userid,
-                                    Username = p.username,
-                                    workerid = p.workerid,
-                                });
+                                 orderby u.Geolocation.Distance(currentlocation)
+                                 select new
+                                 {
+                                     id = u.Id,
+                                     taskbookstatus = tu.Taskbook_Status,
+                                     taskname = u.taskdet_name,
+                                     taskdesc = u.taskdet_desc,
+                                     tasksched = u.taskdet_sched,
+                                     taskimage = u.TaskImage,
+                                     taskaddress = u.Loc_Address,
+                                     jobname = job.JobName,
+                                     userid = u.UserId,
+                                     username = d.UserName,
+                                     workerid = tu.workerId
+                                 }).ToList().Select(p => new TaskPostListView
+                                 {
+                                     Id = p.id,
+                                     Taskbook_Status = p.taskbookstatus,
+                                     taskdet_name = p.taskname,
+                                     taskdet_desc = p.taskdesc,
+                                     taskdet_sched = p.tasksched,
+                                     TaskImage = p.taskimage,
+                                     Loc_Address = p.taskaddress,
+                                     Jobname = p.jobname,
+                                     UserId = p.userid,
+                                     Username = p.username,
+                                     workerid = p.workerid,
+                                 });
+            if(category == "Posted Tasks")
+            {
+                List<TaskPostListView> filteredtaskpostlists = (from e in taskpostlist1 where !(from m in taskpostlist2 select m.Id).Contains(e.Id) select e).ToList();
+                var taskpostviews = new taskViewPost();
+                taskpostviews.Taskpostlistview = filteredtaskpostlists.Where(x=>x.workerid != null).ToList();
+                taskpostviews.TaskViewPost = db.SkillServiceTasks.ToList();
+                List<ShowposttaskcategoryViewModel> categors = new List<ShowposttaskcategoryViewModel>();
+                var cats = new ShowposttaskcategoryViewModel();
+                cats.CategoryName = "Posted Tasks";
+                cats.Id = 1;
+                categors.Add(cats);
+                cats = new ShowposttaskcategoryViewModel();
+                cats.CategoryName = "Request Booking Tasks";
+                cats.Id = 2;
+                categors.Add(cats);
+                ViewBag.Category = new SelectList(categors.Select(p => p.CategoryName).ToList().Distinct());
+                return View(taskpostviews);
+            }
+            if(category == "Request Booking Tasks")
+            {
+                List<TaskPostListView> filteredtaskpostlistss = (from e in taskpostlist1 where !(from m in taskpostlist2 select m.Id).Contains(e.Id) select e).ToList();
+                var taskpostviewss = new taskViewPost();
+                taskpostviewss.Taskpostlistview = filteredtaskpostlistss.Where(x=>x.workerid == null).ToList();
+                taskpostviewss.TaskViewPost = db.SkillServiceTasks.ToList();
+                List<ShowposttaskcategoryViewModel> categorss = new List<ShowposttaskcategoryViewModel>();
+                var catss = new ShowposttaskcategoryViewModel();
+                catss.CategoryName = "Posted Tasks";
+                catss.Id = 1;
+                categorss.Add(catss);
+                catss = new ShowposttaskcategoryViewModel();
+                catss.CategoryName = "Request Booking Tasks";
+                catss.Id = 2;
+                categorss.Add(catss);
+                ViewBag.Category = new SelectList(categorss.Select(p => p.CategoryName).ToList().Distinct());
+                return View(taskpostviewss);
+            }
             List<TaskPostListView> filteredtaskpostlist = (from e in taskpostlist1 where !(from m in taskpostlist2 select m.Id).Contains(e.Id) select e).ToList();
             var taskpostview = new taskViewPost();
             taskpostview.Taskpostlistview = filteredtaskpostlist;
             taskpostview.TaskViewPost = db.SkillServiceTasks.ToList();
+            List<ShowposttaskcategoryViewModel> categor = new List<ShowposttaskcategoryViewModel>();
+            var cat = new ShowposttaskcategoryViewModel();
+            cat.CategoryName = "Posted Tasks";
+            cat.Id = 1;
+            categor.Add(cat);
+            cat = new ShowposttaskcategoryViewModel();
+            cat.CategoryName = "Request Booking Tasks";
+            cat.Id = 2;
+            categor.Add(cat);
+            ViewBag.Category = new SelectList(categor.Select(p => p.CategoryName).ToList().Distinct());
             return View(taskpostview);
         }
         [Authorize(Roles = "Worker")]
-        public ActionResult ViewBiddedRequestTask()
+        public ActionResult ViewBiddedRequestTask(string category)
         {
             //Note para di ko kalimot: echeck ni if ang bid is nana or wala pa.. ang bidded ID basihan sa worker
             var user = User.Identity.GetUserId();
@@ -952,13 +998,58 @@ namespace iAssist.Controllers
                                     Username = p.username,
                                     workerid = p.workerid,
                                 });
+            
+            if (category == "Posted Tasks")
+            {
+                var taskpostviews = new taskViewPost();
+                taskpostviews.Taskpostlistview = taskpostlist.Where(x => x.workerid == null).ToList();
+                taskpostviews.TaskViewPost = db.SkillServiceTasks.ToList();
+                List<ShowposttaskcategoryViewModel> categors = new List<ShowposttaskcategoryViewModel>();
+                var cats = new ShowposttaskcategoryViewModel();
+                cats.CategoryName = "Posted Tasks";
+                cats.Id = 1;
+                categors.Add(cats);
+                cats = new ShowposttaskcategoryViewModel();
+                cats.CategoryName = "Request Booking Tasks";
+                cats.Id = 2;
+                categors.Add(cats);
+                ViewBag.Category = new SelectList(categors.Select(p => p.CategoryName).ToList().Distinct());
+                return View(taskpostviews);
+            }
+            if (category == "Request Booking Tasks")
+            {
+                var taskpostviewss = new taskViewPost();
+                taskpostviewss.Taskpostlistview = taskpostlist.Where(x => x.workerid != null).ToList();
+                taskpostviewss.TaskViewPost = db.SkillServiceTasks.ToList();
+                List<ShowposttaskcategoryViewModel> categorss = new List<ShowposttaskcategoryViewModel>();
+                var catss = new ShowposttaskcategoryViewModel();
+                catss.CategoryName = "Posted Tasks";
+                catss.Id = 1;
+                categorss.Add(catss);
+                catss = new ShowposttaskcategoryViewModel();
+                catss.CategoryName = "Request Booking Tasks";
+                catss.Id = 2;
+                categorss.Add(catss);
+                ViewBag.Category = new SelectList(categorss.Select(p => p.CategoryName).ToList().Distinct());
+                return View(taskpostviewss);
+            }
             var taskpostview = new taskViewPost();
             taskpostview.Taskpostlistview = taskpostlist;
             taskpostview.TaskViewPost = db.SkillServiceTasks.ToList();
+            List<ShowposttaskcategoryViewModel> categor = new List<ShowposttaskcategoryViewModel>();
+            var cat = new ShowposttaskcategoryViewModel();
+            cat.CategoryName = "Posted Tasks";
+            cat.Id = 1;
+            categor.Add(cat);
+            cat = new ShowposttaskcategoryViewModel();
+            cat.CategoryName = "Request Booking Tasks";
+            cat.Id = 2;
+            categor.Add(cat);
+            ViewBag.Category = new SelectList(categor.Select(p => p.CategoryName).ToList().Distinct());
             return View(taskpostview);
         }
         [Authorize(Roles = "Worker")]
-        public ActionResult ViewContractTask()
+        public ActionResult ViewContractTask(string category)
         {
             var user = User.Identity.GetUserId();
             var work = db.RegistWork.Where(x => x.Userid == user).FirstOrDefault();
@@ -1009,9 +1100,53 @@ namespace iAssist.Controllers
                                         taskedid = p.taskedid,
                                         taskedTaskPayable = p.taskedTaskPayable
                                     });
+            if (category == "Posted Tasks")
+            {
+                var taskpostviews = new taskViewPost();
+                taskpostviews.Taskpostlistview = taskpostlist.Where(x => x.workerid == null).ToList();
+                taskpostviews.TaskViewPost = db.SkillServiceTasks.ToList();
+                List<ShowposttaskcategoryViewModel> categors = new List<ShowposttaskcategoryViewModel>();
+                var cats = new ShowposttaskcategoryViewModel();
+                cats.CategoryName = "Posted Tasks";
+                cats.Id = 1;
+                categors.Add(cats);
+                cats = new ShowposttaskcategoryViewModel();
+                cats.CategoryName = "Request Booking Tasks";
+                cats.Id = 2;
+                categors.Add(cats);
+                ViewBag.Category = new SelectList(categors.Select(p => p.CategoryName).ToList().Distinct());
+                return View(taskpostviews);
+            }
+            if (category == "Request Booking Tasks")
+            {
+                var taskpostviewss = new taskViewPost();
+                taskpostviewss.Taskpostlistview = taskpostlist.Where(x => x.workerid != null).ToList();
+                taskpostviewss.TaskViewPost = db.SkillServiceTasks.ToList();
+                List<ShowposttaskcategoryViewModel> categorss = new List<ShowposttaskcategoryViewModel>();
+                var catss = new ShowposttaskcategoryViewModel();
+                catss.CategoryName = "Posted Tasks";
+                catss.Id = 1;
+                categorss.Add(catss);
+                catss = new ShowposttaskcategoryViewModel();
+                catss.CategoryName = "Request Booking Tasks";
+                catss.Id = 2;
+                categorss.Add(catss);
+                ViewBag.Category = new SelectList(categorss.Select(p => p.CategoryName).ToList().Distinct());
+                return View(taskpostviewss);
+            }
             var taskpostview = new taskViewPost();
             taskpostview.Taskpostlistview = taskpostlist;
             taskpostview.TaskViewPost = db.SkillServiceTasks.ToList();
+            List<ShowposttaskcategoryViewModel> categor = new List<ShowposttaskcategoryViewModel>();
+            var cat = new ShowposttaskcategoryViewModel();
+            cat.CategoryName = "Posted Tasks";
+            cat.Id = 1;
+            categor.Add(cat);
+            cat = new ShowposttaskcategoryViewModel();
+            cat.CategoryName = "Request Booking Tasks";
+            cat.Id = 2;
+            categor.Add(cat);
+            ViewBag.Category = new SelectList(categor.Select(p => p.CategoryName).ToList().Distinct());
             return View(taskpostview);
         }
         public ActionResult MarkasWorking(int? id)
@@ -1133,7 +1268,7 @@ namespace iAssist.Controllers
             db.SaveChanges();
             return RedirectToAction("ShowMyTaskPost");
         }
-        public ActionResult ViewCompletedTask()
+        public ActionResult ViewCompletedTask(string category)
         {
             var user = User.Identity.GetUserId();
             var work = db.RegistWork.Where(x => x.Userid == user).FirstOrDefault();
@@ -1183,9 +1318,53 @@ namespace iAssist.Controllers
                                     taskedid = p.taskedid,
                                     taskedTaskPayable = p.taskedTaskPayable
                                 });
+            if (category == "Posted Tasks")
+            {
+                var taskpostviews = new taskViewPost();
+                taskpostviews.Taskpostlistview = taskpostlist.Where(x=>x.workerid == null).ToList();
+                taskpostviews.TaskViewPost = db.SkillServiceTasks.ToList();
+                List<ShowposttaskcategoryViewModel> categors = new List<ShowposttaskcategoryViewModel>();
+                var cats = new ShowposttaskcategoryViewModel();
+                cats.CategoryName = "Posted Tasks";
+                cats.Id = 1;
+                categors.Add(cats);
+                cats = new ShowposttaskcategoryViewModel();
+                cats.CategoryName = "Request Booking Tasks";
+                cats.Id = 2;
+                categors.Add(cats);
+                ViewBag.Category = new SelectList(categors.Select(p => p.CategoryName).ToList().Distinct());
+                return View(taskpostviews);
+            }
+            if (category == "Requested Booking Tasks")
+            {
+                var taskpostviewss = new taskViewPost();
+                taskpostviewss.Taskpostlistview = taskpostlist.Where(x=>x.workerid != null).ToList();
+                taskpostviewss.TaskViewPost = db.SkillServiceTasks.ToList();
+                List<ShowposttaskcategoryViewModel> categorss = new List<ShowposttaskcategoryViewModel>();
+                var catss = new ShowposttaskcategoryViewModel();
+                catss.CategoryName = "Posted Tasks";
+                catss.Id = 1;
+                categorss.Add(catss);
+                catss = new ShowposttaskcategoryViewModel();
+                catss.CategoryName = "Request Booking Tasks";
+                catss.Id = 2;
+                categorss.Add(catss);
+                ViewBag.Category = new SelectList(categorss.Select(p => p.CategoryName).ToList().Distinct());
+                return View(taskpostviewss);
+            }
             var taskpostview = new taskViewPost();
             taskpostview.Taskpostlistview = taskpostlist;
             taskpostview.TaskViewPost = db.SkillServiceTasks.ToList();
+            List<ShowposttaskcategoryViewModel> categor = new List<ShowposttaskcategoryViewModel>();
+            var cat = new ShowposttaskcategoryViewModel();
+            cat.CategoryName = "Posted Tasks";
+            cat.Id = 1;
+            categor.Add(cat);
+            cat = new ShowposttaskcategoryViewModel();
+            cat.CategoryName = "Request Booking Tasks";
+            cat.Id = 2;
+            categor.Add(cat);
+            ViewBag.Category = new SelectList(categor.Select(p => p.CategoryName).ToList().Distinct());
             return View(taskpostview);
         }
 

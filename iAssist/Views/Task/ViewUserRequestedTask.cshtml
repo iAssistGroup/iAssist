@@ -8,6 +8,15 @@
     <h2>User Requested / Posted Task</h2>
     <hr />
     <div class="row">
+        @using (Html.BeginForm("ViewUserRequestedTask", "Task", FormMethod.Get))
+        {
+            <div class="py-2">
+                <label>Filter by category:</label> <div class="py-1">@Html.DropDownList("Category", "All")</div>
+                <div class="py-1">
+                    <input type="submit" class="btn btn-primary" style="background-color: #e65c00; border:none; color:white;" value="Filter" />
+                </div>
+            </div>
+        }
         <div class="card-body">
             <div class="container profile-page">
                 <div class="row">
@@ -58,10 +67,10 @@
                                         <text>&nbsp;</text>
                                     }
                                     <div style="margin-top: 20px;">
-                                        @Html.ActionLink("Bid the Task", "CreateBidToTheTask", "Bidded", new { id = item.Id }, new { @class="btn btn-default", @style="background-color: #e65c00; border:none; color:white;" })
+                                        @Html.ActionLink("Bid the Task", "CreateBidToTheTask", "Bidded", new { id = item.Id }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })
                                         @if (item.workerid != null)
                                         {
-                                            @Html.ActionLink("Cancel", "CancelMyPostTask", "Task", new { id = item.Id, cancel = 1 }, new { @class="btn btn-default", @style="background-color: #e65c00; border:none; color:white;" })
+                                            @Html.ActionLink("Cancel", "CancelMyPostTask", "Task", new { id = item.Id, cancel = 1 }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })
                                         }
                                     </div>
                                 </div>

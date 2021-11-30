@@ -7,6 +7,15 @@
     <h2>My Completed Task</h2>
     <div class="container">
         <div class="row">
+            @using (Html.BeginForm("ViewCompletedTask", "Task", FormMethod.Get))
+            {
+                <div class="py-2">
+                    <label>Filter by category:</label> <div class="py-1">@Html.DropDownList("Category", "All")</div>
+                    <div class="py-1">
+                        <input type="submit" class="btn btn-primary" style="background-color: #e65c00; border:none; color:white;" value="Filter" />
+                    </div>
+                </div>
+            }
             @if (Model.Taskpostlistview.Any() == false)
             {
                 <p>There is no Completed Task</p>
@@ -98,14 +107,14 @@
                             }
                             <div style="margin-top: 20px;">
                                 @*@if (item.Taskbook_Status == 0)
-                                    {
-                                        <button class="btn btn-primary btn-round btn-simple">@Html.ActionLink("Post", "PostTheTask", new { id = item.Id }, new { @style = "text-decoration: none; color:white;" })</button>
-                                        <button class="btn btn-primary btn-round">@Html.ActionLink("Edit", "EditMyPostTask", new { id = item.Id }, new { @style = "text-decoration: none; color:white;" })</button>
-                                    }
-                                    @if (item.Taskbook_Status == 1)
-                                    {
-                                        <button class="btn btn-primary btn-round btn-simple">@Html.ActionLink("View Bidding", "ViewBidding", "Bidded", new { id = item.Id, user = 1 }, new { @style = "text-decoration: none; color:white;" })</button>
-                                    }*@
+                            {
+                                <button class="btn btn-primary btn-round btn-simple">@Html.ActionLink("Post", "PostTheTask", new { id = item.Id }, new { @style = "text-decoration: none; color:white;" })</button>
+                                <button class="btn btn-primary btn-round">@Html.ActionLink("Edit", "EditMyPostTask", new { id = item.Id }, new { @style = "text-decoration: none; color:white;" })</button>
+                            }
+                            @if (item.Taskbook_Status == 1)
+                            {
+                                <button class="btn btn-primary btn-round btn-simple">@Html.ActionLink("View Bidding", "ViewBidding", "Bidded", new { id = item.Id, user = 1 }, new { @style = "text-decoration: none; color:white;" })</button>
+                            }*@
                                 @if (item.Taskbook_Status != 4 && item.Taskbook_Status != 5 && item.Taskbook_Status != 3 && item.taskedstatus == 1)
                                 {
                                     <button class="btn btn-primary btn-round btn-simple">@Html.ActionLink("Mark as Working", "MarkasWorking", new { id = item.taskedid }, new { @style = "text-decoration: none; color:white;" })</button>
