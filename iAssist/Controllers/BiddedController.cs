@@ -133,6 +133,7 @@ namespace iAssist.Controllers
                               amount = b.Bid_Amount,
                               biddesc = b.Bid_Description,
                               tasktitle = taskdet.taskdet_name,
+                              workerid = worker.Id,
                               workerfname = userworker.Firstname,
                               workerlname = userworker.Lastname,
                               workerpic = userworker.ProfilePicture,
@@ -142,56 +143,37 @@ namespace iAssist.Controllers
                               taskdetid = b.TaskDetId,
                           }).ToList();
                 var averate = 0;
+                ViewBag.checkuser = user;
+                List<BidViewModel> bidding = new List<BidViewModel>();
                 foreach(var b in bi)
                 {
                     int a = 0;
-                    var rat = db.Ratings.Where(x => x.WorkerID == b.taskworkerid).ToList();
+                    averate = 0;
+                    var rat = db.Ratings.Where(x => x.WorkerID == b.workerid).ToList();
                     if (rat.Any() == true)
                     {
                         foreach (var i in rat)
                         {
                             a = a + i.Rate;
                         }
-                        averate = a / db.Ratings.Where(x => x.WorkerID == b.taskworkerid).Count();
+                        averate = a / db.Ratings.Where(x => x.WorkerID == b.workerid).Count();
                     }
+                    var bidds = new BidViewModel();
+                    bidds.Bidid = b.bidId;
+                    bidds.Bid_Amount = b.amount;
+                    bidds.Bid_Description = b.biddesc;
+                    bidds.Tasktitle = b.tasktitle;
+                    bidds.Firstname = b.workerfname;
+                    bidds.Lastname = b.workerlname;
+                    bidds.ProfilePicture = b.workerpic;
+                    bidds.workerid = b.taskworkerid;
+                    bidds.bookstatus = b.bookstatus;
+                    bidds.Username = b.username;
+                    bidds.TaskdetId = b.taskdetid;
+                    bidds.Rate = averate;
+                    bidds.user = user;
+                    bidding.Add(bidds);
                 }
-                ViewBag.checkuser = user;
-                var bidding = (from b in db.Bids
-                               where b.TaskDetId == id && b.bid_status != 1
-                               join taskdet in db.TaskDetails on b.TaskDetId equals taskdet.Id
-                               join task in db.TaskBook on taskdet.Id equals task.TaskDetId
-                               join worker in db.RegistWork on b.WorkerId equals worker.Id
-                               join userworker in db.UsersIdentities on worker.Userid equals userworker.Userid
-                               join username in db.Users on worker.Userid equals username.Id
-                               select new
-                               {
-                                   bidId = b.Id,
-                                   amount = b.Bid_Amount,
-                                   biddesc = b.Bid_Description,
-                                   tasktitle = taskdet.taskdet_name,
-                                   workerfname = userworker.Firstname,
-                                   workerlname = userworker.Lastname,
-                                   workerpic = userworker.ProfilePicture,
-                                   taskworkerid = task.workerId,
-                                   bookstatus = b.bid_status,
-                                   username = username.UserName,
-                                   taskdetid = b.TaskDetId,
-                                   rate = averate,
-                               }).ToList().Select(p => new BidViewModel { 
-                                   Bidid = p.bidId,
-                                    Bid_Amount = p.amount,
-                                    Bid_Description = p.biddesc,
-                                    Tasktitle = p.tasktitle,
-                                    Firstname = p.workerfname,
-                                    Lastname = p.workerlname,
-                                    ProfilePicture = p.workerpic,
-                                    user = user,
-                                    workerid = p.taskworkerid,
-                                    bookstatus = p.bookstatus,
-                                   Username = p.username,
-                                   TaskdetId = p.taskdetid,
-                                   Rate = p.rate,
-                               });
                 return View(bidding);
             }
             if (user == 2)//meaning Worker want to see his bidding on the task
@@ -203,7 +185,7 @@ namespace iAssist.Controllers
                     return View("Error");
                 }
                 var bi = (from b in db.Bids
-                          where b.TaskDetId == id && b.bid_status != 1
+                          where b.TaskDetId == id && b.WorkerId == workerids.Id && b.bid_status != 1
                           join taskdet in db.TaskDetails on b.TaskDetId equals taskdet.Id
                           join task in db.TaskBook on taskdet.Id equals task.TaskDetId
                           join worker in db.RegistWork on b.WorkerId equals worker.Id
@@ -215,6 +197,7 @@ namespace iAssist.Controllers
                               amount = b.Bid_Amount,
                               biddesc = b.Bid_Description,
                               tasktitle = taskdet.taskdet_name,
+                              workerid = worker.Id,
                               workerfname = userworker.Firstname,
                               workerlname = userworker.Lastname,
                               workerpic = userworker.ProfilePicture,
@@ -224,55 +207,37 @@ namespace iAssist.Controllers
                               taskdetid = b.TaskDetId,
                           }).ToList();
                 var averate = 0;
+                ViewBag.checkuser = user;
+                List<BidViewModel> bidding = new List<BidViewModel>();
                 foreach (var b in bi)
                 {
                     int a = 0;
-                    var rat = db.Ratings.Where(x => x.WorkerID == b.taskworkerid).ToList();
-                    if(rat.Any() == true)
+                    averate = 0;
+                    var rat = db.Ratings.Where(x => x.WorkerID == b.workerid).ToList();
+                    if (rat.Any() == true)
                     {
                         foreach (var i in rat)
                         {
                             a = a + i.Rate;
                         }
-                        averate = a / db.Ratings.Where(x => x.WorkerID == b.taskworkerid).Count();
+                        averate = a / db.Ratings.Where(x => x.WorkerID == b.workerid).Count();
                     }
+                    var bidds = new BidViewModel();
+                    bidds.Bidid = b.bidId;
+                    bidds.Bid_Amount = b.amount;
+                    bidds.Bid_Description = b.biddesc;
+                    bidds.Tasktitle = b.tasktitle;
+                    bidds.Firstname = b.workerfname;
+                    bidds.Lastname = b.workerlname;
+                    bidds.ProfilePicture = b.workerpic;
+                    bidds.workerid = b.taskworkerid;
+                    bidds.bookstatus = b.bookstatus;
+                    bidds.Username = b.username;
+                    bidds.TaskdetId = b.taskdetid;
+                    bidds.Rate = averate;
+                    bidds.user = user;
+                    bidding.Add(bidds);
                 }
-                var bidding = (from b in db.Bids
-                               where b.TaskDetId == id && b.WorkerId == workerids.Id && b.bid_status != 1
-                               join taskdet in db.TaskDetails on b.TaskDetId equals taskdet.Id
-                               join task in db.TaskBook on taskdet.Id equals task.TaskDetId
-                               join worker in db.RegistWork on workerids.Id equals worker.Id
-                               join userworker in db.UsersIdentities on users equals userworker.Userid
-                               join username in db.Users on users equals username.Id
-                               select new
-                               {
-                                   bidId = b.Id,
-                                   amount = b.Bid_Amount,
-                                   biddesc = b.Bid_Description,
-                                   tasktitle = taskdet.taskdet_name,
-                                   workerfname = userworker.Firstname,
-                                   workerlname = userworker.Lastname,
-                                   workerpic = userworker.ProfilePicture,
-                                   taskworkerid = task.workerId,
-                                   username = username.UserName,
-                                   taskdetid = b.TaskDetId,
-                                   rate = averate
-                               }).ToList().Select(p => new BidViewModel
-                               {
-                                   Bidid = p.bidId,
-                                   Bid_Amount = p.amount,
-                                   Bid_Description = p.biddesc,
-                                   Tasktitle = p.tasktitle,
-                                   Firstname = p.workerfname,
-                                   Lastname = p.workerlname,
-                                   ProfilePicture = p.workerpic,
-                                   user = user,
-                                   workerid = p.taskworkerid,
-                                   Username = p.username,
-                                   TaskdetId = p.taskdetid,
-                                   Rate = p.rate,
-                               });
-                ViewBag.checkuser = user;
                 return View(bidding);
             }
             return View("Error");

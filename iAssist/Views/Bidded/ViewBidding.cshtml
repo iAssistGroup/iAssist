@@ -93,7 +93,7 @@
                     {
                         if (i == 0)
                         {
-                            <h3>@Html.DisplayFor(modelItem => item.Tasktitle)</h3>
+                            <h3>Task Tilte: @Html.DisplayFor(modelItem => item.Tasktitle)</h3>
                             i = 1;
                         }
 
@@ -112,13 +112,13 @@
                                             }
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-12">
-                                            <h4 class="m-t-0 m-b-0"><strong>@Html.DisplayFor(modelItem => item.Firstname)</strong> @Html.DisplayFor(modelItem => item.Lastname)@if (item.Rate != 0)
-                                            {
-                                                for (var c = 0; c <= item.Rate; c++)
-                                                {<i class="text-warning fa fa-star"></i> }
-                                            }
-                                            else
-                                            {<span>No Ratings</span>}</h4>
+                                            <h4 class="m-t-0 m-b-0">
+                                                <strong>@Html.DisplayFor(modelItem => item.Firstname)</strong> @Html.DisplayFor(modelItem => item.Lastname)<br/>
+                                                    @for (var c = 0; c < item.Rate; c++)
+                                                    {<i class="text-warning fa fa-star"></i> }
+                                                    @for (var c = item.Rate + 1; c <= 5; c++)
+                                                    {<i class="text-warning far fa-star"></i>}
+                                            </h4>
                                             @if (item.bookstatus == 1 && item.user == 2)
                                             {
                                                 <span class="job_post">The owner of the task Cancel your bid</span>

@@ -210,10 +210,10 @@
                                 <div class="col-md-10">
                                     <p>
                                         @file.Username
-                                        @for (int a = 1; a <= file.Rate; a++)
-                                        {
-                                            <span class="float-right"><i class="text-warning fa fa-star"></i></span>
-                                        }
+                                        @for (var c = 0; c < file.Rate; c++)
+                                        {<i class="text-warning fa fa-star"></i>}
+                                        @for (var c = file.Rate + 1; c <= 5; c++)
+                                        {<i class="text-warning far fa-star"></i>}
                                     </p>
                                     <div class="clearfix"></div>
                                     <p>@file.Feedback</p>

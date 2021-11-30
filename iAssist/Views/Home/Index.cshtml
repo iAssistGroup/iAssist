@@ -89,21 +89,24 @@
         </ul>
     </div>
 </section>
-<section class="resume py-5 text-center text-white">
-    <div class="container py-5">
-        <div class="row py-5">
-            <div class="col-lg-10 m-auto">
-                <p class="pb-3">BE PART OF IASSIST WORKERS</p>
-                <h1>Be a Worker in iAssist and Start Earning!</h1>
+@if (!User.IsInRole("Worker"))
+{
+    <section class="resume py-5 text-center text-white">
+        <div class="container py-5">
+            <div class="row py-5">
+                <div class="col-lg-10 m-auto">
+                    <p class="pb-3">BE PART OF IASSIST WORKERS</p>
+                    <h1>Be a Worker in iAssist and Start Earning!</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-5 m-auto">
+                    <button onclick="location.href='@Url.Action("ApplySkilledWorker","User")'" class="btn3">REGISTER AS WORKER</button>
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-5 m-auto">
-                <button onclick="location.href='@Url.Action("ApplySkilledWorker","User")'" class="btn3">REGISTER AS WORKER</button>
-            </div>
-        </div>
-    </div>
-</section>
+    </section>
+}
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCCnmMReV03W96lvqJVwbG7nFOTkuUDaX8"></script>
 <script type="text/javascript">
 

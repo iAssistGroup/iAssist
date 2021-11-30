@@ -107,17 +107,10 @@
                                 }
                             </div>
                             <div class="col-lg-8 col-md-8 col-12">
-                                @if (item.Rate != null)
-                                {
-                                    for (var i = 1; i <= item.Rate; i++)
-                                    {
-                                        <span class="float-right"><i class="text-warning fa fa-star"></i></span>
-                                    }
-                                }
-                                else
-                                {
-                                    <span class="float-right">No Rating</span>
-                                }
+                                @for (var c = 0; c < item.Rate; c++)
+                                {<i class="text-warning fa fa-star"></i>}
+                                @for (var c = item.Rate + 1; c <= 5; c++)
+                                {<i class="text-warning far fa-star"></i>}
                                 <h4 class="m-t-0 m-b-0"><strong>@Html.DisplayFor(modelItem => item.Firstname)</strong> @Html.DisplayFor(modelItem => item.Lastname) </h4>
                                 <span class="job_post">@Html.DisplayFor(modelItem => item.Jobname)</span>
                                 <p>@Html.DisplayFor(modelItem => item.nearaddress)</p>
