@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "ViewBidding";
+    int id = ViewBag.Id;
     var i = 0;
 }
 <style type="text/css">
@@ -87,12 +88,32 @@
                 <div class="row">
                     @if (!Model.Any())
                     {
+                        using (Html.BeginForm("ViewBidding", "Bidded", new { id = id }, FormMethod.Get, null))
+                        {
+                            @Html.Hidden("user", 1);
+                            <div class="py-2">
+                                <label>Filter by category:</label> <div class="py-1">@Html.DropDownList("Category", "All")</div>
+                                <div class="py-1">
+                                    <input type="submit" class="btn btn-primary" style="background-color: #e65c00; border:none; color:white;" value="Filter" />
+                                </div>
+                            </div>
+                        }
                         <p>No Worker Bided Yet</p>
                     }
                     @foreach (var item in Model)
                     {
                         if (i == 0)
                         {
+                            using (Html.BeginForm("ViewBidding", "Bidded", new { id = item.TaskdetId }, FormMethod.Get, null))
+                            {
+                                @Html.Hidden("user", item.user);
+                                <div class="py-2">
+                                    <label>Filter by category:</label> <div class="py-1">@Html.DropDownList("Category", "All")</div>
+                                    <div class="py-1">
+                                        <input type="submit" class="btn btn-primary" style="background-color: #e65c00; border:none; color:white;" value="Filter" />
+                                    </div>
+                                </div>
+                            }
                             <h3>Task Tilte: @Html.DisplayFor(modelItem => item.Tasktitle)</h3>
                             i = 1;
                         }
@@ -113,11 +134,11 @@
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-12">
                                             <h4 class="m-t-0 m-b-0">
-                                                <strong>@Html.DisplayFor(modelItem => item.Firstname)</strong> @Html.DisplayFor(modelItem => item.Lastname)<br/>
-                                                    @for (var c = 0; c < item.Rate; c++)
-                                                    {<i class="text-warning fa fa-star"></i> }
-                                                    @for (var c = item.Rate + 1; c <= 5; c++)
-                                                    {<i class="text-warning far fa-star"></i>}
+                                                <strong>@Html.DisplayFor(modelItem => item.Firstname)</strong> @Html.DisplayFor(modelItem => item.Lastname)<br />
+                                                @for (var c = 0; c < item.Rate; c++)
+                                                {<i class="text-warning fa fa-star"></i>}
+                                                @for (var c = item.Rate + 1; c <= 5; c++)
+                                                {<i class="text-warning far fa-star"></i>}
                                             </h4>
                                             @if (item.bookstatus == 1 && item.user == 2)
                                             {
@@ -160,33 +181,33 @@
                             </div>
                         </div>
                         @*<tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Bid_Amount)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Bid_Description)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TaskdetId)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Firstname)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Lastname)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ProfilePicture)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Tasktitle)
-                        </td>
-                        <td>
-                            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                        </td>
-                    </tr>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.Bid_Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Bid_Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TaskdetId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Firstname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Lastname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProfilePicture)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tasktitle)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>*@
                     }
 
                 </div>

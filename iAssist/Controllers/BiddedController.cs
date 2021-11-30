@@ -110,7 +110,7 @@ namespace iAssist.Controllers
             ModelState.AddModelError("", "Something Went Wrong");
             return View(model);
         }
-        public ActionResult ViewBidding(int? id, int? user)
+        public ActionResult ViewBidding(int? id, int? user,string category)
         {
             if (user == 1) //meaning User request to view bidding of workers or worker
             {
@@ -143,6 +143,8 @@ namespace iAssist.Controllers
                               taskdetid = b.TaskDetId,
                           }).ToList();
                 var averate = 0;
+                ViewBag.Id = id;
+                ViewBag.user = user;
                 ViewBag.checkuser = user;
                 List<BidViewModel> bidding = new List<BidViewModel>();
                 foreach(var b in bi)
@@ -174,6 +176,76 @@ namespace iAssist.Controllers
                     bidds.user = user;
                     bidding.Add(bidds);
                 }
+                if(category != null && category != "")
+                {
+                    int rate = 0;
+                    if(category == "5 Stars")
+                    {
+                        rate = 5;
+                    }
+                    if(category == "4 Stars")
+                    {
+                        rate = 4;
+                    }
+                    if (category == "3 Stars")
+                    {
+                        rate = 3;
+                    }
+                    if(category == "2 Stars")
+                    {
+                        rate = 2;
+                    }
+                    if(category == "1 Star")
+                    {
+                        rate = 1;
+                    }
+                    List<ShowposttaskcategoryViewModel> categors = new List<ShowposttaskcategoryViewModel>();
+                    var cats = new ShowposttaskcategoryViewModel();
+                    cats.CategoryName = "5 Stars";
+                    cats.Id = 0;
+                    categors.Add(cats);
+                    cats = new ShowposttaskcategoryViewModel();
+                    cats.CategoryName = "4 Stars";
+                    cats.Id = 1;
+                    categors.Add(cats);
+                    cats = new ShowposttaskcategoryViewModel();
+                    cats.CategoryName = "3 Stars";
+                    cats.Id = 2;
+                    categors.Add(cats);
+                    cats = new ShowposttaskcategoryViewModel();
+                    cats.CategoryName = "2 Stars";
+                    cats.Id = 3;
+                    categors.Add(cats);
+                    cats = new ShowposttaskcategoryViewModel();
+                    cats.CategoryName = "1 Star";
+                    cats.Id = 4;
+                    categors.Add(cats);
+                    ViewBag.Category = new SelectList(categors.Select(p => p.CategoryName).ToList().Distinct());
+                    var biddings = bidding.Where(x => x.Rate == rate).ToList();
+                    return View(biddings);
+                }
+                List<ShowposttaskcategoryViewModel> categor = new List<ShowposttaskcategoryViewModel>();
+                var cat = new ShowposttaskcategoryViewModel();
+                cat.CategoryName = "5 Stars";
+                cat.Id = 0;
+                categor.Add(cat);
+                cat = new ShowposttaskcategoryViewModel();
+                cat.CategoryName = "4 Stars";
+                cat.Id = 1;
+                categor.Add(cat);
+                cat = new ShowposttaskcategoryViewModel();
+                cat.CategoryName = "3 Stars";
+                cat.Id = 2;
+                categor.Add(cat);
+                cat = new ShowposttaskcategoryViewModel();
+                cat.CategoryName = "2 Stars";
+                cat.Id = 3;
+                categor.Add(cat);
+                cat = new ShowposttaskcategoryViewModel();
+                cat.CategoryName = "1 Star";
+                cat.Id = 4;
+                categor.Add(cat);
+                ViewBag.Category = new SelectList(categor.Select(p => p.CategoryName).ToList().Distinct());
                 return View(bidding);
             }
             if (user == 2)//meaning Worker want to see his bidding on the task
