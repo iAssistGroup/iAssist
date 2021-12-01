@@ -253,6 +253,7 @@
     <Compile Include="Models\NotificationViewModel.cs" />
     <Compile Include="Models\PaypalConfiguration.cs" />
     <Compile Include="Models\ProfileViewOfSkilledWorker.cs" />
+    <Compile Include="Models\RandomLocationPH.cs" />
     <Compile Include="Models\RateandFeedback.cs" />
     <Compile Include="Models\Rating.cs" />
     <Compile Include="Models\ReplenishBalance.cs" />

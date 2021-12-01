@@ -6,6 +6,7 @@
     using Microsoft.AspNet.Identity.EntityFramework;
     using Microsoft.SqlServer.Types;
     using System;
+    using System.Collections.Generic;
     using System.Configuration;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -211,6 +212,7 @@
                 }
                 //=======================================Adding 50 Worker============================================
                 var seekingjob = context.JobCategories.ToList();
+                int l = 1;
                 foreach (var item in seekingjob)
                 {
                     for (var j = 1; j <= 25; j++)
@@ -245,9 +247,15 @@
                             {
                                 context.UsersIdentities.Add(seekergenerateidentity);
                                 context.SaveChanges();
+                                if(l > 8)
+                                {
+                                    l = 1;
+                                }
+                                List<RandomLocationPH> loclist = GetRandomLocation();
+                                var result = loclist.Where(x => x.Id == l).FirstOrDefault();
                                 var locationidentity = new Faker<Location>()
-                                .RuleFor(x => x.Loc_Address, x => x.Person.Address.City)
-                                .RuleFor(x => x.Geolocation, x => DbGeography.FromText("POINT(" + x.Person.Address.Geo.Lng + " " + x.Person.Address.Geo.Lat + ")"))
+                                .RuleFor(x => x.Loc_Address, result.Address)
+                                .RuleFor(x => x.Geolocation, x => DbGeography.FromText("POINT(" + result.Longitude + " " + result.Latitude + ")"))
                                 .RuleFor(x => x.Created_At, DateTime.Now)
                                 .RuleFor(x => x.Updated_At, DateTime.Now)
                                 .RuleFor(x => x.JobId, item.Id)
@@ -255,6 +263,7 @@
                                 var locationidentitygenerate = locationidentity.Generate();
                                 context.Locations.Add(locationidentitygenerate);
                                 context.SaveChanges();
+                                l++;
                                 var seekerwallet = new Wallet { Money = 0, UserId = valuesaddseeker.Id };
                                 context.Balance.Add(seekerwallet);
                                 context.SaveChanges();
@@ -286,6 +295,20 @@
                             context.SkillsOfWorkers.Add(skillsofworker);
                             context.SaveChanges();
                         }
+                        for(int r = 0; r <= 10; r++)
+                        {
+                            Random rnd = new Random();
+                            int rand = rnd.Next(1, 5);
+                            var ratings = new Faker<Rating>()
+                            .RuleFor(x => x.Rate, rand)
+                            .RuleFor(x => x.Jobid, item.Id)
+                            .RuleFor(x => x.WorkerID, workerinfo.Id)
+                            .RuleFor(x => x.Feedback, "Good Worker and Exellent Performance")
+                            .RuleFor(x => x.UsernameFeedback, x => x.Person.UserName);
+                            var ratingidentitygenerate = ratings.Generate();
+                            context.Ratings.Add(ratingidentitygenerate);
+                            context.SaveChanges();
+                        }
                     }
                 }
 
@@ -296,6 +319,21 @@
 
                 throw ex2;
             }
+        }
+        public List<RandomLocationPH> GetRandomLocation()
+        {
+            List<RandomLocationPH> RlocList = new List<RandomLocationPH>
+            {
+                 new RandomLocationPH {Id = 1, Address = "18 Horseshoe Drive, Cebu City, Philippines", Latitude = "10.315700", Longitude = "123.897170" },
+                 new RandomLocationPH {Id = 2, Address = "2-14 J. Solon Drive, Cebu City 6000, Philippines", Latitude = "10.324800", Longitude = "123.900560" },
+                 new RandomLocationPH {Id = 3, Address = "22 Macopa St., Cebu City, Philippines", Latitude = "14.682710", Longitude = "121.110250" },
+                 new RandomLocationPH {Id = 4, Address = "29 Pelaez Extension, Cebu City, Philippines", Latitude = "10.301390", Longitude = "123.897500" },
+                 new RandomLocationPH {Id = 5, Address = "Conequip Philippines, Inc., company, Mandaue, Philippines", Latitude = "10.323803600000002", Longitude = "123.93889095886573" },
+                 new RandomLocationPH {Id = 6, Address = "LandBank of the Philippines, bank, Naga, Philippines", Latitude = "10.2093458", Longitude = "123.7589744" },
+                 new RandomLocationPH {Id = 7, Address = "City Homes, neighbourhood, Lapu-Lapu, Philippines", Latitude = "10.2935883", Longitude = "123.9701831" },
+                 new RandomLocationPH {Id = 8, Address = "Agpasan Binaliw Cebu City, residential, Cebu City, Philippines", Latitude = "10.41641185", Longitude = "123.90720949888288" },
+            };
+            return RlocList;
         }
     }
 }
