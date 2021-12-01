@@ -903,7 +903,7 @@ namespace iAssist.Controllers
             {
                 List<TaskPostListView> filteredtaskpostlists = (from e in taskpostlist1 where !(from m in taskpostlist2 select m.Id).Contains(e.Id) select e).ToList();
                 var taskpostviews = new taskViewPost();
-                taskpostviews.Taskpostlistview = filteredtaskpostlists.Where(x=>x.workerid != null).ToList();
+                taskpostviews.Taskpostlistview = filteredtaskpostlists.Where(x=>x.workerid == null).ToList();
                 taskpostviews.TaskViewPost = db.SkillServiceTasks.ToList();
                 List<ShowposttaskcategoryViewModel> categors = new List<ShowposttaskcategoryViewModel>();
                 var cats = new ShowposttaskcategoryViewModel();
@@ -921,7 +921,7 @@ namespace iAssist.Controllers
             {
                 List<TaskPostListView> filteredtaskpostlistss = (from e in taskpostlist1 where !(from m in taskpostlist2 select m.Id).Contains(e.Id) select e).ToList();
                 var taskpostviewss = new taskViewPost();
-                taskpostviewss.Taskpostlistview = filteredtaskpostlistss.Where(x=>x.workerid == null).ToList();
+                taskpostviewss.Taskpostlistview = filteredtaskpostlistss.Where(x=>x.workerid != null).ToList();
                 taskpostviewss.TaskViewPost = db.SkillServiceTasks.ToList();
                 List<ShowposttaskcategoryViewModel> categorss = new List<ShowposttaskcategoryViewModel>();
                 var catss = new ShowposttaskcategoryViewModel();
