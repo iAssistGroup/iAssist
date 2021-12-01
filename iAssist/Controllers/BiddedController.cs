@@ -279,6 +279,8 @@ namespace iAssist.Controllers
                               taskdetid = b.TaskDetId,
                           }).ToList();
                 var averate = 0;
+                ViewBag.Id = id;
+                ViewBag.user = user;
                 ViewBag.checkuser = user;
                 List<BidViewModel> bidding = new List<BidViewModel>();
                 foreach (var b in bi)

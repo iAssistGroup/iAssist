@@ -88,15 +88,18 @@
                 <div class="row">
                     @if (!Model.Any())
                     {
-                        using (Html.BeginForm("ViewBidding", "Bidded", new { id = id }, FormMethod.Get, null))
+                        if (ViewBag.Category != null)
                         {
-                            @Html.Hidden("user", 1);
-                            <div class="py-2">
-                                <label>Filter by category:</label> <div class="py-1">@Html.DropDownList("Category", "All")</div>
-                                <div class="py-1">
-                                    <input type="submit" class="btn btn-primary" style="background-color: #e65c00; border:none; color:white;" value="Filter" />
+                            using (Html.BeginForm("ViewBidding", "Bidded", new { id = id }, FormMethod.Get, null))
+                            {
+                                @Html.Hidden("user", 1);
+                                <div class="py-2">
+                                    <label>Filter by category:</label> <div class="py-1">@Html.DropDownList("Category", "All")</div>
+                                    <div class="py-1">
+                                        <input type="submit" class="btn btn-primary" style="background-color: #e65c00; border:none; color:white;" value="Filter" />
+                                    </div>
                                 </div>
-                            </div>
+                            }
                         }
                         <p>No Worker Bided Yet</p>
                     }
@@ -104,15 +107,18 @@
                     {
                         if (i == 0)
                         {
-                            using (Html.BeginForm("ViewBidding", "Bidded", new { id = item.TaskdetId }, FormMethod.Get, null))
+                            if (ViewBag.Category != null)
                             {
-                                @Html.Hidden("user", item.user);
-                                <div class="py-2">
-                                    <label>Filter by category:</label> <div class="py-1">@Html.DropDownList("Category", "All")</div>
-                                    <div class="py-1">
-                                        <input type="submit" class="btn btn-primary" style="background-color: #e65c00; border:none; color:white;" value="Filter" />
+                                using (Html.BeginForm("ViewBidding", "Bidded", new { id = id }, FormMethod.Get, null))
+                                {
+                                    @Html.Hidden("user", 1);
+                                    <div class="py-2">
+                                        <label>Filter by category:</label> <div class="py-1">@Html.DropDownList("Category", "All")</div>
+                                        <div class="py-1">
+                                            <input type="submit" class="btn btn-primary" style="background-color: #e65c00; border:none; color:white;" value="Filter" />
+                                        </div>
                                     </div>
-                                </div>
+                                }
                             }
                             <h3>Task Tilte: @Html.DisplayFor(modelItem => item.Tasktitle)</h3>
                             i = 1;
