@@ -97,13 +97,13 @@ namespace iAssist.Controllers
                 Receiver = admin.UserName,
                 Title = $"Worker {user.UserName} request to withdraw is balance",
                 Details = $"The worker request to withdraw his balance amount of {model.Money}",
-                DetailsURL = $"",
+                DetailsURL = $"/Admin/RequestWithdraw",
                 Date = DateTime.Now,
                 IsRead = false
             };
             db.Notifications.Add(notification);
             db.SaveChanges();
-            return View("Index");
+            return RedirectToAction("Index") ;
         }
 
     }

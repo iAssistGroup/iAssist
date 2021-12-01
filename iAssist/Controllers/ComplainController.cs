@@ -76,7 +76,7 @@ namespace iAssist.Controllers
                     string filename = Path.GetFileNameWithoutExtension(model.ImageFile.FileName);
                     string extension = Path.GetExtension(model.ImageFile.FileName);
                     filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
-                    model.image = "~/Image/" + filename;
+                    model.image = "" + filename;
                     filename = Path.Combine(Server.MapPath("~/image/"), filename);
                     complaints.compimage = model.image;
                     model.ImageFile.SaveAs(filename);

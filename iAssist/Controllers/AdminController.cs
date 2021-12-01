@@ -292,7 +292,7 @@ namespace iAssist.Controllers
             {
                 Receiver = user.UserName,
                 Title = $"Admin Approve your application",
-                Details = $"You are now a worker in iAssist",
+                Details = $"You are now a worker in iAssist but First you need to logout to take changes",
                 DetailsURL = "",
                 Date = DateTime.Now,
                 IsRead = false
@@ -527,7 +527,7 @@ namespace iAssist.Controllers
         }
         public ActionResult RequestWithdraw()
         {
-            var requestwith = db.Withdraw.Where(x=> x.status == false).ToList();
+            var requestwith = db.Withdraw.ToList();
             return View(requestwith);
         }
         public ActionResult MarkasDoneReq(int? id)
@@ -554,11 +554,23 @@ namespace iAssist.Controllers
                 Receiver = reqlist.Username,
                 Title = $"Admin has accepted your Request",
                 Details = $"The admin accepted your request you have now a balance of {balance.Money}",
-                DetailsURL = $"",
+                DetailsURL = $"/Transactions/TransIndex",
                 Date = DateTime.Now,
                 IsRead = false
             };
             db.Notifications.Add(notification);
+            db.SaveChanges();
+            var trans = new TransactionHistory
+            {
+                tasktitle = "Request Withdraw",
+                BidAmount = reqlist.Money.ToString(),
+                TotalAmount = reqlist.Money.ToString(),
+                Commission = "0",
+                Payer = "iAssist.mvc@gmail.com",
+                Reciever = user.Email,
+                Created_At = DateTime.Now
+            };
+            db.TransactionHistories.Add(trans);
             db.SaveChanges();
             return RedirectToAction("RequestWithdraw","Admin");
         }
