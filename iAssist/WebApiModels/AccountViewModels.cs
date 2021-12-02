@@ -40,4 +40,12 @@ namespace iAssist.Models
 
         public string ProviderKey { get; set; }
     }
+
+    public class UserAddress
+    {
+        public string Address { get; set; }
+        public double? Longitude { get; set; }
+        public double? Latitude { get; set; }
+    }
 }
+

@@ -115,7 +115,7 @@ namespace iAssist.WebApiControllers
                     Receiver = username.UserName,
                     Title = $"Worker bid the task you post/requested",
                     Details = $"A worker bidded your task post/requested",
-                    DetailsURL = "",
+                    DetailsURL = $"/Bidded/ViewBidding/{model.TaskdetId}?user=1",
                     Date = DateTime.Now,
                     IsRead = false
                 };
@@ -127,7 +127,7 @@ namespace iAssist.WebApiControllers
         }
         [HttpGet]
         [Route("ViewBidding")]
-        public async Task<IHttpActionResult> ViewBidding(int? id, int? user)
+        public async Task<IHttpActionResult> ViewBidding(int? id, int? user, string category)
         {
             if (user == 1) //meaning User request to view bidding of workers or worker
             {
@@ -160,6 +160,9 @@ namespace iAssist.WebApiControllers
                               taskdetid = b.TaskDetId,
                           }).ToList();
                 var averate = 0;
+                //ViewBag.Id = id;
+                //ViewBag.user = user;
+                //ViewBag.checkuser = user;
                 List<BidViewModel> bidding = new List<BidViewModel>();
                 foreach (var b in bi)
                 {
@@ -190,6 +193,32 @@ namespace iAssist.WebApiControllers
                     bidds.user = user;
                     bidding.Add(bidds);
                 }
+                if (category != null && category != "")
+                {
+                    int rate = 0;
+                    if (category == "5 Stars")
+                    {
+                        rate = 5;
+                    }
+                    if (category == "4 Stars")
+                    {
+                        rate = 4;
+                    }
+                    if (category == "3 Stars")
+                    {
+                        rate = 3;
+                    }
+                    if (category == "2 Stars")
+                    {
+                        rate = 2;
+                    }
+                    if (category == "1 Star")
+                    {
+                        rate = 1;
+                    }
+                    var biddings = bidding.Where(x => x.Rate == rate).ToList();
+                    return Ok(biddings);
+                }
                 return Ok(bidding);
             }
             if (user == 2)//meaning Worker want to see his bidding on the task
@@ -198,7 +227,7 @@ namespace iAssist.WebApiControllers
                 var workerids = db.RegistWork.Where(x => x.Userid == users).FirstOrDefault();
                 if (id == null)
                 {
-                    return BadRequest(_errorMessageNotFound);
+                    return Ok(_errorMessage);
                 }
                 var bi = (from b in db.Bids
                           where b.TaskDetId == id && b.WorkerId == workerids.Id && b.bid_status != 1

@@ -1138,7 +1138,7 @@ namespace iAssist.WebApiControllers
                 Receiver = useres.UserName,
                 Title = $"You recieved payment from {user.UserName}",
                 Details = $"You recieved {taskeds.TaskPayable} from your previous task",
-                DetailsURL = $"",
+                DetailsURL = $"/Task/ShowMyTaskPost",
                 Date = DateTime.Now,
                 IsRead = false
             };

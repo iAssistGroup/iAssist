@@ -17,6 +17,8 @@ using System.Web.Routing;
 using iAssist.WebApiModels;
 using System.Runtime.Remoting.Messaging;
 using Microsoft.Ajax.Utilities;
+using iAssist.Utility;
+using System.IO;
 
 namespace iAssist.WebApiControllers
 {
@@ -112,6 +114,8 @@ namespace iAssist.WebApiControllers
         }
 
 
+
+
         //GET: / Account/Role
         [HttpGet]
         [AllowAnonymous]
@@ -201,8 +205,22 @@ namespace iAssist.WebApiControllers
                     new { userId = user.Id, code = code },
                     HttpContext.Current.Request.Url.Scheme
                     );
-                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                    return Ok("Please confirm your account. We sent an Email to confirm your account");
+                    //await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                    string body = string.Empty;
+                    using (StreamReader reader = new StreamReader(System.Web.Hosting.HostingEnvironment.MapPath("~/MailTemplate/AccountConfirmation.html")))
+                    {
+                        body = reader.ReadToEnd();
+                    }
+
+                    body = body.Replace("{ConfirmationLink}", callbackUrl);
+                    body = body.Replace("{UserName}", model.Email);
+                    bool IsSendEmail = SendEmail.EmailSend(model.Email, "Confirm your account", body, true);
+                    if (IsSendEmail)
+                    {
+                        return Ok("Please confirm your account. We sent an Email to confirm your account");
+                    }
+                    return BadRequest("An Error has occured");
                 }
                 else
                 {
@@ -260,6 +278,31 @@ namespace iAssist.WebApiControllers
                             IsRead = p.isread
                         });
             return Ok(notif);
+        }
+
+        // GET: Address
+        // POST: /Account/Address
+        [HttpGet]
+        [Route("Address")]
+        public async Task<IHttpActionResult> Address()
+        {
+            var users = User.Identity.GetUserId();
+            db.SaveChanges();
+            var address = (from t in db.Locations
+                         where t.UserId == users
+                         select new
+                         {
+                             Loc_Address = t.Loc_Address,
+                             Longitude = t.Geolocation.Longitude,
+                             Latitude = t.Geolocation.Latitude,
+                         })
+                        .ToList().Select(p => new UserAddress()
+                        {
+                            Address = p.Loc_Address,
+                            Longitude = p.Longitude,
+                            Latitude = p.Latitude,
+                        });
+            return Ok(address);
         }
     }
 }

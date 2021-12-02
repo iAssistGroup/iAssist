@@ -63,7 +63,7 @@ namespace iAssist.WebApiControllers
         {
             var user = User.Identity.GetUserId();
             var worker = db.RegistWork.Where(x => x.Id == id).FirstOrDefault();
-            if(worker != null && worker.Userid == user)
+            if (worker != null && worker.Userid == user)
             {
                 return BadRequest(_errorMessageNotFound);
             }
@@ -116,17 +116,6 @@ namespace iAssist.WebApiControllers
                 return Ok(_successMessage);
             }
             return BadRequest(_errorMessage);
-        }
-
-        private bool ValidateFile(HttpPostedFileBase file)
-        {
-            string fileExtension = System.IO.Path.GetExtension(file.FileName).ToLower();
-            string[] allowedFileTypes = { ".gif", ".png", ".jpeg", ".jpg" };
-            if ((file.ContentLength > 0 && file.ContentLength < 2097152) && allowedFileTypes.Contains(fileExtension))
-            {
-                return true;
-            }
-            return false;
         }
     }
 }

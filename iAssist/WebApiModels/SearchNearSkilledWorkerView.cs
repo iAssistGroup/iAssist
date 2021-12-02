@@ -15,7 +15,7 @@ namespace iAssist.WebApiModels
         public string Longitude { get; set; }
         [Required]
         public string Latitude { get; set; }
-        [Display(Name ="Category")]
+        [Display(Name = "Category")]
         public int JobId { get; set; }
         public IEnumerable<JobListModel> JobList { get; set; }
         public string Firstname { get; set; }
@@ -27,5 +27,6 @@ namespace iAssist.WebApiModels
         public int WorkerId { get; set; }
         public string distance { get; set; }
         public int Taskdet { get; set; }
+        public double? Rate { get; set; }
     }
 }

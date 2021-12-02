@@ -88,41 +88,95 @@ namespace iAssist.WebApiControllers
         }
         [HttpGet]
         [Route("FindWorkerList")]
-        public async Task<IHttpActionResult> FindWorkerList(int? id)
+        public async Task<IHttpActionResult> FindWorkerList(int? id, string category)
         {
             var model = db.TaskDetails.Where(x => x.Id == id).FirstOrDefault();
-            if (model.Geolocation.Latitude != null && model.Geolocation.Longitude != null)
+            if (category == "Distance" || category == null || category == "")
             {
-                var currentLocation = DbGeography.FromText("POINT( " + model.Geolocation.Longitude + " " + model.Geolocation.Latitude + " )");
+                if (model.Geolocation.Latitude != null && model.Geolocation.Longitude != null)
+                {
+                    var currentLocation = DbGeography.FromText("POINT( " + model.Geolocation.Longitude + " " + model.Geolocation.Latitude + " )");
 
-                //var currentLocation = DbGeography.FromText("POINT( 78.3845534 17.4343666 )");
+                    //var currentLocation = DbGeography.FromText("POINT( 78.3845534 17.4343666 )");
 
-                var places = (from userwork in db.RegistWork
-                              where userwork.JobId == model.JobId && userwork.worker_status == 0
-                              join
-                                job in db.JobCategories on model.JobId equals job.Id
-                              join
-                              username in db.Users on userwork.Userid equals username.Id
-                              join
-                                u in db.Locations on userwork.Userid equals u.UserId
-                              join userworkprof in db.UsersIdentities on u.UserId equals userworkprof.Userid
-                              orderby u.Geolocation.Distance(currentLocation) ascending
-                              select new
-                              {
-                                  workerId = userwork.Id,
-                                  Firstname = userworkprof.Firstname,
-                                  Lastname = userworkprof.Lastname,
-                                  Profile = userworkprof.ProfilePicture,
-                                  Jobtitle = job.JobName,
-                                  address = u.Loc_Address,
-                                  userid = username.UserName,
-                                  jobid = job.Id,
-                                  distance = u.Geolocation.Distance(currentLocation),
-                              }).Take(10).Select(x => new WebApiModels.SearchNearSkilledWorkerView() { Firstname = x.Firstname, Lastname = x.Lastname, Profile = x.Profile, Jobname = x.Jobtitle, nearaddress = x.address, WorkerId = x.workerId, UserId = x.userid, JobId = x.jobid, distance = x.distance.ToString(), Taskdet = model.Id }).ToList();
-                return Ok(places);
+
+                    var places = (from userwork in db.RegistWork
+                                  where userwork.JobId == model.JobId && userwork.worker_status == 0
+                                  join
+                                    job in db.JobCategories on model.JobId equals job.Id
+                                  join
+                                  username in db.Users on userwork.Userid equals username.Id
+                                  join
+                                    u in db.Locations on userwork.Userid equals u.UserId
+                                  where u.JobId != null
+                                  join userworkprof in db.UsersIdentities on u.UserId equals userworkprof.Userid
+                                  orderby u.Geolocation.Distance(currentLocation) ascending
+                                  select new
+                                  {
+                                      workerId = userwork.Id,
+                                      Firstname = userworkprof.Firstname,
+                                      Lastname = userworkprof.Lastname,
+                                      Profile = userworkprof.ProfilePicture,
+                                      Jobtitle = job.JobName,
+                                      address = u.Loc_Address,
+                                      userid = username.UserName,
+                                      jobid = job.Id,
+                                      rate = db.Ratings.Where(x => x.WorkerID == userwork.Id).ToList().Average(a => a.Rate),
+                                      distance = u.Geolocation.Distance(currentLocation),
+                                  }).Select(x => new WebApiModels.SearchNearSkilledWorkerView() { Firstname = x.Firstname, Lastname = x.Lastname, Profile = x.Profile, Jobname = x.Jobtitle, nearaddress = x.address, WorkerId = x.workerId, UserId = x.userid, JobId = x.jobid, distance = x.distance.ToString(), Rate = x.rate, Taskdet = model.Id }).ToList();
+                    //This was only for filter dropdown value
+                    List<ShowposttaskcategoryViewModel> categor = new List<ShowposttaskcategoryViewModel>();
+                    var cat = new ShowposttaskcategoryViewModel();
+                    cat.CategoryName = "Distance";
+                    cat.Id = 0;
+                    categor.Add(cat);
+                    cat = new ShowposttaskcategoryViewModel();
+                    cat.CategoryName = "Rating";
+                    cat.Id = 1;
+                    categor.Add(cat);
+                    return Ok(places);
+
+                }
+            }
+            else if (category == "Rating")
+            {
+                if (model.Geolocation.Latitude != null && model.Geolocation.Longitude != null)
+                {
+                    var currentLocation = DbGeography.FromText("POINT( " + model.Geolocation.Longitude + " " + model.Geolocation.Latitude + " )");
+
+                    //var currentLocation = DbGeography.FromText("POINT( 78.3845534 17.4343666 )");
+
+
+                    var places = (from userwork in db.RegistWork
+                                  where userwork.JobId == model.JobId && userwork.worker_status == 0
+                                  join
+                                    job in db.JobCategories on model.JobId equals job.Id
+                                  join
+                                  username in db.Users on userwork.Userid equals username.Id
+                                  join
+                                    u in db.Locations on userwork.Userid equals u.UserId
+                                  where u.JobId != null
+                                  join userworkprof in db.UsersIdentities on u.UserId equals userworkprof.Userid
+                                  select new
+                                  {
+                                      workerId = userwork.Id,
+                                      Firstname = userworkprof.Firstname,
+                                      Lastname = userworkprof.Lastname,
+                                      Profile = userworkprof.ProfilePicture,
+                                      Jobtitle = job.JobName,
+                                      address = u.Loc_Address,
+                                      userid = username.UserName,
+                                      jobid = job.Id,
+                                      rate = db.Ratings.Where(x => x.WorkerID == userwork.Id).ToList().Average(a => a.Rate),
+                                      distance = u.Geolocation.Distance(currentLocation),
+                                  }).Select(x => new WebApiModels.SearchNearSkilledWorkerView() { Firstname = x.Firstname, Lastname = x.Lastname, Profile = x.Profile, Jobname = x.Jobtitle, nearaddress = x.address, WorkerId = x.workerId, UserId = x.userid, JobId = x.jobid, distance = x.distance.ToString(), Rate = x.rate, Taskdet = model.Id }).ToList().OrderByDescending(x => x.Rate);
+
+                    return Ok(places);
+                }
             }
             return BadRequest(_errorMessage);
         }
+
         [HttpGet]
         [Route("ViewDetailsChoosenWorker")]
         public async Task<IHttpActionResult> ViewDetailsChoosenWorker(int? id)
