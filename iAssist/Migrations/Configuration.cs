@@ -121,7 +121,7 @@
                             var seekerwallet = new Wallet { Money = 0, UserId = valuesaddseeker.Id };
                             context.Balance.Add(seekerwallet);
                             context.SaveChanges();
-                            res = userManager.SetLockoutEnabled(valuesaddseeker.Id, false);
+                            res = userManager.SetLockoutEnabled(valuesaddseeker.Id, true);
                         }
                     }
                     var seekerroles = userManager.GetRoles(valuesaddseeker.Id);
@@ -247,7 +247,7 @@
                             {
                                 context.UsersIdentities.Add(seekergenerateidentity);
                                 context.SaveChanges();
-                                if(l > 8)
+                                if(l > 12)
                                 {
                                     l = 1;
                                 }
@@ -267,7 +267,7 @@
                                 var seekerwallet = new Wallet { Money = 0, UserId = valuesaddseeker.Id };
                                 context.Balance.Add(seekerwallet);
                                 context.SaveChanges();
-                                res = userManager.SetLockoutEnabled(valuesaddseeker.Id, false);
+                                res = userManager.SetLockoutEnabled(valuesaddseeker.Id, true);
                             }
                         }
                         var seekerroles = userManager.GetRoles(valuesaddseeker.Id);
@@ -295,7 +295,9 @@
                             context.SkillsOfWorkers.Add(skillsofworker);
                             context.SaveChanges();
                         }
-                        for(int r = 0; r <= 10; r++)
+                        Random rd = new Random();
+                        int rond = rd.Next(5, 10);
+                        for (int r = 1; r <= rond; r++)
                         {
                             Random rnd = new Random();
                             int rand = rnd.Next(1, 5);
@@ -332,6 +334,10 @@
                  new RandomLocationPH {Id = 6, Address = "LandBank of the Philippines, bank, Naga, Philippines", Latitude = "10.2093458", Longitude = "123.7589744" },
                  new RandomLocationPH {Id = 7, Address = "City Homes, neighbourhood, Lapu-Lapu, Philippines", Latitude = "10.2935883", Longitude = "123.9701831" },
                  new RandomLocationPH {Id = 8, Address = "Agpasan Binaliw Cebu City, residential, Cebu City, Philippines", Latitude = "10.41641185", Longitude = "123.90720949888288" },
+                 new RandomLocationPH {Id = 9, Address = "Sergio Osmeña Jr. Avenue / Sergio Osmeña Jr. Boulevard, Cebu City, Philippines", Latitude = "10.314410", Longitude = "123.958480" },
+                 new RandomLocationPH {Id = 10, Address = "R. Rabaya Street, Talisay, Philippines", Latitude = "10.257290", Longitude = "123.849980" },
+                 new RandomLocationPH {Id = 11, Address = "F. Deiparine Street, Talisay, Philippines", Latitude = "10.258490", Longitude = "123.844480" },
+                 new RandomLocationPH {Id = 12, Address = "Kapitan Deiparine Road, Talisay, Philippines", Latitude = "10.257020", Longitude = "123.845510" },
             };
             return RlocList;
         }
