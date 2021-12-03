@@ -517,7 +517,7 @@ namespace iAssist.Controllers
             taskpostlist.taskdet_Created_at = taskdetails.taskdet_Created_at;
             taskpostlist.UserId = taskdetails.UserId;
             taskpostlist.JobList = new SelectList(db.JobCategories, "Id", "JobName", taskpostlist.JobId);
-            taskpostlist.Skilltasks = db.Skills.Where(x => x.Jobid == id).ToList().Select(x => new SelectListItem() { Selected = service.Contains(x.Skillname), Text = x.Skillname, Value = x.Skillname });
+            taskpostlist.Skilltasks = db.SkillServiceTasks.Where(x => x.Taskdet == id).ToList().Select(x => new SelectListItem() { Selected = service.Contains(x.Skillname), Text = x.Skillname, Value = x.Skillname });
             return View(taskpostlist);
         }
         [HttpPost]
