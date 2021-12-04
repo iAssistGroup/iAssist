@@ -47,5 +47,11 @@ namespace iAssist.Models
         public double? Longitude { get; set; }
         public double? Latitude { get; set; }
     }
+
+    public class UserRole
+    {
+        public string Role { get; set; }
+        public int WorkerId { get; set; }
+    }
 }
 

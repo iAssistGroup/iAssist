@@ -136,11 +136,20 @@ namespace iAssist.WebApiControllers
             {
                 if (UserManager.IsInRole(user.Id, "Worker"))
                 {
-                    return Ok("Worker");
+                    UserRole data = new UserRole();
+                    data.Role = "Worker";
+                    data.WorkerId = (from t in db.RegistWork
+                         where t.Userid == user.Id
+                         select t.Id).First();
+
+                    return Ok(data);
                 }
                 else
                 {
-                    return Ok("Employer");
+                    UserRole data = new UserRole();
+                    data.Role = "Employer";
+
+                    return Ok(data);
                 }
             }
         }

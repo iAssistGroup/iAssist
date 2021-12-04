@@ -185,7 +185,7 @@ namespace iAssist.WebApiControllers
                     bidds.Firstname = b.workerfname;
                     bidds.Lastname = b.workerlname;
                     bidds.ProfilePicture = b.workerpic;
-                    bidds.workerid = b.taskworkerid;
+                    bidds.workerid = b.workerid;
                     bidds.bookstatus = b.bookstatus;
                     bidds.Username = b.username;
                     bidds.TaskdetId = b.taskdetid;
