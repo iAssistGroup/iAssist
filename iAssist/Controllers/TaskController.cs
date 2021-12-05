@@ -829,7 +829,7 @@ namespace iAssist.Controllers
                                  join d in db.Users on u.UserId equals d.Id
                                  join
                                  tu in db.TaskBook on u.Id equals tu.TaskDetId
-                                 where tu.Taskbook_Status == 1
+                                 where tu.Taskbook_Status == 1 && tu.workerId == work.Id || tu.Taskbook_Status == 1 && tu.workerId == null || tu.Taskbook_Status == 1 && tu.workerId == 0
                                  join
                                  job in db.JobCategories on u.JobId equals job.Id
                                  orderby u.Geolocation.Distance(currentlocation)
