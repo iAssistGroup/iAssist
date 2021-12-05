@@ -32,12 +32,27 @@ namespace iAssist.Providers
             var userManager = context.OwinContext.GetUserManager<ApplicationUserManager>();
 
             ApplicationUser user = await userManager.FindAsync(context.UserName, context.Password);
-
             if (user == null)
             {
-                context.SetError("invalid_grant", "The user name or password is incorrect.");
+                context.SetError("invalid_grant", "The email or password is incorrect.");
                 return;
             }
+            if (await userManager.IsEmailConfirmedAsync(user.Id) == false)
+            {
+                context.SetError("invalid_grant", "You must have a confirmed email to log on.");
+                return;
+            }
+            if (user.EmailConfirmed == false)
+            {
+                context.SetError("invalid_grant", "Email must be verified to log on.");
+                return;
+            }
+            if (user.LockoutEndDateUtc > DateTime.Now)
+            {
+                context.SetError("invalid_grant", "Account is Locked out.");
+                return;
+            }
+
 
             ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager);
             ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(userManager);
