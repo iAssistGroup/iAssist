@@ -70,7 +70,7 @@
                                         @Html.ActionLink("Bid the Task", "CreateBidToTheTask", "Bidded", new { id = item.Id }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })
                                         @if (item.workerid != null)
                                         {
-                                            @Html.ActionLink("Cancel", "CancelMyPostTask", "Task", new { id = item.Id, cancel = 1 }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })
+                                            @Html.ActionLink("Reject Task", "CancelMyPostTask", "Task", new { id = item.Id, cancel = 1 }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })
                                         }
                                     </div>
                                 </div>

@@ -108,9 +108,9 @@
                                 }
                             </div>
                             <div class="col-lg-8 col-md-8 col-12">
-                                @for (var c = 1; c < item.Rate; c++)
+                                @for (var c = 1; c < (int)item.Rate; c++)
                                 {<i class="text-warning fa fa-star"></i>}
-                                @for (var c = item.Rate + 1; c <= 5; c++)
+                                @for (var c = (int)item.Rate + 1; c <= 5; c++)
                                 {<i class="text-warning far fa-star"></i>}
                                 <h4 class="m-t-0 m-b-0"><strong>@Html.DisplayFor(modelItem => item.Firstname)</strong> @Html.DisplayFor(modelItem => item.Lastname) </h4>
                                 <span class="job_post">@Html.DisplayFor(modelItem => item.Jobname)</span>
