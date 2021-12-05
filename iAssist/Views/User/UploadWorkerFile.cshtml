@@ -5,14 +5,14 @@
 }
 
 <div class="container py-5">
-    <h2>UploadWorkerFile</h2>
+    <h2>Upload Worker File</h2>
 
     @using (Html.BeginForm("UploadWorkerFile", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
 
         <div class="form-horizontal">
-            <h4>SkilledWorkerFileImage</h4>
+            <h4>Skilled Worker File Image</h4>
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group">
