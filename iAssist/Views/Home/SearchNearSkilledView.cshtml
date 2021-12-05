@@ -107,7 +107,7 @@
                                 }
                             </div>
                             <div class="col-lg-8 col-md-8 col-12">
-                                @for (var c = 1; c < (int)item.Rate; c++)
+                                @for (var c = 1; c <= (int)item.Rate; c++)
                                 {<i class="text-warning fa fa-star"></i>}
                                 @for (var c = (int)item.Rate + 1; c <= 5; c++)
                                 {<i class="text-warning far fa-star"></i>}
