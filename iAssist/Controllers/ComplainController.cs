@@ -96,8 +96,8 @@ namespace iAssist.Controllers
                 var notification = new NotificationModel
                 {
                     Receiver = admin.username,
-                    Title = $"{ue} Submitted a report",
-                    Details = $"{ue} submitted a report / complain on a worker",
+                    Title = $"{ue.UserName} Submitted a report",
+                    Details = $"{ue.UserName} submitted a report / complain on a worker",
                     DetailsURL = $"/Admin/ManageUserComplaints",
                     Date = DateTime.Now,
                     IsRead = false
