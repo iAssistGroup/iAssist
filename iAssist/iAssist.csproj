@@ -376,6 +376,7 @@
     <None Include="Properties\PublishProfiles\iAssistph - Web Deploy5.pubxml" />
     <None Include="Properties\PublishProfiles\iAssistph - Web Deploy6.pubxml" />
     <None Include="Properties\PublishProfiles\iAssistph - Web Deploy7.pubxml" />
+    <None Include="Properties\PublishProfiles\iAssistph - Web Deploy8.pubxml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />

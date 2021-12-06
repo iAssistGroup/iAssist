@@ -23,15 +23,15 @@ namespace iAssist.Controllers
         {
             if (category == "Distance" || category == null)
             {
-                if(Session["lng"] != null && Session["lat"] != null && Session["jid"] != null)
-                {
-                    model.Longitude = Session["lng"].ToString();
-                    model.Latitude = Session["lat"].ToString();
-                    model.JobId = int.Parse(Session["jid"].ToString());
-                    Session["lat"] = null;
-                    Session["lng"] = null;
-                    Session["jid"] = null;
-                }
+                //if(Session["lng"].ToString() != "" && Session["lat"].ToString() != "" && Session["jid"].ToString() != "")
+                //{
+                //    model.Longitude = Session["lng"].ToString();
+                //    model.Latitude = Session["lat"].ToString();
+                //    model.JobId = int.Parse(Session["jid"].ToString());
+                //    Session["lat"] = "";
+                //    Session["lng"] = "";
+                //    Session["jid"] = "";
+                //}
                 if (model.Latitude != null && model.Longitude != null)
                 {
                     var currentLocation = DbGeography.FromText("POINT( " + model.Longitude + " " + model.Latitude + " )");
@@ -62,7 +62,7 @@ namespace iAssist.Controllers
                                       jobid = job.Id,
                                       rate = db.Ratings.Where(x => x.WorkerID == userwork.Id).ToList().Average(a => a.Rate),
                                       distance = u.Geolocation.Distance(currentLocation),
-                                  }).Select(x => new SearchNearSkilledWorkerView() { Firstname = x.Firstname, Lastname = x.Lastname, Profile = x.Profile, Jobname = x.Jobtitle, nearaddress = x.address, WorkerId = x.workerId, UserId = x.userid, JobId = x.jobid, distance = x.distance.ToString(), Rate = x.rate }).ToList();
+                                  }).Select(x => new SearchNearSkilledWorkerView() { Firstname = x.Firstname, Lastname = x.Lastname, Profile = x.Profile, Jobname = x.Jobtitle, nearaddress = x.address, WorkerId = x.workerId, UserId = x.userid, JobId = x.jobid, distance = x.distance.ToString(), Rate = x.rate }).Distinct().OrderBy(x => x.distance).ToList();
                     //This was only for filter dropdown value
                     List<ShowposttaskcategoryViewModel> categor = new List<ShowposttaskcategoryViewModel>();
                     var cat = new ShowposttaskcategoryViewModel();
@@ -143,11 +143,11 @@ namespace iAssist.Controllers
         }
         public ActionResult FindWorkerList(int? id, string category)
         {
-            if (Session["tid"] != null)
-            {
-                id = int.Parse(Session["tid"].ToString());
-                Session["tid"] = null;
-            }
+            //if (Session["tid"] != null)
+            //{
+            //    id = int.Parse(Session["tid"].ToString());
+            //    Session["tid"] = null;
+            //}
             var model = db.TaskDetails.Where(x => x.Id == id).FirstOrDefault();
             if (category == "Distance" || category == null)
             {
@@ -181,7 +181,7 @@ namespace iAssist.Controllers
                                       jobid = job.Id,
                                       rate = db.Ratings.Where(x => x.WorkerID == userwork.Id).ToList().Average(a => a.Rate),
                                       distance = u.Geolocation.Distance(currentLocation),
-                                  }).Select(x => new SearchNearSkilledWorkerView() { Firstname = x.Firstname, Lastname = x.Lastname, Profile = x.Profile, Jobname = x.Jobtitle, nearaddress = x.address, WorkerId = x.workerId, UserId = x.userid, JobId = x.jobid, distance = x.distance.ToString(), Rate = x.rate, Taskdet = model.Id }).ToList();
+                                  }).Select(x => new SearchNearSkilledWorkerView() { Firstname = x.Firstname, Lastname = x.Lastname, Profile = x.Profile, Jobname = x.Jobtitle, nearaddress = x.address, WorkerId = x.workerId, UserId = x.userid, JobId = x.jobid, distance = x.distance.ToString(), Rate = x.rate, Taskdet = model.Id }).Distinct().OrderBy(x=>x.distance).ToList();
                     //This was only for filter dropdown value
                     List<ShowposttaskcategoryViewModel> categor = new List<ShowposttaskcategoryViewModel>();
                     var cat = new ShowposttaskcategoryViewModel();

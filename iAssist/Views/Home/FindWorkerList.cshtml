@@ -77,7 +77,7 @@
 </style>
 <div class="container profile-page py-5">
     <div class="row">
-        @using (Html.BeginForm("FindWorkerList", "Home", FormMethod.Get))
+        @*@using (Html.BeginForm("FindWorkerList", "Home", FormMethod.Get))
         {
             <div class="py-2">
                 <label>Filter by category:</label> <div class="py-1">@Html.DropDownList("Category")</div>
@@ -86,7 +86,7 @@
                     <input type="submit" class="btn btn-primary" style="background-color: #e65c00; border:none; color:white;" value="Filter" />
                 </div>
             </div>
-        }
+        }*@
         @if (Model.Any() == false)
         {
             <p>There is no Worker Found</p>
