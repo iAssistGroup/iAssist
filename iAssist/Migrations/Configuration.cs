@@ -247,7 +247,7 @@
                             {
                                 context.UsersIdentities.Add(seekergenerateidentity);
                                 context.SaveChanges();
-                                if(l > 12)
+                                if (l > 12)
                                 {
                                     l = 1;
                                 }

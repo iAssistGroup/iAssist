@@ -13,7 +13,7 @@ namespace iAssist.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202111240603435_InitialCreate"; }
+            get { return "202112111425252_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

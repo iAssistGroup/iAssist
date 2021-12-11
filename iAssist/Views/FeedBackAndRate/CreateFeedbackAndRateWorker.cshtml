@@ -31,6 +31,7 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.Rate, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div onmouseout="CRateSelected()">
+                            <p id="rates"></p>
                             <span id="span1" onmouseout="CRateOut(1)" onmouseover="CRateOver(1)" onclick="CRateClick(1)" class="far fa-star"></span>
                             <span id="span2" onmouseout="CRateOut(2)" onmouseover="CRateOver(2)" onclick="CRateClick(2)" class="far fa-star"></span>
                             <span id="span3" onmouseout="CRateOut(3)" onmouseover="CRateOver(3)" onclick="CRateClick(3)" class="far fa-star"></span>
@@ -89,6 +90,21 @@
     }
     function CRateSelected() {
         var rating = $('#Rate').val();
+        if (rating == 1) {
+            $('#rates').text('Very Bad!');
+        }
+        if (rating == 2) {
+            $('#rates').text('Bad!');
+        }
+        if (rating == 3) {
+            $('#rates').text('Good!');
+        }
+        if (rating == 4) {
+            $('#rates').text('Very Good!');
+        }
+        if (rating == 5) {
+            $('#rates').text('Excellent!');
+        }
         for (var i = 1; i <= rating; i++) {
             $('#span' + i).attr('class', 'fas fa-star');
         }

@@ -15,7 +15,6 @@ namespace iAssist.Models
         [Range(1d, 5d, ErrorMessage = "{0} must be in the range 1..5")]
         [RegularExpression("([1-9][0-9]*)", ErrorMessage = "Rate must be a natural number")]
         public int Rate { get; set; }
-        [Required]
         [StringLength(4096, MinimumLength = 1, ErrorMessage = "{0} length must be in the range 1..4096")]
         [Display(Name = "Review message")]
         public string Feedback { get; set; }
