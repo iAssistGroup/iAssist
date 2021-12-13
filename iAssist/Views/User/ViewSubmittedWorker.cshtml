@@ -100,12 +100,12 @@
                 }
             </dd>
             <dd>
-                <p><b>Worker Image File</b></p>
+                <p><b>Worker File</b></p>
             </dd>
             <dd>
                 @foreach (var items in Model.SkilledWorkerImageFile)
                 {
-                    <img class="profile-photo" src="@Url.Content("~/image/RegisterSkilledFile/" +items.FileName)" style=padding:5px />
+                <a href="@Url.Content("~/image/RegisterSkilledFile/" +items.FileName)" target="_blank">@items.FileName</a><p></p>
                 }
             </dd>
         </dl>

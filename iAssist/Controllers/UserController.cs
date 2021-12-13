@@ -98,129 +98,134 @@ namespace iAssist.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult RegisterSkilledWorker(RegisterSkilledWorker model, params string[] selectedSkills)
         {
-            //var user = User.Identity.GetUserId();
-            //var userident = db.UsersIdentities.Where(x => x.Userid == user).FirstOrDefault();
-            //if (!ModelState.IsValid && selectedSkills == null)
-            //{
-            //    ViewBag.SkillsSelect = new SelectList(db.Skills.Where(x => x.Jobid == model.JobId), "Id", "Skillname");
-            //    return View(model);
-            //}
-            //if (model.Firstname != null)
-            //{
-            //    userident.Firstname = model.Firstname;
-            //}
-            //if (model.Lastname != null)
-            //{
-            //    userident.Lastname = model.Lastname;
-            //}
-            //if (model.Phonenumber != null)
-            //{
-            //    var changePhoneNumberToken = UserManager.GenerateChangePhoneNumberToken(user, model.Phonenumber);
-            //    var result = UserManager.ChangePhoneNumber(user, model.Phonenumber, changePhoneNumberToken);
-            //}
-            //userident.Updated_At = DateTime.Now;
-            var user = User.Identity.GetUserId();
-            var userident = db.UsersIdentities.Where(x => x.Userid == user).FirstOrDefault();
-            if (model.ImageFile != null && ValidateFile(model.ImageFile) == true)
+           if(ModelState.IsValid)
             {
-                string filename = Path.GetFileNameWithoutExtension(model.ImageFile.FileName);
-                string extension = Path.GetExtension(model.ImageFile.FileName);
-                filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
-                model.ProfilePicture = "" + filename;
-                filename = Path.Combine(Server.MapPath("~/image/"), filename);
-                userident.ProfilePicture = model.ProfilePicture;
-                model.ImageFile.SaveAs(filename);
-                userident.Updated_At = DateTime.Now;
-            }
-            //var w = db.RegistWork.Where(x => x.Userid == user && model.JobId == x.JobId).FirstOrDefault();
-            //if (w == null)
-            //{
-            //    Work worker = new Work();
-            //    worker.worker_overview = model.Overview;
-            //    worker.worker_status = 3;
-            //    worker.Created_At = DateTime.Now;
-            //    worker.Updated_At = DateTime.Now;
-            //    worker.Userid = User.Identity.GetUserId();
-            //    worker.JobId = model.JobId;
-            //    db.RegistWork.Add(worker);
-            //    db.SaveChanges();
-            //}
-            //if (w != null)
-            //{
-            //    w.worker_overview = model.Overview;
-            //    w.worker_status = 3;
-            //    w.Updated_At = DateTime.Now;
-            //    w.JobId = model.JobId;
-            //    db.SaveChanges();
-            //}
-            //var l = db.Locations.Where(x => x.UserId == user).FirstOrDefault();
-            //if (l == null)
-            //{
-            //    var location = new Location();
-            //    location.Loc_Address = model.Address;
-            //    location.UserId = user;
-            //    location.Created_At = DateTime.Now;
-            //    location.Updated_At = DateTime.Now;
-            //    location.Geolocation = DbGeography.FromText("POINT( " + model.Longitude + " " + model.Latitude + " )");
-            //    db.Locations.Add(location);
-            //    db.SaveChanges();
-            //}
-            //if (l != null)
-            //{
-            //    l.Loc_Address = model.Address;
-            //    l.Updated_At = DateTime.Now;
-            //    l.Geolocation = DbGeography.FromText("POINT( " + model.Longitude + " " + model.Latitude + " )");
-            //    db.SaveChanges();
-            //}
-            //var s = db.SkillsOfWorkers.Where(x => x.UserId == user && model.JobId == x.Jobid).ToList();
-            //if (s == null)
-            //{
-            //    if (selectedSkills != null)
-            //    {
-            //        for (int i = 0; i < selectedSkills.Count(); i++)
-            //        {
-            //            var skills = new SkillsOfWorker();
-            //            skills.Jobid = model.JobId;
-            //            skills.Skillname = selectedSkills[i];
-            //            skills.UserId = user;
-            //            db.SkillsOfWorkers.Add(skills);
-            //            db.SaveChanges();
-            //        }
-            //    }
-            //}
-            //if (s != null)
-            //{
-            //    db.SkillsOfWorkers.RemoveRange(s);
-            //    db.SaveChanges();
-            //    if (selectedSkills != null)
-            //    {
-            //        for (int i = 0; i < selectedSkills.Count(); i++)
-            //        {
-            //            var skills = new SkillsOfWorker();
-            //            skills.Jobid = model.JobId;
-            //            skills.Skillname = selectedSkills[i];
-            //            skills.UserId = user;
-            //            db.SkillsOfWorkers.Add(skills);
-            //            db.SaveChanges();
-            //        }
-            //    }
-            //}
-            if (selectedSkills != null)
-            {
-                model.workerskills = new List<worskills>();
-                for (int i = 0; i < selectedSkills.Count(); i++)
+                //var user = User.Identity.GetUserId();
+                //var userident = db.UsersIdentities.Where(x => x.Userid == user).FirstOrDefault();
+                //if (!ModelState.IsValid && selectedSkills == null)
+                //{
+                //    ViewBag.SkillsSelect = new SelectList(db.Skills.Where(x => x.Jobid == model.JobId), "Id", "Skillname");
+                //    return View(model);
+                //}
+                //if (model.Firstname != null)
+                //{
+                //    userident.Firstname = model.Firstname;
+                //}
+                //if (model.Lastname != null)
+                //{
+                //    userident.Lastname = model.Lastname;
+                //}
+                //if (model.Phonenumber != null)
+                //{
+                //    var changePhoneNumberToken = UserManager.GenerateChangePhoneNumberToken(user, model.Phonenumber);
+                //    var result = UserManager.ChangePhoneNumber(user, model.Phonenumber, changePhoneNumberToken);
+                //}
+                //userident.Updated_At = DateTime.Now;
+                var user = User.Identity.GetUserId();
+                var userident = db.UsersIdentities.Where(x => x.Userid == user).FirstOrDefault();
+                if (model.ImageFile != null && ValidateFile(model.ImageFile) == true)
                 {
-                    model.workerskills.Add(new worskills { Jobid = model.JobId, Skillname = selectedSkills[i], UserId = user });
+                    string filename = Path.GetFileNameWithoutExtension(model.ImageFile.FileName);
+                    string extension = Path.GetExtension(model.ImageFile.FileName);
+                    filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
+                    model.ProfilePicture = "" + filename;
+                    filename = Path.Combine(Server.MapPath("~/image/"), filename);
+                    userident.ProfilePicture = model.ProfilePicture;
+                    model.ImageFile.SaveAs(filename);
+                    userident.Updated_At = DateTime.Now;
                 }
+                //var w = db.RegistWork.Where(x => x.Userid == user && model.JobId == x.JobId).FirstOrDefault();
+                //if (w == null)
+                //{
+                //    Work worker = new Work();
+                //    worker.worker_overview = model.Overview;
+                //    worker.worker_status = 3;
+                //    worker.Created_At = DateTime.Now;
+                //    worker.Updated_At = DateTime.Now;
+                //    worker.Userid = User.Identity.GetUserId();
+                //    worker.JobId = model.JobId;
+                //    db.RegistWork.Add(worker);
+                //    db.SaveChanges();
+                //}
+                //if (w != null)
+                //{
+                //    w.worker_overview = model.Overview;
+                //    w.worker_status = 3;
+                //    w.Updated_At = DateTime.Now;
+                //    w.JobId = model.JobId;
+                //    db.SaveChanges();
+                //}
+                //var l = db.Locations.Where(x => x.UserId == user).FirstOrDefault();
+                //if (l == null)
+                //{
+                //    var location = new Location();
+                //    location.Loc_Address = model.Address;
+                //    location.UserId = user;
+                //    location.Created_At = DateTime.Now;
+                //    location.Updated_At = DateTime.Now;
+                //    location.Geolocation = DbGeography.FromText("POINT( " + model.Longitude + " " + model.Latitude + " )");
+                //    db.Locations.Add(location);
+                //    db.SaveChanges();
+                //}
+                //if (l != null)
+                //{
+                //    l.Loc_Address = model.Address;
+                //    l.Updated_At = DateTime.Now;
+                //    l.Geolocation = DbGeography.FromText("POINT( " + model.Longitude + " " + model.Latitude + " )");
+                //    db.SaveChanges();
+                //}
+                //var s = db.SkillsOfWorkers.Where(x => x.UserId == user && model.JobId == x.Jobid).ToList();
+                //if (s == null)
+                //{
+                //    if (selectedSkills != null)
+                //    {
+                //        for (int i = 0; i < selectedSkills.Count(); i++)
+                //        {
+                //            var skills = new SkillsOfWorker();
+                //            skills.Jobid = model.JobId;
+                //            skills.Skillname = selectedSkills[i];
+                //            skills.UserId = user;
+                //            db.SkillsOfWorkers.Add(skills);
+                //            db.SaveChanges();
+                //        }
+                //    }
+                //}
+                //if (s != null)
+                //{
+                //    db.SkillsOfWorkers.RemoveRange(s);
+                //    db.SaveChanges();
+                //    if (selectedSkills != null)
+                //    {
+                //        for (int i = 0; i < selectedSkills.Count(); i++)
+                //        {
+                //            var skills = new SkillsOfWorker();
+                //            skills.Jobid = model.JobId;
+                //            skills.Skillname = selectedSkills[i];
+                //            skills.UserId = user;
+                //            db.SkillsOfWorkers.Add(skills);
+                //            db.SaveChanges();
+                //        }
+                //    }
+                //}
+                if (selectedSkills != null)
+                {
+                    model.workerskills = new List<worskills>();
+                    for (int i = 0; i < selectedSkills.Count(); i++)
+                    {
+                        model.workerskills.Add(new worskills { Jobid = model.JobId, Skillname = selectedSkills[i], UserId = user });
+                    }
+                }
+                if (selectedSkills == null)
+                {
+                    ViewBag.SkillsSelect = new SelectList(db.Skills.Where(x => x.Jobid == model.JobId), "Id", "Skillname");
+                    ModelState.AddModelError("", "Please specify Skills / Service Offer");
+                    return View(model);
+                }
+                Session["Model"] = model;
+                return RedirectToAction("GetSkilledWOrkerFile");
             }
-            if(selectedSkills == null)
-            {
-                ViewBag.SkillsSelect = new SelectList(db.Skills.Where(x => x.Jobid == model.JobId), "Id", "Skillname");
-                ModelState.AddModelError("", "Please specify Skills / Service Offer");
-                return View(model);
-            }
-            Session["Model"] = model;
-            return RedirectToAction("GetSkilledWOrkerFile");
+            ViewBag.SkillsSelect = new SelectList(db.Skills.Where(x => x.Jobid == model.JobId), "Id", "Skillname");
+            return View(model);
         }
         public ActionResult EditRegisterSkilledWorker(int id)
         {
@@ -372,7 +377,9 @@ namespace iAssist.Controllers
                 Session["Model"] = model;
                 return RedirectToAction("EditGetSkilledWorkerFile");
             }
-            ViewBag.SkillsSelect = new SelectList(db.Skills.Where(x => x.Jobid == model.JobId), "Id", "Skillname");
+            var UserId = User.Identity.GetUserId();
+            var skills = (from u in db.SkillsOfWorkers where u.UserId == UserId && u.Jobid == model.JobId select u.Skillname).ToList();
+            model.workskill = db.Skills.Where(x => x.Jobid == model.JobId).ToList().Select(x => new SelectListItem() { Selected = skills.Contains(x.Skillname), Text = x.Skillname, Value = x.Skillname });
             return View(model);
         }
         public ActionResult EditGetSkilledWorkerFile()
@@ -804,19 +811,31 @@ namespace iAssist.Controllers
         }
         private void SaveFileToDisk(HttpPostedFileBase file)
         {
-            WebImage img = new WebImage(file.InputStream);
-            img.Save("~/image/RegisterSkilledFile/Thumbnails" + file.FileName);
-            if (img.Width > 190)
+            string fileExtension = System.IO.Path.GetExtension(file.FileName).ToLower();
+            string[] allowedFileTypes = { ".gif", ".png", ".jpeg", ".jpg" };
+            string[] allowedFileTypess = { ".pdf" };
+            if (allowedFileTypes.Contains(fileExtension))
             {
-                img.Resize(190, img.Height);
+                WebImage img = new WebImage(file.InputStream);
+                img.Save("~/image/RegisterSkilledFile/Thumbnails" + file.FileName);
+                if (img.Width > 190)
+                {
+                    img.Resize(190, img.Height);
+                }
+                img.Save("~/image/RegisterSkilledFile/" + file.FileName);
             }
-            img.Save("~/image/RegisterSkilledFile/" + file.FileName);
+            if(allowedFileTypess.Contains(fileExtension))
+            {
+                string _FileName = Path.GetFileName(file.FileName);
+                string _path = Path.Combine(Server.MapPath("~/image/RegisterSkilledFile"), _FileName);
+                file.SaveAs(_path);
+            }
         }
         private bool ValidateFile(HttpPostedFileBase file)
         {
             string fileExtension = System.IO.Path.GetExtension(file.FileName).ToLower();
-            string[] allowedFileTypes = { ".gif", ".png", ".jpeg", ".jpg" };
-            if ((file.ContentLength > 0 && file.ContentLength < 2097152) && allowedFileTypes.Contains(fileExtension))
+            string[] allowedFileTypes = { ".gif", ".png", ".jpeg", ".jpg", ".pdf" };
+            if ((file.ContentLength > 0) && allowedFileTypes.Contains(fileExtension))
             {
                 return true;
             }

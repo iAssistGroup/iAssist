@@ -16,9 +16,9 @@
         {
             <tr>
                 <td>
-                    <img class="profile-photo" src="@Url.Content("~/image/RegisterSkilledFile/" +item.FileName)" />
-                    @Html.ActionLink("Delete", "DeleteSkilledWorkerFiles", new { id = item.id })
+                    <a href="@Url.Content("~/image/RegisterSkilledFile/" +item.FileName)" target="_blank"><b>@item.FileName</b></a>
                 </td>
+                <td>@Html.ActionLink("Delete", "DeleteSkilledWorkerFiles", new { id = item.id })</td>
             </tr>
         }
 

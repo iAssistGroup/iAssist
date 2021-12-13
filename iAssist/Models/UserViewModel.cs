@@ -54,8 +54,10 @@ namespace iAssist.Models
     public class RegisterSkilledWorker
     {
         [Required]
+        [RegularExpression(@"^[0-9a-zA-Z''-'\s]{1,40}$", ErrorMessage = "Special Characters are not  allowed.")]
         public string Firstname { get; set; }
         [Required]
+        [RegularExpression(@"^[0-9a-zA-Z''-'\s]{1,40}$", ErrorMessage = "Special Characters are not  allowed.")]
         public string Lastname { get; set; }
         public string ProfilePicture { get; set; }
         [Required]
