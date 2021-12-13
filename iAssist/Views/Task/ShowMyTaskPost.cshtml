@@ -90,7 +90,7 @@
                         }
                     }
                     <span class="job_post">@Html.DisplayFor(modelItem => item.Jobname)</span> <br />
-                    <span class="job_post">Schedule: @Html.DisplayFor(modelItem => item.taskdet_sched)</span>
+                    <span class="job_post">Schedule: @Html.DisplayFor(modelItem => item.taskdet_sched) @Html.DisplayFor(modelItem => item.taskdet_time)</span>
                     <p>Address: @Html.DisplayFor(modelItem => item.Loc_Address)</p>
                     <p>Task Description: @Html.DisplayFor(modelItem => item.taskdet_desc)</p>
                     <p>Service Need:</p>

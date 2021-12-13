@@ -19,8 +19,12 @@ namespace iAssist.Models
         public string TaskDesc { get; set; }
         [Required]
         [DataType(DataType.Date)]
-        [Display(Name ="Task Schedule")]
+        [Display(Name ="Schedule Date")]
         public DateTime taskdet_sched { get; set; }
+        [Required]
+        [DataType(DataType.Date)]
+        [Display(Name = "Schedule Time")]
+        public DateTime taskdet_time { get; set; }
         public DateTime taskdet_Created_at { get; set; }
         public DateTime taskdet_Updated_at { get; set; }
         [Required]

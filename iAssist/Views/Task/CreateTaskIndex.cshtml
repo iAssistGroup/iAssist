@@ -43,71 +43,79 @@
                 <div class="card-body">
                     @Html.AntiForgeryToken()
                     <div style="overflow-x:auto;">
-                            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
-                                        <form class="well form-horizontal">
-                                            <fieldset>
-                                                @if (Model.check == 1)
-                                                {
-                                                    <div class="form-group">
-                                                        @Html.LabelFor(model => model.TaskTitle, htmlAttributes: new { @class = "control-label col-md-2" })
-                                                        <div class="col-md-8 inputGroupContainer">
-                                                            @Html.EditorFor(model => model.TaskTitle, new { htmlAttributes = new { @class = "form-control" } })
-                                                            @Html.ValidationMessageFor(model => model.TaskTitle, "", new { @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        @Html.LabelFor(model => model.TaskDesc, htmlAttributes: new { @class = "control-label col-md-2" })
-                                                        <div class="col-md-8 inputGroupContainer">
-                                                            @Html.TextAreaFor(model => model.TaskDesc, 10, 98, new { htmlAttributes = new { @class = "form-control" } })
-                                                            @Html.ValidationMessageFor(model => model.TaskDesc, "", new { @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        @Html.LabelFor(model => model.taskdet_sched, htmlAttributes: new { @class = "control-label col-md-2" })
-                                                        <div class="col-md-8 inputGroupContainer">
-                                                            @Html.TextBoxFor(model => model.taskdet_sched, new { htmlAttributes = new { @class = "form-control", @Value = Model.taskdet_sched.ToString("dd.MM.yyyy") } })
-                                                            @Html.ValidationMessageFor(model => model.taskdet_sched, "", new { @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
-                                                        <div class="col-md-8 inputGroupContainer">
-                                                            @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
-                                                            @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                    @Html.HiddenFor(model => model.Latitude, new { htmlAttributes = new { @class = "form-control" } })
-                                                    @Html.HiddenFor(model => model.JobId, new { htmlAttributes = new { @class = "form-control" } })
-                                                    @Html.HiddenFor(model => model.Longitude, new { htmlAttributes = new { @class = "form-control" } })
-                                                    <div class="form-group">
-                                                        <label class="col-md-2 control-label">
-                                                            Select Service
-                                                        </label>
-                                                            @foreach (var item in (SelectList)ViewBag.SkillsSelect)
-                                                            {<div class="col-md- inputGroupContainer">
-                                                                <input type="checkbox" name="selectedSkills" value="@item.Text"
-                                                                       class="checkbox-inline" />
-                                                                @Html.Label(item.Text, new { @class = "control-label" })</div>
-                                                            }
-                                                        
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <div class="col-md-8 inputGroupContainer">
-                                                            <input type="file" name="ImageFile" style="margin: auto; margin-top: 20px;" accept="image/png, image/gif, image/jpeg" size="23" />
-                                                        </div>
-                                                    </div>
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                        <form class="well form-horizontal">
+                            <fieldset>
+                                @if (Model.check == 1)
+                                {
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.TaskTitle, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-8 inputGroupContainer">
+                                            @Html.EditorFor(model => model.TaskTitle, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.TaskTitle, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.TaskDesc, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-8 inputGroupContainer">
+                                            @Html.TextAreaFor(model => model.TaskDesc, 10, 98, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.TaskDesc, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.taskdet_sched, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-8 inputGroupContainer">
+                                            @Html.TextBoxFor(model => model.taskdet_sched, new { htmlAttributes = new { @class = "form-control", @Value = Model.taskdet_sched.ToString("dd.MM.yyyy") } })
+                                            @Html.ValidationMessageFor(model => model.taskdet_sched, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.taskdet_time, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-8 inputGroupContainer">
+                                            @Html.TextBoxFor(model => model.taskdet_time, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.taskdet_time, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-8 inputGroupContainer">
+                                            @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    @Html.HiddenFor(model => model.Latitude, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.HiddenFor(model => model.JobId, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.HiddenFor(model => model.Longitude, new { htmlAttributes = new { @class = "form-control" } })
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">
+                                            Select Service
+                                        </label>
+                                        @foreach (var item in (SelectList)ViewBag.SkillsSelect)
+                                        {<div class="col-md- inputGroupContainer">
+                                                <input type="checkbox" name="selectedSkills" value="@item.Text"
+                                                       class="checkbox-inline" />
+                                                @Html.Label(item.Text, new { @class = "control-label" })
+                                            </div>
+                                        }
 
-                                                    <div class="col-md-10">
-                                                        <div class="form-group">
-                                                            <div class="col-md-offset-2 col-md-10 py-3">
-                                                                <input type="submit" value="Create" class="btn btn-primary" style="background-color: #e65c00; border:none; color:white;" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                }
-                                            </fieldset>
-                                        </form>
-                    </div>            
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-8 inputGroupContainer">
+                                            <input type="file" name="ImageFile" style="margin: auto; margin-top: 20px;" accept="image/png, image/gif, image/jpeg" size="23" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-10">
+                                        <div class="form-group">
+                                            <div class="col-md-offset-2 col-md-10 py-3">
+                                                <input type="submit" value="Create" class="btn btn-primary" style="background-color: #e65c00; border:none; color:white;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </fieldset>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -116,6 +124,26 @@
         @Html.ActionLink("View My Task", "ShowMyTaskPost")
     </div>
 </div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.1/jquery.timepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.1/jquery.timepicker.min.css" type="text/css" />
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        $("#taskdet_sched").datepicker({
+            format: "dd/mm/yy",
+            autoclose: true,
+            todayHighlight: true,
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            autoclose: true,
+            changeMonth: true,
+            changeYear: true,
+            minDate: -0,
+        });
+        $('#taskdet_time').timepicker();
+    });
+</script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCCnmMReV03W96lvqJVwbG7nFOTkuUDaX8"></script>
 <script type="text/javascript">
 
@@ -132,22 +160,5 @@
             $("#Latitude").val("" + place.geometry.location.lat());
         });
 
-    });
-</script>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<script>
-    $(function () {
-        $("#taskdet_sched").datepicker({
-            format: "dd/mm/yy",
-            autoclose: true,
-            todayHighlight: true,
-            showOtherMonths: true,
-            selectOtherMonths: true,
-            autoclose: true,
-            changeMonth: true,
-            changeYear: true,
-            minDate: -0,
-        });
     });
 </script>

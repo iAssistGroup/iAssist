@@ -16,7 +16,11 @@ namespace iAssist.Models
         [Required]
         public string taskdet_desc { get; set; }
         [Required]
+        [DataType(DataType.Date)]
         public DateTime taskdet_sched { get; set; }
+        [Required]
+        [DataType(DataType.Time)]
+        public DateTime taskdet_time { get; set; }
         public DateTime taskdet_Created_at { get; set; }
         public DateTime taskdet_Updated_at { get; set; }
         public string TaskImage { get; set; }

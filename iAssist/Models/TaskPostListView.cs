@@ -13,7 +13,10 @@ namespace iAssist.Models
         public int Taskbook_Status { get; set; }
         public string taskdet_name { get; set; }
         public string taskdet_desc { get; set; }
+        [DataType(DataType.Date)]
         public DateTime taskdet_sched { get; set; }
+        [DataType(DataType.Time)]
+        public DateTime taskdet_time { get; set; }
         public DateTime taskdet_Created_at { get; set; }
         public DateTime taskdet_Updated_at { get; set; }
         public string TaskImage { get; set; }
