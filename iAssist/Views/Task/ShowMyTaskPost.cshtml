@@ -93,6 +93,7 @@
                     <span class="job_post">Schedule: @Html.DisplayFor(modelItem => item.taskdet_sched) @Html.DisplayFor(modelItem => item.taskdet_time)</span>
                     <p>Address: @Html.DisplayFor(modelItem => item.Loc_Address)</p>
                     <p>Task Description: @Html.DisplayFor(modelItem => item.taskdet_desc)</p>
+                    <p>Budget/Price: @Html.DisplayFor(modelItem => item.budget)</p>
                     <p>Service Need:</p>
                     @foreach (var items in Model.TaskViewPost)
                     {

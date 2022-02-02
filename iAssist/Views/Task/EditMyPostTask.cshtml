@@ -15,90 +15,97 @@
             {
                 @Html.AntiForgeryToken()
 
-                <div class="form-horizontal">
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.JobId, htmlAttributes: new { @class = "control-label" })
-                        @Html.DropDownListFor(vm => vm.JobId, Model.JobList, htmlAttributes: new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.JobId, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.TaskTitle, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.TaskTitle, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.TaskTitle, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.TaskDesc, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-8 inputGroupContainer">
-                            @Html.TextAreaFor(model => model.TaskDesc, 10, 98, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.TaskDesc, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.taskdet_sched, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.TextBoxFor(model => model.taskdet_sched, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.taskdet_sched, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.taskdet_time, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.TextBoxFor(model => model.taskdet_time, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.taskdet_time, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-md-10">
-                            @Html.HiddenFor(model => model.Latitude, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Latitude, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-md-10">
-                            @Html.HiddenFor(model => model.Longitude, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Longitude, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">
-                            Select Service
-                        </label>
-                        <div class="col-md-10">
-                            @foreach (var item in Model.Skilltasks)
-                            {
-                                <input type="checkbox" name="selectedSkills" value="@item.Text" checked="@item.Selected"
-                                       class="checkbox-inline" />
-                                @Html.Label(item.Text, new { @class = "control-label" })
-                            }
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-10">
-                            <input type="file" name="ImageFile" style="margin: auto; margin-top: 20px;" accept="image/png, image/gif, image/jpeg" size="23" />
-                        </div>
-                    </div>
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.JobId, htmlAttributes: new { @class = "control-label" })
+                    @Html.DropDownListFor(vm => vm.JobId, Model.JobList, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.JobId, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TaskTitle, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <div class="form-group">
-                            <div class="col-md-offset-2 col-md-10 py-3">
-                                <input type="submit" value="Save" class="btn btn-default" style="background-color: #e65c00; border:none; color:white;" />
-                            </div>
+                        @Html.EditorFor(model => model.TaskTitle, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.TaskTitle, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TaskDesc, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-8 inputGroupContainer">
+                        @Html.TextAreaFor(model => model.TaskDesc, 10, 98, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.TaskDesc, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.taskdet_sched, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.taskdet_sched, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.taskdet_sched, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.taskdet_time, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.taskdet_time, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.taskdet_time, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Budget, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Budget, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Budget, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-10">
+                        @Html.HiddenFor(model => model.Latitude, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Latitude, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-10">
+                        @Html.HiddenFor(model => model.Longitude, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Longitude, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">
+                        Select Service
+                    </label>
+                    <div class="col-md-10">
+                        @foreach (var item in Model.Skilltasks)
+                        {
+                            <input type="checkbox" name="selectedSkills" value="@item.Text" checked="@item.Selected"
+                                   class="checkbox-inline" />
+                            @Html.Label(item.Text, new { @class = "control-label" })
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <input type="file" name="ImageFile" style="margin: auto; margin-top: 20px;" accept="image/png, image/gif, image/jpeg" size="23" />
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10 py-3">
+                            <input type="submit" value="Save" class="btn btn-default" style="background-color: #e65c00; border:none; color:white;" />
                         </div>
                     </div>
                 </div>
+            </div>
             }
 
             <div>

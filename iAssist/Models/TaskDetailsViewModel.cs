@@ -30,6 +30,10 @@ namespace iAssist.Models
         [Required]
         [Display(Name = "Job Category")]
         public int JobId { get; set; }
+        [Required]
+        [DataType(DataType.Currency)]
+        [Display(Name = "Price/Budget")]
+        public decimal Budget { get; set; }
         public int check { get; set; }
         public SelectList JobList { get; set; }
         public string UserId { get; set; }

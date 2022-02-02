@@ -230,9 +230,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Hubs\NotificationHub.cs" />
-    <Compile Include="Migrations\202112131232200_InitialCreate.cs" />
-    <Compile Include="Migrations\202112131232200_InitialCreate.designer.cs">
-      <DependentUpon>202112131232200_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\202112160210039_InitialCreate.cs" />
+    <Compile Include="Migrations\202112160210039_InitialCreate.designer.cs">
+      <DependentUpon>202112160210039_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -504,8 +504,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202112131232200_InitialCreate.resx">
-      <DependentUpon>202112131232200_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202112160210039_InitialCreate.resx">
+      <DependentUpon>202112160210039_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

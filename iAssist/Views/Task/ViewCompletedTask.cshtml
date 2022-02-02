@@ -81,6 +81,7 @@
                             <span class="job_post">Schedule: @Html.DisplayFor(modelItem => item.taskdet_sched)</span>
                             <p>Address: @Html.DisplayFor(modelItem => item.Loc_Address)</p>
                             <p>Task Description: @Html.DisplayFor(modelItem => item.taskdet_desc)</p>
+                            <p>Budget/Price: @Html.DisplayFor(modelItem => item.budget)</p>
                             <p>Service Need:</p>
                             @foreach (var items in Model.TaskViewPost)
                             {
@@ -107,14 +108,14 @@
                             }
                             <div style="margin-top: 20px;">
                                 @*@if (item.Taskbook_Status == 0)
-                            {
-                                <button class="btn btn-primary btn-round btn-simple">@Html.ActionLink("Post", "PostTheTask", new { id = item.Id }, new { @style = "text-decoration: none; color:white;" })</button>
-                                <button class="btn btn-primary btn-round">@Html.ActionLink("Edit", "EditMyPostTask", new { id = item.Id }, new { @style = "text-decoration: none; color:white;" })</button>
-                            }
-                            @if (item.Taskbook_Status == 1)
-                            {
-                                <button class="btn btn-primary btn-round btn-simple">@Html.ActionLink("View Bidding", "ViewBidding", "Bidded", new { id = item.Id, user = 1 }, new { @style = "text-decoration: none; color:white;" })</button>
-                            }*@
+            {
+                <button class="btn btn-primary btn-round btn-simple">@Html.ActionLink("Post", "PostTheTask", new { id = item.Id }, new { @style = "text-decoration: none; color:white;" })</button>
+                <button class="btn btn-primary btn-round">@Html.ActionLink("Edit", "EditMyPostTask", new { id = item.Id }, new { @style = "text-decoration: none; color:white;" })</button>
+            }
+            @if (item.Taskbook_Status == 1)
+            {
+                <button class="btn btn-primary btn-round btn-simple">@Html.ActionLink("View Bidding", "ViewBidding", "Bidded", new { id = item.Id, user = 1 }, new { @style = "text-decoration: none; color:white;" })</button>
+            }*@
                                 @if (item.Taskbook_Status != 4 && item.Taskbook_Status != 5 && item.Taskbook_Status != 3 && item.taskedstatus == 1)
                                 {
                                     <button class="btn btn-primary btn-round btn-simple">@Html.ActionLink("Mark as Working", "MarkasWorking", new { id = item.taskedid }, new { @style = "text-decoration: none; color:white;" })</button>

@@ -21,6 +21,7 @@ namespace iAssist.Models
         [Required]
         [DataType(DataType.Time)]
         public DateTime taskdet_time { get; set; }
+        public decimal Budget { get; set; }
         public DateTime taskdet_Created_at { get; set; }
         public DateTime taskdet_Updated_at { get; set; }
         public string TaskImage { get; set; }

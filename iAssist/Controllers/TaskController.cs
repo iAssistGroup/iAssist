@@ -107,6 +107,7 @@ namespace iAssist.Controllers
                 userposttask.taskdet_desc = model.TaskDesc;
                 userposttask.taskdet_sched = model.taskdet_sched;
                 userposttask.taskdet_time = model.taskdet_time;
+                userposttask.Budget = model.Budget;
                 model.taskdet_Created_at = DateTime.Now;
                 userposttask.taskdet_Created_at = model.taskdet_Created_at;
                 userposttask.taskdet_Updated_at = userposttask.taskdet_Created_at;
@@ -168,6 +169,7 @@ namespace iAssist.Controllers
                                         tasktype = (from td in db.Taskeds where td.TaskDetId == u.Id select td.TaskType).FirstOrDefault(),
                                         tasksched = u.taskdet_sched,
                                         tasktime = u.taskdet_time,
+                                        budget = u.Budget,
                                         taskimage = u.TaskImage,
                                         taskaddress = u.Loc_Address,
                                         jobname = job.JobName,
@@ -191,6 +193,7 @@ namespace iAssist.Controllers
                                         Loc_Address = p.taskaddress,
                                         jobid = p.jobid,
                                         Jobname = p.jobname,
+                                        budget = p.budget,
                                         UserId = p.userid,
                                         taskedWorkerfname = p.taskedWorkerfname,
                                         taskedWorkerlname = p.taskedWorkerlname,
@@ -223,6 +226,7 @@ namespace iAssist.Controllers
                                             taskimage = u.TaskImage,
                                             taskaddress = u.Loc_Address,
                                             jobname = job.JobName,
+                                            budget = u.Budget,
                                             jobid = job.Id,
                                             userid = u.UserId,
                                             specificworkerid = tu.workerId,
@@ -243,6 +247,7 @@ namespace iAssist.Controllers
                                             Loc_Address = p.taskaddress,
                                             jobid = p.jobid,
                                             Jobname = p.jobname,
+                                            budget = p.budget,
                                             UserId = p.userid,
                                             taskedWorkerfname = p.taskedWorkerfname,
                                             taskedWorkerlname = p.taskedWorkerlname,
@@ -275,6 +280,7 @@ namespace iAssist.Controllers
                                         taskimage = u.TaskImage,
                                         taskaddress = u.Loc_Address,
                                         jobname = job.JobName,
+                                        budget = u.Budget,
                                         jobid = job.Id,
                                         userid = u.UserId,
                                         specificworkerid = tu.workerId,
@@ -295,6 +301,7 @@ namespace iAssist.Controllers
                                         Loc_Address = p.taskaddress,
                                         jobid = p.jobid,
                                         Jobname = p.jobname,
+                                        budget = p.budget,
                                         UserId = p.userid,
                                         taskedWorkerfname = p.taskedWorkerfname,
                                         taskedWorkerlname = p.taskedWorkerlname,
@@ -327,6 +334,7 @@ namespace iAssist.Controllers
                                         taskimage = u.TaskImage,
                                         taskaddress = u.Loc_Address,
                                         jobname = job.JobName,
+                                        budget = u.Budget,
                                         jobid = job.Id,
                                         userid = u.UserId,
                                         specificworkerid = tu.workerId,
@@ -348,6 +356,7 @@ namespace iAssist.Controllers
                                         jobid = p.jobid,
                                         Jobname = p.jobname,
                                         UserId = p.userid,
+                                        budget = p.budget,
                                         taskedWorkerfname = p.taskedWorkerfname,
                                         taskedWorkerlname = p.taskedWorkerlname,
                                         taskedstatus = p.taskedstatus,
@@ -377,6 +386,7 @@ namespace iAssist.Controllers
                                         tasksched = u.taskdet_sched,
                                         tasktime = u.taskdet_time,
                                         taskimage = u.TaskImage,
+                                        budget = u.Budget,
                                         taskaddress = u.Loc_Address,
                                         jobname = job.JobName,
                                         jobid = job.Id,
@@ -397,6 +407,7 @@ namespace iAssist.Controllers
                                         taskdet_time = p.tasktime,
                                         TaskImage = p.taskimage,
                                         Loc_Address = p.taskaddress,
+                                        budget = p.budget,
                                         jobid = p.jobid,
                                         Jobname = p.jobname,
                                         UserId = p.userid,
@@ -431,6 +442,7 @@ namespace iAssist.Controllers
                                         taskimage = u.TaskImage,
                                         taskaddress = u.Loc_Address,
                                         jobname = job.JobName,
+                                        budget = u.Budget,
                                         jobid = job.Id,
                                         userid = u.UserId,
                                         specificworkerid = tu.workerId,
@@ -451,6 +463,7 @@ namespace iAssist.Controllers
                                         Loc_Address = p.taskaddress,
                                         jobid = p.jobid,
                                         Jobname = p.jobname,
+                                        budget = p.budget,
                                         UserId = p.userid,
                                         taskedWorkerfname = p.taskedWorkerfname,
                                         taskedWorkerlname = p.taskedWorkerlname,
@@ -527,6 +540,7 @@ namespace iAssist.Controllers
             taskpostlist.taskdet_sched = taskdetails.taskdet_sched;
             taskpostlist.JobId = taskdetails.JobId;
             taskpostlist.TaskDesc = taskdetails.taskdet_desc;
+            taskpostlist.Budget = taskdetails.Budget;
             taskpostlist.taskdet_Created_at = taskdetails.taskdet_Created_at;
             taskpostlist.UserId = taskdetails.UserId;
             taskpostlist.JobList = new SelectList(db.JobCategories, "Id", "JobName", taskpostlist.JobId);
@@ -558,6 +572,7 @@ namespace iAssist.Controllers
                 userposttask.taskdet_desc = model.TaskDesc;
                 userposttask.taskdet_sched = model.taskdet_sched;
                 userposttask.taskdet_time = model.taskdet_time;
+                userposttask.Budget = model.Budget;
                 userposttask.taskdet_Updated_at = DateTime.Now;
                 if (selectedSkills != null)
                 {
@@ -747,6 +762,7 @@ namespace iAssist.Controllers
                 userposttask.taskdet_sched = model.taskdet_sched;
                 userposttask.taskdet_time = model.taskdet_time;
                 model.taskdet_Created_at = DateTime.Now;
+                userposttask.Budget = model.Budget;
                 userposttask.taskdet_Created_at = model.taskdet_Created_at;
                 userposttask.taskdet_Updated_at = userposttask.taskdet_Created_at;
                 userposttask.UserId = user;
@@ -897,6 +913,7 @@ namespace iAssist.Controllers
                                      taskdesc = u.taskdet_desc,
                                      tasksched = u.taskdet_sched,
                                      tasktime = u.taskdet_time,
+                                     budget = u.Budget,
                                      taskimage = u.TaskImage,
                                      taskaddress = u.Loc_Address,
                                      jobname = job.JobName,
@@ -911,6 +928,7 @@ namespace iAssist.Controllers
                                      taskdet_desc = p.taskdesc,
                                      taskdet_sched = p.tasksched,
                                      taskdet_time = p.tasktime,
+                                     budget = p.budget,
                                      TaskImage = p.taskimage,
                                      Loc_Address = p.taskaddress,
                                      Jobname = p.jobname,
@@ -998,6 +1016,7 @@ namespace iAssist.Controllers
                                     taskdesc = u.taskdet_desc,
                                     tasksched = u.taskdet_sched,
                                     tasktime = u.taskdet_time,
+                                    budget = u.Budget,
                                     taskimage = u.TaskImage,
                                     taskaddress = u.Loc_Address,
                                     jobname = job.JobName,
@@ -1013,6 +1032,7 @@ namespace iAssist.Controllers
                                     taskdet_sched = p.tasksched,
                                     taskdet_time = p.tasktime,
                                     TaskImage = p.taskimage,
+                                    budget = p.budget,
                                     Loc_Address = p.taskaddress,
                                     Jobname = p.jobname,
                                     UserId = p.userid,
@@ -1096,6 +1116,7 @@ namespace iAssist.Controllers
                                         tasktime = u.taskdet_time,
                                         taskimage = u.TaskImage,
                                         taskaddress = u.Loc_Address,
+                                        budget = u.Budget,
                                         jobname = job.JobName,
                                         userid = u.UserId,
                                         workerid = tu.workerId,
@@ -1119,6 +1140,7 @@ namespace iAssist.Controllers
                                         taskedWorkerfname = p.taskedWorkerfname,
                                         taskedWorkerlname = p.taskedWorkerlname,
                                         taskedstatus = p.taskedstatus,
+                                        budget = p.budget,
                                         workerid = p.workerid,
                                         taskedid = p.taskedid,
                                         taskedTaskPayable = p.taskedTaskPayable
@@ -1313,6 +1335,7 @@ namespace iAssist.Controllers
                                     taskname = t.taskdet_name,
                                     taskdesc = t.taskdet_desc,
                                     tasksched = t.taskdet_sched,
+                                    budget = t.Budget,
                                     tasktime = t.taskdet_time,
                                     taskimage = t.TaskImage,
                                     taskaddress = t.Loc_Address,
@@ -1331,6 +1354,7 @@ namespace iAssist.Controllers
                                     taskdet_name = p.taskname,
                                     taskdet_desc = p.taskdesc,
                                     taskdet_sched = p.tasksched,
+                                    budget = p.budget,
                                     taskdet_time = p.tasktime,
                                     TaskImage = p.taskimage,
                                     Loc_Address = p.taskaddress,

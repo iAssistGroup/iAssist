@@ -19,6 +19,7 @@ namespace iAssist.Models
         public DateTime taskdet_time { get; set; }
         public DateTime taskdet_Created_at { get; set; }
         public DateTime taskdet_Updated_at { get; set; }
+        public decimal? budget { get; set; }
         public string TaskImage { get; set; }
         public string Loc_Address { get; set; }
         public DbGeography Geolocation { get; set; }
