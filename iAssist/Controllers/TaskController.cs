@@ -203,7 +203,29 @@ namespace iAssist.Controllers
                                         taskedTaskPayable = p.taskedTaskPayable,
                                         Tasktype = p.tasktype,
                                     });
-            if(!String.IsNullOrEmpty(category))
+            foreach (var item in taskpostlist)
+            {
+                if (DateTime.Compare(item.taskdet_sched, item.taskdet_time) > 0 && item.Taskbook_Status != 9)
+                {
+                    item.Taskbook_Status = 9;
+                    var task = db.TaskBook.Where(x => x.TaskDetId == item.Id).FirstOrDefault();
+                    task.Taskbook_Status = 9;
+                    db.SaveChanges();
+                    var userinfo = db.Users.Where(x => x.Id == user).FirstOrDefault();
+                    var notification = new NotificationModel
+                    {
+                        Receiver = userinfo.UserName,
+                        Title = $"The Task {item.taskdet_name} has expired",
+                        Details = $"The Task you created / Posted has expired you can create another one",
+                        DetailsURL = $"",
+                        Date = DateTime.Now,
+                        IsRead = false
+                    };
+                    db.Notifications.Add(notification);
+                    db.SaveChanges();
+                }
+            }
+            if (!String.IsNullOrEmpty(category))
             {
                 if(category == "Pending")
                 {
@@ -426,7 +448,61 @@ namespace iAssist.Controllers
                                     where u.UserId == user
                                     join
                                     tu in db.TaskBook on u.Id equals tu.TaskDetId
-                                    where tu.Taskbook_Status != 1 && tu.Taskbook_Status != 2 && tu.Taskbook_Status != 3 && tu.Taskbook_Status != 0
+                                    where tu.Taskbook_Status != 1 && tu.Taskbook_Status != 2 && tu.Taskbook_Status != 3 && tu.Taskbook_Status != 0 && tu.Taskbook_Status != 9
+                                    join
+                                    job in db.JobCategories on u.JobId equals job.Id
+                                    orderby u.taskdet_Created_at descending
+                                    select new
+                                    {
+                                        id = u.Id,
+                                        taskbookstatus = tu.Taskbook_Status,
+                                        taskname = u.taskdet_name,
+                                        taskdesc = u.taskdet_desc,
+                                        tasktime = u.taskdet_time,
+                                        tasktype = (from td in db.Taskeds where td.TaskDetId == u.Id select td.TaskType).FirstOrDefault(),
+                                        tasksched = u.taskdet_sched,
+                                        taskimage = u.TaskImage,
+                                        taskaddress = u.Loc_Address,
+                                        jobname = job.JobName,
+                                        budget = u.Budget,
+                                        jobid = job.Id,
+                                        userid = u.UserId,
+                                        specificworkerid = tu.workerId,
+                                        workerid = (from td in db.Taskeds where td.TaskDetId == u.Id select td.WorkerId).FirstOrDefault(),
+                                        taskedstatus = (from td in db.Taskeds where td.TaskDetId == u.Id select td.TaskStatus).FirstOrDefault(),
+                                        taskedTaskPayable = (from tp in db.Taskeds where tp.TaskDetId == u.Id select tp.TaskPayable).FirstOrDefault(),
+                                        taskedWorkerfname = (from tp in db.Taskeds where tp.TaskDetId == u.Id join uw in db.RegistWork on tp.WorkerId equals uw.Id join us in db.UsersIdentities on uw.Userid equals us.Userid select us.Firstname).FirstOrDefault(),
+                                        taskedWorkerlname = (from tp in db.Taskeds where tp.TaskDetId == u.Id join uw in db.RegistWork on tp.WorkerId equals uw.Id join us in db.UsersIdentities on uw.Userid equals us.Userid select us.Lastname).FirstOrDefault(),
+                                    }).ToList().Select(p => new TaskPostListView
+                                    {
+                                        Id = p.id,
+                                        Taskbook_Status = p.taskbookstatus,
+                                        taskdet_name = p.taskname,
+                                        taskdet_desc = p.taskdesc,
+                                        taskdet_sched = p.tasksched,
+                                        taskdet_time = p.tasktime,
+                                        TaskImage = p.taskimage,
+                                        Loc_Address = p.taskaddress,
+                                        jobid = p.jobid,
+                                        Jobname = p.jobname,
+                                        budget = p.budget,
+                                        UserId = p.userid,
+                                        taskedWorkerfname = p.taskedWorkerfname,
+                                        taskedWorkerlname = p.taskedWorkerlname,
+                                        taskedstatus = p.taskedstatus,
+                                        specificworkerid = p.specificworkerid,
+                                        workerid = p.workerid,
+                                        taskedTaskPayable = p.taskedTaskPayable,
+                                        Tasktype = p.tasktype,
+                                    });
+                }
+                if (category == "Expired")
+                {
+                    taskpostlist = (from u in db.TaskDetails
+                                    where u.UserId == user
+                                    join
+                                    tu in db.TaskBook on u.Id equals tu.TaskDetId
+                                    where tu.Taskbook_Status == 9
                                     join
                                     job in db.JobCategories on u.JobId equals job.Id
                                     orderby u.taskdet_Created_at descending
@@ -500,6 +576,10 @@ namespace iAssist.Controllers
             cat.Id = 4;
             categor.Add(cat);
             ViewBag.Category = new SelectList(categor.Select(p=>p.CategoryName).ToList().Distinct());
+            cat.CategoryName = "Expired";
+            cat.Id = 9;
+            categor.Add(cat);
+            ViewBag.Category = new SelectList(categor.Select(p => p.CategoryName).ToList().Distinct());
             return View(taskpostview);
         }
         //Posting the task
@@ -1145,6 +1225,28 @@ namespace iAssist.Controllers
                                         taskedid = p.taskedid,
                                         taskedTaskPayable = p.taskedTaskPayable
                                     });
+            foreach (var item in taskpostlist)
+            {
+                if (DateTime.Compare(item.taskdet_sched, item.taskdet_time) > 0 && item.Taskbook_Status != 9)
+                {
+                    item.taskedstatus = 6;
+                    var task = db.Taskeds.Where(x => x.TaskDetId == item.Id).FirstOrDefault();
+                    task.TaskStatus = 6;
+                    db.SaveChanges();
+                    var userinfo = db.Users.Where(x => x.Id == user).FirstOrDefault();
+                    var notification = new NotificationModel
+                    {
+                        Receiver = userinfo.UserName,
+                        Title = $"The Task {item.taskdet_name} has expired",
+                        Details = $"The Task you have contracted has expired",
+                        DetailsURL = $"",
+                        Date = DateTime.Now,
+                        IsRead = false
+                    };
+                    db.Notifications.Add(notification);
+                    db.SaveChanges();
+                }
+            }
             if (category == "Posted Tasks")
             {
                 var taskpostviews = new taskViewPost();
