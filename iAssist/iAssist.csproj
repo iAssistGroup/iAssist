@@ -366,6 +366,7 @@
     <Content Include="Content\bootstrap-grid.rtl.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
+    <Content Include="image\terms-and-conditions.pdf" />
     <None Include="Properties\PublishProfiles\iAssist20211120193630 - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\iAssist20211120205938 - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\iAssistph - Web Deploy.pubxml" />
