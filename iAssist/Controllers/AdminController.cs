@@ -293,7 +293,7 @@ namespace iAssist.Controllers
                 Receiver = user.UserName,
                 Title = $"Admin Approve your application",
                 Details = $"You are now a worker in iAssist but First you need to logout to take changes",
-                DetailsURL = "",
+                DetailsURL = "./images/terms-and-conditions.pdf",
                 Date = DateTime.Now,
                 IsRead = false
             };
