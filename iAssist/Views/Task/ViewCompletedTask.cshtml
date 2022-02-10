@@ -99,13 +99,18 @@
                             {
                                 <p>Worker Name: @Html.DisplayFor(modelItem => item.taskedWorkerfname) @Html.DisplayFor(modelItem => item.taskedWorkerlname) </p>
                             }
-                            <p>Image: </p>
-                            @if (item.TaskImage != null)
-                            {
-                                <a href="@Url.Content("~/image/"+item.TaskImage)">
-                                    <img class="card-img-top" src="@Url.Content("~/image/"+item.TaskImage)" alt="Card image cap" />
-                                </a>
-                            }
+                                <h6>Files</h6>
+                                @if (item.taskfiles.Any() == true)
+                                {
+                                    foreach (var tf in item.taskfiles)
+                                    {
+                                        <a href="@Url.Content("~/image/UploadedFiles/"+tf.TaskFileName)">@tf.TaskFileName</a><br />
+                                    }
+                                }
+                                else
+                                {
+                                    <p>No files Uploaded</p>
+                                }
                             <div style="margin-top: 20px;">
                                 @*@if (item.Taskbook_Status == 0)
             {

@@ -44,7 +44,7 @@ namespace iAssist.Models
         public string Latitude { get; set; }
         [Required]
         public string Longitude { get; set; }
-        public HttpPostedFileBase ImageFile { get; set; }
+        public HttpPostedFileBase[] ImageFile { get; set; }
         public int? workerid { get; set; }
         public IEnumerable<SelectListItem> Skilltasks { get; set; }
 

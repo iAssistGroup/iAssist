@@ -230,9 +230,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Hubs\NotificationHub.cs" />
-    <Compile Include="Migrations\202112160210039_InitialCreate.cs" />
-    <Compile Include="Migrations\202112160210039_InitialCreate.designer.cs">
-      <DependentUpon>202112160210039_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\202202101212190_InitialCreate.cs" />
+    <Compile Include="Migrations\202202101212190_InitialCreate.designer.cs">
+      <DependentUpon>202202101212190_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -240,6 +240,7 @@
     <Compile Include="Models\AdminViewModel.cs" />
     <Compile Include="Models\Bid.cs" />
     <Compile Include="Models\BidViewModel.cs" />
+    <Compile Include="Models\TaskFiles.cs" />
     <Compile Include="Models\Complaint.cs" />
     <Compile Include="Models\complaintViewModel.cs" />
     <Compile Include="Models\ComplainViews.cs" />
@@ -500,13 +501,14 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="image\RegisterSkilledFile\Thumbnails\" />
+    <Folder Include="image\UploadedFiles\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202112160210039_InitialCreate.resx">
-      <DependentUpon>202112160210039_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202202101212190_InitialCreate.resx">
+      <DependentUpon>202202101212190_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

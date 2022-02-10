@@ -37,6 +37,7 @@ namespace iAssist.Models
         public int? taskedid { get; set; }
         public string Tasktype { get; set; }
         public int? specificworkerid { get; set; }
+        public IEnumerable<TaskFiles> taskfiles { get; set; }
     }
     public class taskViewPost
     {

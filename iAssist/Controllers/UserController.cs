@@ -760,7 +760,7 @@ namespace iAssist.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("FileName", "The file must be gif, png, jpeg or jpg and less than 2MB in size");
+                    ModelState.AddModelError("FileName", "The file must be pdf, gif, png, jpeg or jpg and less than 2MB in size");
                 }
             }
             else

@@ -89,16 +89,6 @@ namespace iAssist.Controllers
                 var taskbook = new Task_Book();
                 var user = User.Identity.GetUserId();
                 var userposttask = new TaskDetails();
-                if (model.ImageFile != null && ValidateFile(model.ImageFile) == true)
-                {
-                    string filename = Path.GetFileNameWithoutExtension(model.ImageFile.FileName);
-                    string extension = Path.GetExtension(model.ImageFile.FileName);
-                    filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
-                    model.TaskImage = "" + filename;
-                    filename = Path.Combine(Server.MapPath("~/image/"), filename);
-                    userposttask.TaskImage = model.TaskImage;
-                    model.ImageFile.SaveAs(filename);
-                }
                 userposttask.JobId = model.JobId;
                 model.JobList = new SelectList(db.JobCategories, "Id", "JobName", userposttask.JobId);
                 userposttask.Loc_Address = model.Address;
@@ -114,6 +104,35 @@ namespace iAssist.Controllers
                 userposttask.UserId = user;
                 db.TaskDetails.Add(userposttask);
                 db.SaveChanges();
+                //I will change this part for image saving.. I will add some models for it
+                foreach (HttpPostedFileBase file in model.ImageFile)
+                {
+                    //Checking file is available to save.  
+                    if (file != null)
+                    {
+                        var InputFileName = Path.GetFileName(file.FileName);
+                        var ServerSavePath = Path.Combine(Server.MapPath("~/image/UploadedFiles/") + InputFileName);
+                        //Save file to server folder  
+                        file.SaveAs(ServerSavePath);
+                        var tfile = new TaskFiles();
+                        tfile.TaskFileName = file.FileName;
+                        tfile.TaskId = userposttask.Id;
+                        db.Taskfileses.Add(tfile);
+                        db.SaveChanges();
+                    }
+
+                }
+                //if (model.ImageFile != null && ValidateFile(model.ImageFile) == true)
+                //{
+                //    string filename = Path.GetFileNameWithoutExtension(model.ImageFile.FileName);
+                //    string extension = Path.GetExtension(model.ImageFile.FileName);
+                //    filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
+                //    model.TaskImage = "" + filename;
+                //    filename = Path.Combine(Server.MapPath("~/image/"), filename);
+                //    userposttask.TaskImage = model.TaskImage;
+                //    model.ImageFile.SaveAs(filename);
+                //}
+                //End of the edit
                 var taskdetid = db.TaskDetails.OrderByDescending(p => p.taskdet_Created_at).First();
                 var check = db.TaskBook.Find(taskdetid.Id);
                 if (check == null)
@@ -202,6 +221,7 @@ namespace iAssist.Controllers
                                         workerid = p.workerid,
                                         taskedTaskPayable = p.taskedTaskPayable,
                                         Tasktype = p.tasktype,
+                                        taskfiles = db.Taskfileses.Where(x=>x.TaskId == p.id).ToList(),
                                     });
             foreach (var item in taskpostlist)
             {
@@ -278,6 +298,7 @@ namespace iAssist.Controllers
                                             workerid = p.workerid,
                                             taskedTaskPayable = p.taskedTaskPayable,
                                             Tasktype = p.tasktype,
+                                            taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                         });
                 }
                 if(category == "Posted")
@@ -332,6 +353,7 @@ namespace iAssist.Controllers
                                         workerid = p.workerid,
                                         taskedTaskPayable = p.taskedTaskPayable,
                                         Tasktype = p.tasktype,
+                                        taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                     });
                 }
                 if(category == "Ongoing")
@@ -386,6 +408,7 @@ namespace iAssist.Controllers
                                         workerid = p.workerid,
                                         taskedTaskPayable = p.taskedTaskPayable,
                                         Tasktype = p.tasktype,
+                                        taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                     });
                 }
                 if(category == "Completed")
@@ -440,6 +463,7 @@ namespace iAssist.Controllers
                                         workerid = p.workerid,
                                         taskedTaskPayable = p.taskedTaskPayable,
                                         Tasktype = p.tasktype,
+                                        taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                     });
                 }
                 if(category == "Cancelled")
@@ -494,6 +518,7 @@ namespace iAssist.Controllers
                                         workerid = p.workerid,
                                         taskedTaskPayable = p.taskedTaskPayable,
                                         Tasktype = p.tasktype,
+                                        taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                     });
                 }
                 if (category == "Expired")
@@ -548,6 +573,7 @@ namespace iAssist.Controllers
                                         workerid = p.workerid,
                                         taskedTaskPayable = p.taskedTaskPayable,
                                         Tasktype = p.tasktype,
+                                        taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                     });
                 }
             }
@@ -634,15 +660,28 @@ namespace iAssist.Controllers
             {
                 var taskbook = new Task_Book();
                 var userposttask = db.TaskDetails.Where(x=>x.Id == model.Id).FirstOrDefault();
-                if (model.ImageFile != null && ValidateFile(model.ImageFile) == true)
+                if(model.ImageFile != null)
                 {
-                    string filename = Path.GetFileNameWithoutExtension(model.ImageFile.FileName);
-                    string extension = Path.GetExtension(model.ImageFile.FileName);
-                    filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
-                    model.TaskImage = "" + filename;
-                    filename = Path.Combine(Server.MapPath("~/image/"), filename);
-                    userposttask.TaskImage = model.TaskImage;
-                    model.ImageFile.SaveAs(filename);
+                    var tf = db.Taskfileses.Where(x => x.TaskId == userposttask.Id).ToList();
+                    db.Taskfileses.RemoveRange(tf);
+                    db.SaveChanges();
+                    foreach (HttpPostedFileBase file in model.ImageFile)
+                    {
+                        //Checking file is available to save.  
+                        if (file != null)
+                        {
+                            var InputFileName = Path.GetFileName(file.FileName);
+                            var ServerSavePath = Path.Combine(Server.MapPath("~/image/UploadedFiles/") + InputFileName);
+                            //Save file to server folder  
+                            file.SaveAs(ServerSavePath);
+                            var tfile = new TaskFiles();
+                            tfile.TaskFileName = file.FileName;
+                            tfile.TaskId = userposttask.Id;
+                            db.Taskfileses.Add(tfile);
+                            db.SaveChanges();
+                        }
+
+                    }
                 }
                 userposttask.JobId = model.JobId;
                 model.JobList = new SelectList(db.JobCategories, "Id", "JobName", userposttask.JobId);
@@ -823,15 +862,22 @@ namespace iAssist.Controllers
                 var user = User.Identity.GetUserId();
                 var username = db.Users.Where(x => x.Id == user).FirstOrDefault();
                 var userposttask = new TaskDetails();
-                if (model.ImageFile != null && ValidateFile(model.ImageFile) == true)
+                foreach (HttpPostedFileBase file in model.ImageFile)
                 {
-                    string filename = Path.GetFileNameWithoutExtension(model.ImageFile.FileName);
-                    string extension = Path.GetExtension(model.ImageFile.FileName);
-                    filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
-                    model.TaskImage = "" + filename;
-                    filename = Path.Combine(Server.MapPath("~/image/"), filename);
-                    userposttask.TaskImage = model.TaskImage;
-                    model.ImageFile.SaveAs(filename);
+                    //Checking file is available to save.  
+                    if (file != null)
+                    {
+                        var InputFileName = Path.GetFileName(file.FileName);
+                        var ServerSavePath = Path.Combine(Server.MapPath("~/image/UploadedFiles/") + InputFileName);
+                        //Save file to server folder  
+                        file.SaveAs(ServerSavePath);
+                        var tfile = new TaskFiles();
+                        tfile.TaskFileName = file.FileName;
+                        tfile.TaskId = userposttask.Id;
+                        db.Taskfileses.Add(tfile);
+                        db.SaveChanges();
+                    }
+
                 }
                 userposttask.JobId = model.JobId;
                 model.JobList = new SelectList(db.JobCategories, "Id", "JobName", userposttask.JobId);
@@ -972,6 +1018,7 @@ namespace iAssist.Controllers
                                      UserId = p.userid,
                                      Username = p.username,
                                      workerid = p.workerid,
+                                     taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                  });
             var taskpostlist2 = (from u in db.TaskDetails
                                  where u.UserId != user
@@ -1015,6 +1062,7 @@ namespace iAssist.Controllers
                                      UserId = p.userid,
                                      Username = p.username,
                                      workerid = p.workerid,
+                                     taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                  });
             if(category == "Posted Tasks")
             {
@@ -1118,6 +1166,7 @@ namespace iAssist.Controllers
                                     UserId = p.userid,
                                     Username = p.username,
                                     workerid = p.workerid,
+                                    taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                 });
             
             if (category == "Posted Tasks")
@@ -1223,7 +1272,8 @@ namespace iAssist.Controllers
                                         budget = p.budget,
                                         workerid = p.workerid,
                                         taskedid = p.taskedid,
-                                        taskedTaskPayable = p.taskedTaskPayable
+                                        taskedTaskPayable = p.taskedTaskPayable,
+                                        taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                     });
             foreach (var item in taskpostlist)
             {
@@ -1467,7 +1517,8 @@ namespace iAssist.Controllers
                                     taskedstatus = p.taskedstatus,
                                     workerid = p.workerid,
                                     taskedid = p.taskedid,
-                                    taskedTaskPayable = p.taskedTaskPayable
+                                    taskedTaskPayable = p.taskedTaskPayable,
+                                    taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                 });
             if (category == "Posted Tasks")
             {

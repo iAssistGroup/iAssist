@@ -57,5 +57,6 @@ namespace iAssist.Models
         public DbSet<SkillServiceTask> SkillServiceTasks { get; set; }
         public DbSet<TransactionHistory> TransactionHistories { get; set; }
         public DbSet<WithDrawRequest> Withdraw { get; set; }
+        public DbSet<TaskFiles> Taskfileses { get; set; }
     }
 }
