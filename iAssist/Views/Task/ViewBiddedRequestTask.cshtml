@@ -31,7 +31,7 @@
                             {
                                 foreach (var tf in item.taskfiles)
                                 {
-                                    <a href="@Url.Content("~/image/UploadedFiles/"+tf.TaskFileName)">@tf.TaskFileName</a><br />
+                                    <a href="@Url.Content("~/image/UploadedFiles/"+tf.TaskFileName)" target="_blank">@tf.TaskFileName</a><br />
                                 }
                             }
                             else
@@ -77,9 +77,10 @@
                                 <img class="card-img-top" src="@Url.Content("~/image/"+item.TaskImage)" alt="Card image cap" />
                             </a>
                         }
-                        <div style="margin-top: 20px;">
-                            @Html.ActionLink("View my Bid details", "ViewBidding", "Bidded", new { id = item.Id, user = 2 }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })
-                        </div>
+                    <div style="margin-top: 20px;">
+                        @Html.ActionLink("Add Another Bid", "CreateBidToTheTask", "Bidded", new { id = item.Id }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })
+                        @Html.ActionLink("View my Bid details", "ViewBidding", "Bidded", new { id = item.Id, user = 2 }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })
+                    </div>
                     </div>
                     </div>
                 </div>

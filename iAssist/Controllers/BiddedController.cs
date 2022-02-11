@@ -87,6 +87,7 @@ namespace iAssist.Controllers
                 bid.Bid_Amount = model.Bid_Amount;
                 bid.Bid_Description = model.Bid_Description;
                 bid.TaskDetId = model.TaskdetId;
+                bid.BidTimeExp = model.BidTimeExp;
                 bid.Created_at = DateTime.Now;
                 bid.Updated_at = bid.Created_at;
                 bid.WorkerId = workerid.Id;
@@ -121,7 +122,7 @@ namespace iAssist.Controllers
                     return View("Error");
                 }
                 var bi = (from b in db.Bids
-                          where b.TaskDetId == id && b.bid_status != 1
+                          where b.TaskDetId == id && b.bid_status != 1 && b.bid_status != -1 && b.bid_status != -1
                           join taskdet in db.TaskDetails on b.TaskDetId equals taskdet.Id
                           join task in db.TaskBook on taskdet.Id equals task.TaskDetId
                           join worker in db.RegistWork on b.WorkerId equals worker.Id
@@ -130,6 +131,7 @@ namespace iAssist.Controllers
                           select new
                           {
                               bidId = b.Id,
+                              bidstat = b.bid_status,
                               amount = b.Bid_Amount,
                               biddesc = b.Bid_Description,
                               tasktitle = taskdet.taskdet_name,
@@ -141,7 +143,28 @@ namespace iAssist.Controllers
                               bookstatus = b.bid_status,
                               username = username.UserName,
                               taskdetid = b.TaskDetId,
+                              bidtimeexp = b.BidTimeExp,
                           }).ToList();
+                foreach(var exbid in bi)
+                {
+                    if(exbid.bidstat != -1 && DateTime.Compare(DateTime.Now, exbid.bidtimeexp)>0)
+                    {
+                        var ebid = db.Bids.Where(x=>x.Id == exbid.bidId).FirstOrDefault();
+                        ebid.bid_status = -1;
+                        db.SaveChanges();
+                        var notification = new NotificationModel
+                        {
+                            Receiver = exbid.username,
+                            Title = $"The bid {exbid.biddesc} has expired",
+                            Details = $"The bid has already expired.",
+                            DetailsURL = $"",
+                            Date = DateTime.Now,
+                            IsRead = false
+                        };
+                        db.Notifications.Add(notification);
+                        db.SaveChanges();
+                    }
+                }
                 var averate = 0;
                 ViewBag.Id = id;
                 ViewBag.user = user;
@@ -170,6 +193,7 @@ namespace iAssist.Controllers
                     bidds.ProfilePicture = b.workerpic;
                     bidds.workerid = b.taskworkerid;
                     bidds.bookstatus = b.bookstatus;
+                    bidds.BidTimeExp = b.bidtimeexp;
                     bidds.Username = b.username;
                     bidds.TaskdetId = b.taskdetid;
                     bidds.Rate = averate;
@@ -257,7 +281,7 @@ namespace iAssist.Controllers
                     return View("Error");
                 }
                 var bi = (from b in db.Bids
-                          where b.TaskDetId == id && b.WorkerId == workerids.Id && b.bid_status != 1
+                          where b.TaskDetId == id && b.WorkerId == workerids.Id && b.bid_status != 1 && b.bid_status != -1
                           join taskdet in db.TaskDetails on b.TaskDetId equals taskdet.Id
                           join task in db.TaskBook on taskdet.Id equals task.TaskDetId
                           join worker in db.RegistWork on b.WorkerId equals worker.Id
@@ -267,6 +291,7 @@ namespace iAssist.Controllers
                           {
                               bidId = b.Id,
                               amount = b.Bid_Amount,
+                              bidstat = b.bid_status,
                               biddesc = b.Bid_Description,
                               tasktitle = taskdet.taskdet_name,
                               workerid = worker.Id,
@@ -277,7 +302,28 @@ namespace iAssist.Controllers
                               bookstatus = b.bid_status,
                               username = username.UserName,
                               taskdetid = b.TaskDetId,
+                              bidtimeexp = b.BidTimeExp,
                           }).ToList();
+                foreach (var exbid in bi)
+                {
+                    if (exbid.bidstat != -1 && DateTime.Compare(DateTime.Now, exbid.bidtimeexp) > 0)
+                    {
+                        var ebid = db.Bids.Where(x => x.Id == exbid.bidId).FirstOrDefault();
+                        ebid.bid_status = -1;
+                        db.SaveChanges();
+                        var notification = new NotificationModel
+                        {
+                            Receiver = exbid.username,
+                            Title = $"The bid {exbid.biddesc} has expired",
+                            Details = $"The bid has already expired.",
+                            DetailsURL = $"",
+                            Date = DateTime.Now,
+                            IsRead = false
+                        };
+                        db.Notifications.Add(notification);
+                        db.SaveChanges();
+                    }
+                }
                 var averate = 0;
                 ViewBag.Id = id;
                 ViewBag.user = user;
@@ -307,6 +353,7 @@ namespace iAssist.Controllers
                     bidds.workerid = b.taskworkerid;
                     bidds.bookstatus = b.bookstatus;
                     bidds.Username = b.username;
+                    bidds.BidTimeExp = b.bidtimeexp;
                     bidds.TaskdetId = b.taskdetid;
                     bidds.Rate = averate;
                     bidds.user = user;
@@ -323,6 +370,7 @@ namespace iAssist.Controllers
             ViewBag.bidid = id;
             bidmodel.Bid_Amount = bid.Bid_Amount;
             bidmodel.Bid_Description = bid.Bid_Description;
+            bidmodel.BidTimeExp = bid.BidTimeExp;
             return View(bidmodel);
             
         }
@@ -341,6 +389,7 @@ namespace iAssist.Controllers
                 var bidmodel = db.Bids.Where(x => x.Id == model.Bidid).FirstOrDefault();
                 bidmodel.Bid_Amount = model.Bid_Amount;
                 bidmodel.Bid_Description = model.Bid_Description;
+                bidmodel.BidTimeExp = model.BidTimeExp;
                 bidmodel.Updated_at = DateTime.Now;
                 db.SaveChanges();
                 return RedirectToAction("ViewBiddedRequestTask", "Task");

@@ -15,6 +15,7 @@ namespace iAssist.Models
         [Required]
         [StringLength(4096, MinimumLength = 30, ErrorMessage = "{0} length must be in the range 30..4096")]
         public string Bid_Description { get; set; }
+        public DateTime BidTimeExp { get; set; }
         public int TaskdetId { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }

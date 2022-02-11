@@ -10,6 +10,7 @@ namespace iAssist.Models
         public int Id { get; set; }
         public decimal Bid_Amount { get; set; }
         public string Bid_Description { get; set; }
+        public DateTime BidTimeExp { get; set; }
         public DateTime Created_at { get; set; }
         public DateTime Updated_at { get; set; }
         public int TaskDetId { get; set; }

@@ -225,24 +225,41 @@ namespace iAssist.Controllers
                                     });
             foreach (var item in taskpostlist)
             {
-                if (DateTime.Compare(item.taskdet_sched, item.taskdet_time) > 0 && item.Taskbook_Status != 9)
+                if (DateTime.Compare(DateTime.Today.Date, item.taskdet_sched) > 0 && item.Taskbook_Status == 0 && item.Taskbook_Status == 1)
                 {
-                    item.Taskbook_Status = 9;
-                    var task = db.TaskBook.Where(x => x.TaskDetId == item.Id).FirstOrDefault();
-                    task.Taskbook_Status = 9;
-                    db.SaveChanges();
-                    var userinfo = db.Users.Where(x => x.Id == user).FirstOrDefault();
-                    var notification = new NotificationModel
+                    if(DateTime.Compare(DateTime.Now, item.taskdet_time) > 0)
                     {
-                        Receiver = userinfo.UserName,
-                        Title = $"The Task {item.taskdet_name} has expired",
-                        Details = $"The Task you created / Posted has expired you can create another one",
-                        DetailsURL = $"",
-                        Date = DateTime.Now,
-                        IsRead = false
-                    };
-                    db.Notifications.Add(notification);
-                    db.SaveChanges();
+                        item.Taskbook_Status = 9;
+                        var task = db.TaskBook.Where(x => x.TaskDetId == item.Id).FirstOrDefault();
+                        task.Taskbook_Status = 9;
+                        db.SaveChanges();
+                        var userinfo = db.Users.Where(x => x.Id == user).FirstOrDefault();
+                        var notification = new NotificationModel
+                        {
+                            Receiver = userinfo.UserName,
+                            Title = $"The Task {item.taskdet_name} has expired",
+                            Details = $"The Task you created / Posted has expired you can create another one",
+                            DetailsURL = $"",
+                            Date = DateTime.Now,
+                            IsRead = false
+                        };
+                        db.Notifications.Add(notification);
+                        db.SaveChanges();
+                        if(item.taskedstatus == 4)
+                        {
+                            var notificationss = new NotificationModel
+                            {
+                                Receiver = userinfo.UserName,
+                                Title = $"Worker mark your task as Done",
+                                Details = $"Please don`t forget to mark the task as Completed so you can pay the worker",
+                                DetailsURL = $"/Task/ShowMyTaskPost",
+                                Date = DateTime.Now,
+                                IsRead = false
+                            };
+                            db.Notifications.Add(notificationss);
+                            db.SaveChanges();
+                        }
+                    }
                 }
             }
             if (!String.IsNullOrEmpty(category))
@@ -1028,7 +1045,7 @@ namespace iAssist.Controllers
                                  where tu.Taskbook_Status == 1
                                  join
                                  bu in db.Bids on u.Id equals bu.TaskDetId
-                                 where bu.WorkerId == work.Id && bu.bid_status != 1 && bu.bid_status != 2
+                                 where bu.WorkerId == work.Id && bu.bid_status != 1 && bu.bid_status != 2 && bu.bid_status != -1
                                  join
                                 job in db.JobCategories on u.JobId equals job.Id
                                  orderby u.Geolocation.Distance(currentlocation)
@@ -1132,7 +1149,7 @@ namespace iAssist.Controllers
                                 where tu.Taskbook_Status == 1
                                 join
                                 bu in db.Bids on u.Id equals bu.TaskDetId
-                                where bu.WorkerId == work.Id && bu.bid_status != 1 && bu.bid_status != 2
+                                where bu.WorkerId == work.Id && bu.bid_status != 1 && bu.bid_status != 2 && bu.bid_status != -1
                                 join
                                 job in db.JobCategories on u.JobId equals job.Id
                                 orderby bu.Created_at descending
@@ -1151,7 +1168,7 @@ namespace iAssist.Controllers
                                     userid = u.UserId,
                                     username = d.UserName,
                                     workerid = tu.workerId
-                                }).ToList().Select(p => new TaskPostListView
+                                }).ToList().Distinct().Select(p => new TaskPostListView
                                 {
                                     Id = p.id,
                                     Taskbook_Status = p.taskbookstatus,
@@ -1224,79 +1241,58 @@ namespace iAssist.Controllers
             var user = User.Identity.GetUserId();
             var work = db.RegistWork.Where(x => x.Userid == user).FirstOrDefault();
             var worker = db.Locations.Where(x => x.UserId == user).FirstOrDefault();
-                var taskpostlist = (from u in db.TaskDetails
-                                    where u.UserId != user && u.JobId == work.JobId
-                                    join d in db.Users on u.UserId equals d.Id
-                                    join
-                                    tu in db.TaskBook on u.Id equals tu.TaskDetId
-                                    where tu.Taskbook_Status != 1 && tu.Taskbook_Status != 0 && tu.Taskbook_Status != 3
-                                    join
-                                    au in db.Taskeds on u.Id equals au.TaskDetId where au.WorkerId == work.Id
-                                    join
-                                    job in db.JobCategories on u.JobId equals job.Id
-                                    orderby u.taskdet_Created_at descending
-                                    select new
-                                    {
-                                        id = u.Id,
-                                        taskbookstatus = tu.Taskbook_Status,
-                                        taskname = u.taskdet_name,
-                                        taskdesc = u.taskdet_desc,
-                                        tasksched = u.taskdet_sched,
-                                        tasktime = u.taskdet_time,
-                                        taskimage = u.TaskImage,
-                                        taskaddress = u.Loc_Address,
-                                        budget = u.Budget,
-                                        jobname = job.JobName,
-                                        userid = u.UserId,
-                                        workerid = tu.workerId,
-                                        taskedid = (from td in db.Taskeds where td.TaskDetId == u.Id select td.Id).FirstOrDefault(),
-                                        taskedstatus = (from td in db.Taskeds where td.TaskDetId == u.Id select td.TaskStatus).FirstOrDefault(),
-                                        taskedTaskPayable = (from tp in db.Taskeds where tp.TaskDetId == u.Id select tp.TaskPayable).FirstOrDefault(),
-                                        taskedWorkerfname = (from tp in db.Taskeds where tp.TaskDetId == u.Id join uw in db.RegistWork on tp.WorkerId equals uw.Id join us in db.UsersIdentities on uw.Userid equals us.Userid select us.Firstname).FirstOrDefault(),
-                                        taskedWorkerlname = (from tp in db.Taskeds where tp.TaskDetId == u.Id join uw in db.RegistWork on tp.WorkerId equals uw.Id join us in db.UsersIdentities on uw.Userid equals us.Userid select us.Lastname).FirstOrDefault(),
-                                    }).ToList().Select(p => new TaskPostListView
-                                    {
-                                        Id = p.id,
-                                        Taskbook_Status = p.taskbookstatus,
-                                        taskdet_name = p.taskname,
-                                        taskdet_desc = p.taskdesc,
-                                        taskdet_sched = p.tasksched,
-                                        taskdet_time = p.tasktime,
-                                        TaskImage = p.taskimage,
-                                        Loc_Address = p.taskaddress,
-                                        Jobname = p.jobname,
-                                        UserId = p.userid,
-                                        taskedWorkerfname = p.taskedWorkerfname,
-                                        taskedWorkerlname = p.taskedWorkerlname,
-                                        taskedstatus = p.taskedstatus,
-                                        budget = p.budget,
-                                        workerid = p.workerid,
-                                        taskedid = p.taskedid,
-                                        taskedTaskPayable = p.taskedTaskPayable,
-                                        taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
-                                    });
-            foreach (var item in taskpostlist)
-            {
-                if (DateTime.Compare(item.taskdet_sched, item.taskdet_time) > 0 && item.Taskbook_Status != 9)
-                {
-                    item.taskedstatus = 6;
-                    var task = db.Taskeds.Where(x => x.TaskDetId == item.Id).FirstOrDefault();
-                    task.TaskStatus = 6;
-                    db.SaveChanges();
-                    var userinfo = db.Users.Where(x => x.Id == user).FirstOrDefault();
-                    var notification = new NotificationModel
-                    {
-                        Receiver = userinfo.UserName,
-                        Title = $"The Task {item.taskdet_name} has expired",
-                        Details = $"The Task you have contracted has expired",
-                        DetailsURL = $"",
-                        Date = DateTime.Now,
-                        IsRead = false
-                    };
-                    db.Notifications.Add(notification);
-                    db.SaveChanges();
-                }
-            }
+            var taskpostlist = (from u in db.TaskDetails
+                                where u.UserId != user && u.JobId == work.JobId
+                                join d in db.Users on u.UserId equals d.Id
+                                join
+                                tu in db.TaskBook on u.Id equals tu.TaskDetId
+                                where tu.Taskbook_Status != 1 && tu.Taskbook_Status != 0 && tu.Taskbook_Status != 3
+                                join
+                                au in db.Taskeds on u.Id equals au.TaskDetId
+                                where au.WorkerId == work.Id
+                                join
+                                job in db.JobCategories on u.JobId equals job.Id
+                                orderby u.taskdet_Created_at descending
+                                select new
+                                {
+                                    id = u.Id,
+                                    taskbookstatus = tu.Taskbook_Status,
+                                    taskname = u.taskdet_name,
+                                    taskdesc = u.taskdet_desc,
+                                    tasksched = u.taskdet_sched,
+                                    tasktime = u.taskdet_time,
+                                    taskimage = u.TaskImage,
+                                    taskaddress = u.Loc_Address,
+                                    budget = u.Budget,
+                                    jobname = job.JobName,
+                                    userid = u.UserId,
+                                    workerid = tu.workerId,
+                                    taskedid = (from td in db.Taskeds where td.TaskDetId == u.Id select td.Id).FirstOrDefault(),
+                                    taskedstatus = (from td in db.Taskeds where td.TaskDetId == u.Id select td.TaskStatus).FirstOrDefault(),
+                                    taskedTaskPayable = (from tp in db.Taskeds where tp.TaskDetId == u.Id select tp.TaskPayable).FirstOrDefault(),
+                                    taskedWorkerfname = (from tp in db.Taskeds where tp.TaskDetId == u.Id join uw in db.RegistWork on tp.WorkerId equals uw.Id join us in db.UsersIdentities on uw.Userid equals us.Userid select us.Firstname).FirstOrDefault(),
+                                    taskedWorkerlname = (from tp in db.Taskeds where tp.TaskDetId == u.Id join uw in db.RegistWork on tp.WorkerId equals uw.Id join us in db.UsersIdentities on uw.Userid equals us.Userid select us.Lastname).FirstOrDefault(),
+                                }).ToList().Select(p => new TaskPostListView
+                                {
+                                    Id = p.id,
+                                    Taskbook_Status = p.taskbookstatus,
+                                    taskdet_name = p.taskname,
+                                    taskdet_desc = p.taskdesc,
+                                    taskdet_sched = p.tasksched,
+                                    taskdet_time = p.tasktime,
+                                    TaskImage = p.taskimage,
+                                    Loc_Address = p.taskaddress,
+                                    Jobname = p.jobname,
+                                    UserId = p.userid,
+                                    taskedWorkerfname = p.taskedWorkerfname,
+                                    taskedWorkerlname = p.taskedWorkerlname,
+                                    taskedstatus = p.taskedstatus,
+                                    budget = p.budget,
+                                    workerid = p.workerid,
+                                    taskedid = p.taskedid,
+                                    taskedTaskPayable = p.taskedTaskPayable,
+                                    taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
+                                });
             if (category == "Posted Tasks")
             {
                 var taskpostviews = new taskViewPost();

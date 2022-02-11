@@ -30,7 +30,13 @@
                             @Html.ValidationMessageFor(model => model.Bid_Description, "", new { @class = "text-danger" })
                         </div>
                     </div>
-
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.BidTimeExp, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-8 inputGroupContainer">
+                            @Html.TextBoxFor(model => model.BidTimeExp, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.BidTimeExp, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
                     <div class="form-group">
                         <div class="col-md-10">
                             @Html.HiddenFor(model => model.TaskdetId, new { htmlAttributes = new { @class = "form-control" } })
@@ -53,3 +59,22 @@
         </div>
     </div>
 </div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.1/jquery.timepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.1/jquery.timepicker.min.css" type="text/css" />
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        $("#BidTimeExp").datepicker({
+            format: "dd/mm/yy",
+            autoclose: true,
+            todayHighlight: true,
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            autoclose: true,
+            changeMonth: true,
+            changeYear: true,
+            minDate: 1,
+        });
+    });
+</script>
