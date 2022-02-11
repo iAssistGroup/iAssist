@@ -151,6 +151,8 @@
                                 {
                                     <div class="ps-1">@Html.ActionLink("Rate and Feedback Worker", "CreateFeedbackAndRateWorker", "FeedBackAndRate", new { id = item.workerid, taskid = item.Id, jobid = item.jobid }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
                                     <div class="ps-1">@Html.ActionLink("Don`t Rate and Feedback", "DontRate", "FeedBackAndRate", new { id = item.workerid, taskid = item.Id, jobid = item.jobid }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
+                                    <div class="ps-1">@Html.ActionLink("Report Worker", "ReportWorkerOnTask", "Complain", new { id = item.workerid }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
+
                                 }
                             </div>
                         </div>

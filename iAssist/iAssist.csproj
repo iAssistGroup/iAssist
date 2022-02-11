@@ -497,6 +497,7 @@
     <Content Include="Views\Balance\WithdrawBalance.cshtml" />
     <Content Include="Views\Admin\RequestWithdraw.cshtml" />
     <Content Include="Views\Transactions\TransIndex.cshtml" />
+    <Content Include="Views\Complain\ReportWorkerOnTask.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

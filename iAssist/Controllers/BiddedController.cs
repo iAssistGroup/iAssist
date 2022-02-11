@@ -117,7 +117,7 @@ namespace iAssist.Controllers
             {
                 var users = User.Identity.GetUserId();
                 var workerids = db.RegistWork.Where(x => x.Userid == users).FirstOrDefault();
-                if (id == null)
+                if (id == null|| minimum > maximum)
                 {
                     return View("Error");
                 }
