@@ -111,7 +111,7 @@ namespace iAssist.Controllers
             ModelState.AddModelError("", "Something Went Wrong");
             return View(model);
         }
-        public ActionResult ViewBidding(int? id, int? user,string category)
+        public ActionResult ViewBidding(int? id, int? user,string category, decimal?minimum, decimal? maximum)
         {
             if (user == 1) //meaning User request to view bidding of workers or worker
             {
@@ -200,14 +200,61 @@ namespace iAssist.Controllers
                     bidds.user = user;
                     bidding.Add(bidds);
                 }
-                if(category != null && category != "")
+                if(minimum > 0 && maximum > 0)
                 {
                     int rate = 0;
-                    if(category == "5 Stars")
+                    List<ShowposttaskcategoryViewModel> categors = new List<ShowposttaskcategoryViewModel>();
+                    var cats = new ShowposttaskcategoryViewModel();
+                    if (category != "" && category != null)
+                    {
+                        if (category == "5 Stars")
+                        {
+                            rate = 5;
+                        }
+                        if (category == "4 Stars")
+                        {
+                            rate = 4;
+                        }
+                        if (category == "3 Stars")
+                        {
+                            rate = 3;
+                        }
+                        if (category == "2 Stars")
+                        {
+                            rate = 2;
+                        }
+                        if (category == "1 Star")
+                        {
+                            rate = 1;
+                        }
+                        cats.CategoryName = "5 Stars";
+                        cats.Id = 0;
+                        categors.Add(cats);
+                        cats = new ShowposttaskcategoryViewModel();
+                        cats.CategoryName = "4 Stars";
+                        cats.Id = 1;
+                        categors.Add(cats);
+                        cats = new ShowposttaskcategoryViewModel();
+                        cats.CategoryName = "3 Stars";
+                        cats.Id = 2;
+                        categors.Add(cats);
+                        cats = new ShowposttaskcategoryViewModel();
+                        cats.CategoryName = "2 Stars";
+                        cats.Id = 3;
+                        categors.Add(cats);
+                        cats = new ShowposttaskcategoryViewModel();
+                        cats.CategoryName = "1 Star";
+                        cats.Id = 4;
+                        categors.Add(cats);
+                        ViewBag.Category = new SelectList(categors.Select(p => p.CategoryName).ToList().Distinct());
+                        var bidmax = bidding.Where(x => x.Bid_Amount <= maximum && x.Bid_Amount >= minimum && x.Rate == rate).ToList();
+                        return View(bidmax);
+                    }
+                    if (category == "5 Stars")
                     {
                         rate = 5;
                     }
-                    if(category == "4 Stars")
+                    if (category == "4 Stars")
                     {
                         rate = 4;
                     }
@@ -215,16 +262,14 @@ namespace iAssist.Controllers
                     {
                         rate = 3;
                     }
-                    if(category == "2 Stars")
+                    if (category == "2 Stars")
                     {
                         rate = 2;
                     }
-                    if(category == "1 Star")
+                    if (category == "1 Star")
                     {
                         rate = 1;
                     }
-                    List<ShowposttaskcategoryViewModel> categors = new List<ShowposttaskcategoryViewModel>();
-                    var cats = new ShowposttaskcategoryViewModel();
                     cats.CategoryName = "5 Stars";
                     cats.Id = 0;
                     categors.Add(cats);
@@ -245,8 +290,245 @@ namespace iAssist.Controllers
                     cats.Id = 4;
                     categors.Add(cats);
                     ViewBag.Category = new SelectList(categors.Select(p => p.CategoryName).ToList().Distinct());
-                    var biddings = bidding.Where(x => x.Rate == rate).ToList();
-                    return View(biddings);
+                    var bidmaxs = bidding.Where(x => x.Bid_Amount <= maximum && x.Bid_Amount >= minimum).ToList();
+                    return View(bidmaxs);
+                }
+                if(minimum > 0 && maximum == 0 || minimum > 0 && maximum == null)
+                {
+                    int rate = 0;
+                    List<ShowposttaskcategoryViewModel> categors = new List<ShowposttaskcategoryViewModel>();
+                    var cats = new ShowposttaskcategoryViewModel();
+                    if (category != "" && category != null)
+                    {
+                        if (category == "5 Stars")
+                        {
+                            rate = 5;
+                        }
+                        if (category == "4 Stars")
+                        {
+                            rate = 4;
+                        }
+                        if (category == "3 Stars")
+                        {
+                            rate = 3;
+                        }
+                        if (category == "2 Stars")
+                        {
+                            rate = 2;
+                        }
+                        if (category == "1 Star")
+                        {
+                            rate = 1;
+                        }
+                        cats.CategoryName = "5 Stars";
+                        cats.Id = 0;
+                        categors.Add(cats);
+                        cats = new ShowposttaskcategoryViewModel();
+                        cats.CategoryName = "4 Stars";
+                        cats.Id = 1;
+                        categors.Add(cats);
+                        cats = new ShowposttaskcategoryViewModel();
+                        cats.CategoryName = "3 Stars";
+                        cats.Id = 2;
+                        categors.Add(cats);
+                        cats = new ShowposttaskcategoryViewModel();
+                        cats.CategoryName = "2 Stars";
+                        cats.Id = 3;
+                        categors.Add(cats);
+                        cats = new ShowposttaskcategoryViewModel();
+                        cats.CategoryName = "1 Star";
+                        cats.Id = 4;
+                        categors.Add(cats);
+                        ViewBag.Category = new SelectList(categors.Select(p => p.CategoryName).ToList().Distinct());
+                        var bidmax = bidding.Where(x => x.Bid_Amount >= minimum && x.Rate == rate).ToList();
+                        return View(bidmax);
+                    }
+                    if (category == "5 Stars")
+                    {
+                        rate = 5;
+                    }
+                    if (category == "4 Stars")
+                    {
+                        rate = 4;
+                    }
+                    if (category == "3 Stars")
+                    {
+                        rate = 3;
+                    }
+                    if (category == "2 Stars")
+                    {
+                        rate = 2;
+                    }
+                    if (category == "1 Star")
+                    {
+                        rate = 1;
+                    }
+                    cats.CategoryName = "5 Stars";
+                    cats.Id = 0;
+                    categors.Add(cats);
+                    cats = new ShowposttaskcategoryViewModel();
+                    cats.CategoryName = "4 Stars";
+                    cats.Id = 1;
+                    categors.Add(cats);
+                    cats = new ShowposttaskcategoryViewModel();
+                    cats.CategoryName = "3 Stars";
+                    cats.Id = 2;
+                    categors.Add(cats);
+                    cats = new ShowposttaskcategoryViewModel();
+                    cats.CategoryName = "2 Stars";
+                    cats.Id = 3;
+                    categors.Add(cats);
+                    cats = new ShowposttaskcategoryViewModel();
+                    cats.CategoryName = "1 Star";
+                    cats.Id = 4;
+                    categors.Add(cats);
+                    ViewBag.Category = new SelectList(categors.Select(p => p.CategoryName).ToList().Distinct());
+                    var bidmaxs = bidding.Where(x => x.Bid_Amount >= minimum).ToList();
+                    return View(bidmaxs);
+                }
+                if(minimum == 0 && maximum > 0 || minimum == null && maximum > 0)
+                {
+                    int rate = 0;
+                    List<ShowposttaskcategoryViewModel> categors = new List<ShowposttaskcategoryViewModel>();
+                    var cats = new ShowposttaskcategoryViewModel();
+                    if (category != "" && category != null)
+                    {
+                        if (category == "5 Stars")
+                        {
+                            rate = 5;
+                        }
+                        if (category == "4 Stars")
+                        {
+                            rate = 4;
+                        }
+                        if (category == "3 Stars")
+                        {
+                            rate = 3;
+                        }
+                        if (category == "2 Stars")
+                        {
+                            rate = 2;
+                        }
+                        if (category == "1 Star")
+                        {
+                            rate = 1;
+                        }
+                        cats.CategoryName = "5 Stars";
+                        cats.Id = 0;
+                        categors.Add(cats);
+                        cats = new ShowposttaskcategoryViewModel();
+                        cats.CategoryName = "4 Stars";
+                        cats.Id = 1;
+                        categors.Add(cats);
+                        cats = new ShowposttaskcategoryViewModel();
+                        cats.CategoryName = "3 Stars";
+                        cats.Id = 2;
+                        categors.Add(cats);
+                        cats = new ShowposttaskcategoryViewModel();
+                        cats.CategoryName = "2 Stars";
+                        cats.Id = 3;
+                        categors.Add(cats);
+                        cats = new ShowposttaskcategoryViewModel();
+                        cats.CategoryName = "1 Star";
+                        cats.Id = 4;
+                        categors.Add(cats);
+                        ViewBag.Category = new SelectList(categors.Select(p => p.CategoryName).ToList().Distinct());
+                        var bidmax = bidding.Where(x => x.Bid_Amount <= maximum&& x.Rate == rate).ToList();
+                        return View(bidmax);
+                    }
+                    if (category == "5 Stars")
+                    {
+                        rate = 5;
+                    }
+                    if (category == "4 Stars")
+                    {
+                        rate = 4;
+                    }
+                    if (category == "3 Stars")
+                    {
+                        rate = 3;
+                    }
+                    if (category == "2 Stars")
+                    {
+                        rate = 2;
+                    }
+                    if (category == "1 Star")
+                    {
+                        rate = 1;
+                    }
+                    cats.CategoryName = "5 Stars";
+                    cats.Id = 0;
+                    categors.Add(cats);
+                    cats = new ShowposttaskcategoryViewModel();
+                    cats.CategoryName = "4 Stars";
+                    cats.Id = 1;
+                    categors.Add(cats);
+                    cats = new ShowposttaskcategoryViewModel();
+                    cats.CategoryName = "3 Stars";
+                    cats.Id = 2;
+                    categors.Add(cats);
+                    cats = new ShowposttaskcategoryViewModel();
+                    cats.CategoryName = "2 Stars";
+                    cats.Id = 3;
+                    categors.Add(cats);
+                    cats = new ShowposttaskcategoryViewModel();
+                    cats.CategoryName = "1 Star";
+                    cats.Id = 4;
+                    categors.Add(cats);
+                    ViewBag.Category = new SelectList(categors.Select(p => p.CategoryName).ToList().Distinct());
+                    var bidmaxs = bidding.Where(x => x.Bid_Amount <= maximum).ToList();
+                    return View(bidmaxs);
+                }
+                if (minimum == 0 && maximum == 0 || minimum == null && maximum == null)
+                {
+                    int rate = 0;
+                    List<ShowposttaskcategoryViewModel> categors = new List<ShowposttaskcategoryViewModel>();
+                    var cats = new ShowposttaskcategoryViewModel();
+                    if (category != "" && category != null)
+                    {
+                        if (category == "5 Stars")
+                        {
+                            rate = 5;
+                        }
+                        if (category == "4 Stars")
+                        {
+                            rate = 4;
+                        }
+                        if (category == "3 Stars")
+                        {
+                            rate = 3;
+                        }
+                        if (category == "2 Stars")
+                        {
+                            rate = 2;
+                        }
+                        if (category == "1 Star")
+                        {
+                            rate = 1;
+                        }
+                        cats.CategoryName = "5 Stars";
+                        cats.Id = 0;
+                        categors.Add(cats);
+                        cats = new ShowposttaskcategoryViewModel();
+                        cats.CategoryName = "4 Stars";
+                        cats.Id = 1;
+                        categors.Add(cats);
+                        cats = new ShowposttaskcategoryViewModel();
+                        cats.CategoryName = "3 Stars";
+                        cats.Id = 2;
+                        categors.Add(cats);
+                        cats = new ShowposttaskcategoryViewModel();
+                        cats.CategoryName = "2 Stars";
+                        cats.Id = 3;
+                        categors.Add(cats);
+                        cats = new ShowposttaskcategoryViewModel();
+                        cats.CategoryName = "1 Star";
+                        cats.Id = 4;
+                        categors.Add(cats);
+                        ViewBag.Category = new SelectList(categors.Select(p => p.CategoryName).ToList().Distinct());
+                        var bidmax = bidding.Where(x => x.Rate == rate).ToList();
+                        return View(bidmax);
+                    }
                 }
                 List<ShowposttaskcategoryViewModel> categor = new List<ShowposttaskcategoryViewModel>();
                 var cat = new ShowposttaskcategoryViewModel();

@@ -225,7 +225,7 @@ namespace iAssist.Controllers
                                     });
             foreach (var item in taskpostlist)
             {
-                if (DateTime.Compare(DateTime.Today.Date, item.taskdet_sched) > 0 && item.Taskbook_Status == 0 && item.Taskbook_Status == 1)
+                if (DateTime.Compare(DateTime.Now, item.taskdet_sched) > 0 && item.Taskbook_Status == 0 || DateTime.Compare(DateTime.Now, item.taskdet_sched) > 0 && item.Taskbook_Status == 1)
                 {
                     if(DateTime.Compare(DateTime.Now, item.taskdet_time) > 0)
                     {
