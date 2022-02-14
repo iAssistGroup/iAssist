@@ -28,6 +28,7 @@ namespace iAssist.Models
         public string UserId { get; set; }
         public string Username { get; set; }
         public int? workerid { get; set; }
+        public string workerphone { get; set; }
         public int? bid { get; set; }
         public int? taskedstatus { get; set; }
         [DataType(DataType.Currency)]

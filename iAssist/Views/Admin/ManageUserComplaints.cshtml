@@ -4,50 +4,60 @@
     ViewBag.Title = "ManageUserComplaints";
 }
 <div class="container py-3">
-    <h3>User Complaints</h3>
+    <h3>Worker Status Complaints</h3>
     <hr />
     <div class="card">
         <div class="card-header" style="background-color: #e65c00;">
-            <h5 style="color:white;">Manage UserComplaints</h5>
+            <h5 style="color:white;">Manage Worker Status Complaints</h5>
         </div>
         <div class="card-body">
             <div style="overflow-x:auto;">
                 <table class="table table-striped">
                     <tr>
                         <th>
-                            @Html.DisplayNameFor(model => model.ComplaintTitle)
+                            @Html.DisplayNameFor(model => model.WorkerFirstname)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Desc)
+                            @Html.DisplayNameFor(model => model.WorkerLastname)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.compimage)
+                            @Html.DisplayNameFor(model => model.WorkerReports)
                         </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Username)
-                        </th>
+                        @*<th>
+                            @Html.DisplayNameFor(model => model.WorkerWarning)
+                        </th>*@
                         <th>
                             @Html.DisplayNameFor(model => model.Workerusername)
                         </th>
-                        <th></th>
+                        <th>Actions</th>
                     </tr>
                     @foreach (var item in Model)
                     {
                         <tr>
                             <td>
-                                @Html.DisplayFor(modelItem => item.ComplaintTitle)
+                                @Html.DisplayFor(modelItem => item.WorkerFirstname)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Desc)
+                                @Html.DisplayFor(modelItem => item.WorkerLastname)
                             </td>
                             <td>
-                                <img style="width:50px; height:50px;" src="@Url.Content("~/image/"+item.compimage)" />
+                                @Html.DisplayFor(modelItem => item.WorkerReports)
                             </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Username)
-                            </td>
+                            @*<td>
+                                @Html.DisplayFor(modelItem => item.WorkerWarning)
+                            </td>*@
                             <td>
                                 @Html.DisplayFor(modelItem => item.Workerusername)
+                            </td>
+                            <td>@Html.ActionLink("View Details", "ViewDetailsWorkerComplaints", new { workerid = item.WorkerUserID }) |
+                                @if (item.locoutdatetime != null)
+                                {
+                                    @Html.ActionLink("Unblock", "BlockWorker", new { id = item.WorkerUserID })
+                                }
+                                @if (item.locoutdatetime == null)
+                                {
+                                    @Html.ActionLink("Block", "BlockWorker", new { id = item.WorkerUserID })
+                                }|
                             </td>
                         </tr>
                     }

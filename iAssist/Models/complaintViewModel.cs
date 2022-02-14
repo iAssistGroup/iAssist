@@ -7,10 +7,12 @@ namespace iAssist.Models
 {
     public class complaintViewModel
     {
-        public string ComplaintTitle { get; set; }
-        public string Desc { get; set; }
-        public string compimage { get; set; }
-        public string Username { get; set; }
+        public string WorkerUserID { get; set; }
+        public int WorkerWarning { get; set; }
+        public int WorkerReports { get; set; }
+        public string WorkerFirstname { get; set; }
+        public string WorkerLastname { get; set; }
         public string Workerusername { get; set; }
+        public DateTime? locoutdatetime { get; set; }
     }
 }

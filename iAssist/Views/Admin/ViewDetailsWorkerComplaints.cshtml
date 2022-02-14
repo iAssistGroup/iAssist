@@ -1,0 +1,60 @@
+﻿@model iAssist.Models.WorkerComplaintDetails
+
+@{
+    ViewBag.Title = "ViewDetailsWorkerComplaints";
+}
+
+<div class="container py-3">
+    <h3>Worker Status Complaints</h3>
+    <hr />
+    <h5>Worker ID: @Html.DisplayFor(model => model.WorkerUserID)</h5>
+    <h5>Worker Name: @Html.DisplayFor(model => model.WorkerLastname), @Html.DisplayFor(model => model.WorkerFirstname)</h5>
+    <h5>Worker Username: @Html.DisplayFor(model => model.WorkerUsername)</h5>
+    <div class="card">
+        <div class="card-header" style="background-color: #e65c00;">
+            <h5 style="color:white;">Users Complaints on the Worker</h5>
+        </div>
+        <div class="card-body">
+            <div style="overflow-x:auto;">
+                <table class="table table-striped">
+                    <tr>
+                        <th>
+                            User Report ID
+                        </th>
+                        <th>
+                            Complaint Title
+                        </th>
+                        <th>
+                            Complaint Descriptions
+                        </th>
+                    </tr>
+                    @foreach (var item in Model.complaints)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UserId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ComplaintTitle)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Desc)
+                            </td>
+                        </tr>
+                    }
+                </table>
+
+            </div>
+        </div>
+    </div>
+    @Html.ActionLink("Back", "ManageUserComplaints", new { @style = "text-decoration: none; color:white;" }) |
+    @if (Model.loclocoutdatetime != null)
+    {
+        @Html.ActionLink("Unblock", "BlockWorker", new { id = Model.WorkerUserID })
+    }
+    @if (Model.loclocoutdatetime == null)
+    {
+        @Html.ActionLink("Block", "BlockWorker", new { id = Model.WorkerUserID })
+    }|
+
+</div>

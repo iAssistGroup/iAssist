@@ -200,6 +200,7 @@ namespace iAssist.Controllers
                                         taskedTaskPayable = (from tp in db.Taskeds where tp.TaskDetId == u.Id select tp.TaskPayable).FirstOrDefault(),
                                         taskedWorkerfname = (from tp in db.Taskeds where tp.TaskDetId == u.Id join uw in db.RegistWork on tp.WorkerId equals uw.Id join us in db.UsersIdentities on uw.Userid equals us.Userid select us.Firstname).FirstOrDefault(),
                                         taskedWorkerlname = (from tp in db.Taskeds where tp.TaskDetId == u.Id join uw in db.RegistWork on tp.WorkerId equals uw.Id join us in db.UsersIdentities on uw.Userid equals us.Userid select us.Lastname).FirstOrDefault(),
+                                        workerphone = (from tp in db.Taskeds where tp.TaskDetId == u.Id join uw in db.RegistWork on tp.WorkerId equals uw.Id join us in db.Users on uw.Userid equals us.Id select us.PhoneNumber).FirstOrDefault(),
                                     }).ToList().Select(p => new TaskPostListView
                                     {
                                         Id = p.id,
@@ -221,6 +222,7 @@ namespace iAssist.Controllers
                                         workerid = p.workerid,
                                         taskedTaskPayable = p.taskedTaskPayable,
                                         Tasktype = p.tasktype,
+                                        workerphone = p.workerphone,
                                         taskfiles = db.Taskfileses.Where(x=>x.TaskId == p.id).ToList(),
                                     });
             foreach (var item in taskpostlist)
@@ -1469,7 +1471,8 @@ namespace iAssist.Controllers
             var taskpostlist = (from u in db.Taskeds
                                 where u.WorkerId == work.Id
                                 join t in db.TaskDetails on u.TaskDetId equals t.Id
-                                join d in db.Users on worker.UserId equals d.Id
+                                join d in db.UsersIdentities on worker.UserId equals d.Userid
+                                join dw in db.Users on worker.UserId equals dw.Id
                                 join
                                 tu in db.TaskBook on u.TaskDetId equals tu.TaskDetId
                                 where tu.Taskbook_Status == 3
@@ -1490,6 +1493,7 @@ namespace iAssist.Controllers
                                     jobname = job.JobName,
                                     userid = t.UserId,
                                     workerid = tu.workerId,
+                                    workerphone = dw.PhoneNumber,
                                     taskedid = (from td in db.Taskeds where td.TaskDetId == u.Id select td.Id).FirstOrDefault(),
                                     taskedstatus = (from td in db.Taskeds where td.TaskDetId == t.Id select td.TaskStatus).FirstOrDefault(),
                                     taskedTaskPayable = (from tp in db.Taskeds where tp.TaskDetId == t.Id select tp.TaskPayable).FirstOrDefault(),
@@ -1510,6 +1514,7 @@ namespace iAssist.Controllers
                                     UserId = p.userid,
                                     taskedWorkerfname = p.taskedWorkerfname,
                                     taskedWorkerlname = p.taskedWorkerlname,
+                                    workerphone = p.workerphone,
                                     taskedstatus = p.taskedstatus,
                                     workerid = p.workerid,
                                     taskedid = p.taskedid,

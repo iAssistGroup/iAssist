@@ -39,126 +39,128 @@
                             <p>No files Uploaded</p>
                         }
                     </div>
-                <div class="card-body">
-                    @if (item.specificworkerid != null && item.specificworkerid != 0)
-                    {
-                        <i class="fas fa-user"></i>
-                    }
-                    @if (item.specificworkerid == null || item.specificworkerid == 0)
-                    {
-                        <i class="fas fa-users"></i>
-                    }
-                    <h5 class="card-title">@Html.DisplayFor(modelItem => item.taskdet_name)</h5>
-                    @if (item.Taskbook_Status == 0)//0 means pending and the task can be edit
-                    {
-                        <h6 style="color:red;"><strong>Pending</strong></h6>
-                    }
-                    @if (item.Taskbook_Status == 1)//1 means Posted and can`t be edit
-                    {
-                        <h6 style="color:Orange;"><strong>Posted</strong></h6>
-                    }
-                    @if (item.Taskbook_Status == 2)//2 means ge sugdan na ang trabaho
-                    {
-                        <h6 class="text-warning"><strong>Ongoing</strong></h6>
-                    }
-                    @if (item.Taskbook_Status == 3)//3 if complete na ang task or mana
-                    {
-                        <h6 style="color:green;"><strong>Completed</strong></h6>
-                    }
-                    @if (item.Taskbook_Status == 9)//3 if complete na ang task or mana
-                    {
-                        <h6 style="color:red;"><strong>Expired</strong></h6>
-                    }
-                    @if (item.Taskbook_Status == 4)// 4 if cancelled by the Creator of the task
-                    {
-                        <h6 style="color:green;"><strong>You cancelled this Task</strong></h6>
-                    }
-                    @if (item.Taskbook_Status == 5)// 4 if cancelled by the specific worker
-                    {
-                        <h6 style="color:Red;"><strong>The worker cancelled this Task</strong></h6>
-                    }
-                    @if (item.Taskbook_Status == 6)// 4 if cancelled by the specific worker
-                    {
-                        <h6 style="color:Red;"><strong>You cancelled the Worker Bid</strong></h6>
-                    }
-                    @if (item.taskedstatus != null)
-                    {
-                        if (item.taskedstatus == 1)
+                    <div class="card-body">
+                        @if (item.specificworkerid != null && item.specificworkerid != 0)
                         {
-                            <p class="text-warning">Worker Status: Worker is ongoing</p>
+                            <i class="fas fa-user"></i>
                         }
-                        if (item.taskedstatus == 2)
+                        @if (item.specificworkerid == null || item.specificworkerid == 0)
                         {
-                            <p class="text-danger">Cancelled</p>
+                            <i class="fas fa-users"></i>
                         }
-                        if (item.taskedstatus == 3)
+                        <h5 class="card-title">@Html.DisplayFor(modelItem => item.taskdet_name)</h5>
+                        @if (item.Taskbook_Status == 0)//0 means pending and the task can be edit
                         {
-                            <p class="text-danger">Worker is working the Task</p>
+                            <h6 style="color:red;"><strong>Pending</strong></h6>
                         }
-                        if (item.taskedstatus == 4)
+                        @if (item.Taskbook_Status == 1)//1 means Posted and can`t be edit
                         {
-                            <p class="text-danger">Worker is done</p>
+                            <h6 style="color:Orange;"><strong>Posted</strong></h6>
                         }
-                        if (item.taskedstatus == 6)
+                        @if (item.Taskbook_Status == 2)//2 means ge sugdan na ang trabaho
                         {
-                            <p class="text-danger">Contract Task Expired!</p>
+                            <h6 class="text-warning"><strong>Ongoing</strong></h6>
                         }
-                    }
-                    <span class="job_post">@Html.DisplayFor(modelItem => item.Jobname)</span> <br />
-                    <span class="job_post">Schedule: @Html.DisplayFor(modelItem => item.taskdet_sched) @Html.DisplayFor(modelItem => item.taskdet_time)</span>
-                    <p>Address: @Html.DisplayFor(modelItem => item.Loc_Address)</p>
-                    <p>Task Description: @Html.DisplayFor(modelItem => item.taskdet_desc)</p>
-                    <p>Budget/Price: @Html.DisplayFor(modelItem => item.budget)</p>
-                    <p>Service Need:</p>
-                    @foreach (var items in Model.TaskViewPost)
-                    {
-                        if (items.Taskdet == item.Id)
+                        @if (item.Taskbook_Status == 3)//3 if complete na ang task or mana
                         {
-                            <span class="border border-info">@items.Skillname</span>
+                            <h6 style="color:green;"><strong>Completed</strong></h6>
                         }
-                        <text>&nbsp;</text>
-                    }
-                    @if (item.taskedTaskPayable != null && item.taskedTaskPayable != 0)
-                    {
-                        <p>Payable Amount: @Html.DisplayFor(modelItem => item.taskedTaskPayable)</p>
-                    }
-                    @if (item.taskedWorkerfname != null && item.taskedWorkerlname != null)
-                    {
-                        <p>Worker Name: @Html.DisplayFor(modelItem => item.taskedWorkerfname) @Html.DisplayFor(modelItem => item.taskedWorkerlname) </p>
-                    }
-                    <div class="py-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                @if (item.Taskbook_Status == 0 || item.Taskbook_Status == 5)
-                                {
-                                    <div class="ps-1">@Html.ActionLink("Post", "PostTheTask", new { id = item.Id }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
-                                    <div class="ps-1">@Html.ActionLink("Find Worker", "FindWorkerList", "Home", new { id = item.Id }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
-                                    <div class="ps-1">@Html.ActionLink("Edit", "EditMyPostTask", new { id = item.Id }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
-                                }
-                                @if (item.Taskbook_Status == 1)
-                                {
-                                    <div class="ps-1">@Html.ActionLink("View Bidding", "ViewBidding", "Bidded", new { id = item.Id, user = 1 }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
-                                }
-                                @if (item.Taskbook_Status != 4 && item.Taskbook_Status != 3 && item.taskedstatus != 2 && item.taskedstatus != 3 && item.taskedstatus != 4 && item.Taskbook_Status != 9) //taskedstatus 2 means working and 3 completed
-                                {
-                                    <div class="ps-1">@Html.ActionLink("Cancel", "CancelMyPostTask", new { id = item.Id }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
-                                }
-                                @if (item.taskedstatus == 4)
-                                {
-                                    <div class="ps-1">@Html.ActionLink("Mark as Complete Task", "MarkasCompleteTask", new { id = item.Id }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
-                                }
-                                @if (item.Tasktype == "" && item.taskedstatus == 6 || item.Tasktype == "" && item.taskedstatus == 5 || item.Tasktype == null && item.taskedstatus == 5 || item.Tasktype == null && item.taskedstatus == 6)
-                                {
-                                    <div class="ps-1">@Html.ActionLink("Rate and Feedback Worker", "CreateFeedbackAndRateWorker", "FeedBackAndRate", new { id = item.workerid, taskid = item.Id, jobid = item.jobid }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
-                                    <div class="ps-1">@Html.ActionLink("Don`t Rate and Feedback", "DontRate", "FeedBackAndRate", new { id = item.workerid, taskid = item.Id, jobid = item.jobid }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
-                                    <div class="ps-1">@Html.ActionLink("Report Worker", "ReportWorkerOnTask", "Complain", new { id = item.workerid }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
+                        @if (item.Taskbook_Status == 9)//3 if complete na ang task or mana
+                        {
+                            <h6 style="color:red;"><strong>Expired</strong></h6>
+                        }
+                        @if (item.Taskbook_Status == 4)// 4 if cancelled by the Creator of the task
+                        {
+                            <h6 style="color:green;"><strong>You cancelled this Task</strong></h6>
+                        }
+                        @if (item.Taskbook_Status == 5)// 4 if cancelled by the specific worker
+                        {
+                            <h6 style="color:Red;"><strong>The worker cancelled this Task</strong></h6>
+                        }
+                        @if (item.Taskbook_Status == 6)// 4 if cancelled by the specific worker
+                        {
+                            <h6 style="color:Red;"><strong>You cancelled the Worker Bid</strong></h6>
+                        }
+                        @if (item.taskedstatus != null)
+                        {
+                            if (item.taskedstatus == 1)
+                            {
+                                <p class="text-warning">Worker Status: Worker is ongoing</p>
+                            }
+                            if (item.taskedstatus == 2)
+                            {
+                                <p class="text-danger">Cancelled</p>
+                            }
+                            if (item.taskedstatus == 3)
+                            {
+                                <p class="text-danger">Worker is working the Task</p>
+                            }
+                            if (item.taskedstatus == 4)
+                            {
+                                <p class="text-danger">Worker is done</p>
+                            }
+                            if (item.taskedstatus == 6)
+                            {
+                                <p class="text-danger">Contract Task Expired!</p>
+                            }
+                        }
+                        <span class="job_post">@Html.DisplayFor(modelItem => item.Jobname)</span> <br />
+                        <span class="job_post">Schedule: @Html.DisplayFor(modelItem => item.taskdet_sched) @Html.DisplayFor(modelItem => item.taskdet_time)</span>
+                        <p>Address: @Html.DisplayFor(modelItem => item.Loc_Address)</p>
+                        <p>Task Description: @Html.DisplayFor(modelItem => item.taskdet_desc)</p>
+                        <p>Budget/Price: @Html.DisplayFor(modelItem => item.budget)</p>
+                        <p>Service Need:</p>
+                        @foreach (var items in Model.TaskViewPost)
+                        {
+                            if (items.Taskdet == item.Id)
+                            {
+                                <span class="border border-info">@items.Skillname</span>
+                            }
+                            <text>&nbsp;</text>
+                        }
+                        @if (item.taskedTaskPayable != null && item.taskedTaskPayable != 0)
+                        {
+                            <p>Payable Amount: @Html.DisplayFor(modelItem => item.taskedTaskPayable)</p>
+                        }
+                        @if (item.taskedWorkerfname != null && item.taskedWorkerlname != null)
+                        {
+                            <strong>Incase of the Worker has a Backjob Just contact him</strong>
+                            <p>Worker Name: @Html.DisplayFor(modelItem => item.taskedWorkerfname) @Html.DisplayFor(modelItem => item.taskedWorkerlname) </p>
+                            <p>Worker Phone: @Html.DisplayFor(modelItem => item.workerphone) </p>
+                        }
+                        <div class="py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    @if (item.Taskbook_Status == 0 || item.Taskbook_Status == 5)
+                                    {
+                                        <div class="ps-1">@Html.ActionLink("Post", "PostTheTask", new { id = item.Id }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
+                                        <div class="ps-1">@Html.ActionLink("Find Worker", "FindWorkerList", "Home", new { id = item.Id }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
+                                        <div class="ps-1">@Html.ActionLink("Edit", "EditMyPostTask", new { id = item.Id }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
+                                    }
+                                    @if (item.Taskbook_Status == 1)
+                                    {
+                                        <div class="ps-1">@Html.ActionLink("View Bidding", "ViewBidding", "Bidded", new { id = item.Id, user = 1 }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
+                                    }
+                                    @if (item.Taskbook_Status != 4 && item.Taskbook_Status != 3 && item.taskedstatus != 2 && item.taskedstatus != 3 && item.taskedstatus != 4 && item.Taskbook_Status != 9) //taskedstatus 2 means working and 3 completed
+                                    {
+                                        <div class="ps-1">@Html.ActionLink("Cancel", "CancelMyPostTask", new { id = item.Id }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
+                                    }
+                                    @if (item.taskedstatus == 4)
+                                    {
+                                        <div class="ps-1">@Html.ActionLink("Mark as Complete Task", "MarkasCompleteTask", new { id = item.Id }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
+                                    }
+                                    @if (item.Tasktype == "" && item.taskedstatus == 6 || item.Tasktype == "" && item.taskedstatus == 5 || item.Tasktype == null && item.taskedstatus == 5 || item.Tasktype == null && item.taskedstatus == 6)
+                                    {
+                                        <div class="ps-1">@Html.ActionLink("Rate and Feedback Worker", "CreateFeedbackAndRateWorker", "FeedBackAndRate", new { id = item.workerid, taskid = item.Id, jobid = item.jobid }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
+                                        <div class="ps-1">@Html.ActionLink("Don`t Rate and Feedback", "DontRate", "FeedBackAndRate", new { id = item.workerid, taskid = item.Id, jobid = item.jobid }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
+                                        <div class="ps-1">@Html.ActionLink("Report Worker", "ReportWorkerOnTask", "Complain", new { id = item.workerid }, new { @class = "btn btn-default", @style = "background-color: #e65c00; border:none; color:white;" })</div>
 
-                                }
+                                    }
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                </div>
+                    </div>
                 </div>
             </div>
         }

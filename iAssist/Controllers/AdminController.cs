@@ -191,22 +191,51 @@ namespace iAssist.Controllers
         //Complaints
         public ActionResult ManageUserComplaints()
         {
-            var userscomplaints = (from u in db.Complaints
-                                   select new
-                                   {
-                                       complainttitle = u.ComplaintTitle,
-                                       desc = u.Desc,
-                                       compimage = u.compimage,
-                                       username = (from us in db.Users where us.Id == u.UserId select us.UserName).FirstOrDefault(),
-                                       workername = (from wu in db.RegistWork where wu.Id == u.WorkerId join uw in db.Users on wu.Userid equals uw.Id select uw.UserName).FirstOrDefault(),
-                                   }).ToList().Select(p => new complaintViewModel { 
-                                        ComplaintTitle = p.complainttitle,
-                                        compimage = p.compimage,
-                                        Desc = p.desc,
-                                        Username = p.username,
-                                        Workerusername = p.workername,
-                                   });
-            return View(userscomplaints);
+            //var userscomplaints = (from u in db.Complaints
+            //                       select new
+            //                       {
+            //                           complainttitle = u.ComplaintTitle,
+            //                           desc = u.Desc,
+            //                           compimage = u.compimage,
+            //                           username = (from us in db.Users where us.Id == u.UserId select us.UserName).FirstOrDefault(),
+            //                           workername = (from wu in db.RegistWork where wu.Id == u.WorkerId join uw in db.Users on wu.Userid equals uw.Id select uw.UserName).FirstOrDefault(),
+            //                       }).ToList().Select(p => new complaintViewModel
+            //                       {
+            //                           ComplaintTitle = p.complainttitle,
+            //                           compimage = p.compimage,
+            //                           Desc = p.desc,
+            //                           Username = p.username,
+            //                           Workerusername = p.workername,
+            //                       });
+
+            //return View(userscomplaints);
+            var workerstat = db.WorkerReportTask.ToList();
+            List<complaintViewModel> workerstatreport = new List<complaintViewModel>();
+            foreach(var item in workerstat)
+            {
+                var workerstats = new complaintViewModel();
+                workerstats.WorkerFirstname = (from a in db.RegistWork where a.Id == item.workerId join b in db.UsersIdentities on a.Userid equals b.Userid select b.Firstname).FirstOrDefault();
+                workerstats.WorkerLastname = (from a in db.RegistWork where a.Id == item.workerId join b in db.UsersIdentities on a.Userid equals b.Userid select b.Lastname).FirstOrDefault();
+                workerstats.WorkerReports = db.Complaints.Where(x => x.WorkerId == item.workerId).Count();
+                workerstats.WorkerWarning = item.Warning;
+                workerstats.Workerusername = (from a in db.RegistWork where a.Id == item.workerId join b in db.Users on a.Userid equals b.Id select b.UserName).FirstOrDefault();
+                workerstats.WorkerUserID = (from a in db.RegistWork where a.Id == item.workerId join b in db.Users on a.Userid equals b.Id select b.Id).FirstOrDefault();
+                workerstats.locoutdatetime = (from a in db.RegistWork where a.Id == item.workerId join b in db.Users on a.Userid equals b.Id select b.LockoutEndDateUtc).FirstOrDefault();
+                workerstatreport.Add(workerstats);
+            }
+            return View(workerstatreport);
+        }
+        public ActionResult ViewDetailsWorkerComplaints(string workerid)
+        {
+            var workid = (from a in db.RegistWork where a.Userid == workerid select a.Id).FirstOrDefault();
+            var workercomplaints = new WorkerComplaintDetails();
+            workercomplaints.loclocoutdatetime = (from b in db.Users where b.Id == workerid select b.LockoutEndDateUtc).FirstOrDefault();
+            workercomplaints.WorkerFirstname = (from a in db.UsersIdentities where a.Userid == workerid select a.Firstname).FirstOrDefault();
+            workercomplaints.WorkerLastname = (from a in db.UsersIdentities where a.Userid == workerid select a.Lastname).FirstOrDefault();
+            workercomplaints.WorkerUserID = workerid;
+            workercomplaints.WorkerUsername = (from a in db.Users where a.Id == workerid select a.UserName).FirstOrDefault();
+            workercomplaints.complaints = db.Complaints.Where(x => x.WorkerId == workid).ToList();
+            return View(workercomplaints);
         }
         //SkilledWorker
         public ActionResult ManageSkilledWorker()
@@ -507,6 +536,23 @@ namespace iAssist.Controllers
             db.TransactionHistories.Add(transaction);
             db.SaveChanges();
             return RedirectToAction("ViewUsers");
+        }
+        public ActionResult BlockWorker(string id)
+        {
+            var user = db.Users.Where(x => x.Id == id).FirstOrDefault();
+            if (user == null)
+            {
+                return View("Error");
+            }
+            if (user.LockoutEndDateUtc == null)
+            {
+                user.LockoutEndDateUtc = DateTime.MaxValue;
+                db.SaveChanges();
+                return RedirectToAction("ManageUserComplaints");
+            }
+            user.LockoutEndDateUtc = null;
+            db.SaveChanges();
+            return RedirectToAction("ManageUserComplaints");
         }
         public ActionResult BlockUser(string id)
         {

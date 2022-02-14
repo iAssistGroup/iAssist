@@ -146,6 +146,15 @@ namespace iAssist.Controllers
                 complaints.WorkerId = model.Workerid;
                 db.Complaints.Add(complaints);
                 db.SaveChanges();
+                var findworkerstat = db.WorkerReportTask.Where(x => x.workerId == model.Workerid).FirstOrDefault();
+                if(findworkerstat == null)
+                {
+                    var workerrolestat = new Workerstat();
+                    workerrolestat.workerId = model.Workerid;
+                    workerrolestat.Warning = 0;
+                    db.WorkerReportTask.Add(workerrolestat);
+                    db.SaveChanges();
+                }
                 var role = (from rolename in db.Roles where rolename.Name.Contains("admin") select rolename).FirstOrDefault();
                 var admin = (from us in db.Users where us.Roles.Any(r => r.RoleId == role.Id) select new { username = us.UserName }).FirstOrDefault();
                 var use = User.Identity.GetUserId();
