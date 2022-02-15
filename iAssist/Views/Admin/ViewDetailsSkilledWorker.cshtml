@@ -89,7 +89,7 @@
                 <h4>Submitted Image Files</h4>
                 @foreach (ViewFileRegSkilledWorker file in Model.ViewFileRegSkilledWorker)
                 {
-                    <a href="@Url.Content("~/image/RegisterSkilledFile/Thumbnails" +file.FileName)">@file.FileName</a><br />
+                    <a href="@Url.Content("~/image/RegisterSkilledFile/" +file.FileName)">@file.FileName</a><br />
                 }
             </div>
             <br />
