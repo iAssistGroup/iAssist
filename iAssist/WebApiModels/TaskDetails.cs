@@ -30,6 +30,13 @@ namespace iAssist.WebApiModels
         public HttpPostedFileBase ImageFile { get; set; }
         public int? workerid { get; set; }
 
+
+
+        public DateTime taskdet_time { get; set; }
+        public decimal Budget { get; set; }
+        //public int check { get; set; }
+        //public IEnumerable<SelectListItem> Skilltasks { get; set; }
+
     }
 
     public class JobListModel

@@ -100,7 +100,7 @@ namespace iAssist.WebApiControllers
         // GET: Task
         //Creating Task in General or Posting Task
         [HttpGet]
-        [Route("CreateTaskIndex")]
+        [Route("GetCreateTaskIndex")]
         public async Task<IHttpActionResult> CreateTaskIndex(int? jobid)
         {
             var user = User.Identity.GetUserId();
@@ -111,15 +111,15 @@ namespace iAssist.WebApiControllers
                 taskposting.Address = db.Locations.Where(x => x.UserId == user && x.JobId == null).Select(p => p.Loc_Address).FirstOrDefault();
                 taskposting.Longitude = db.Locations.Where(x => x.UserId == user && x.JobId == null).Select(p => p.Geolocation.Longitude.ToString()).FirstOrDefault();
                 taskposting.Latitude = db.Locations.Where(x => x.UserId == user && x.JobId == null).Select(p => p.Geolocation.Latitude.ToString()).FirstOrDefault();
-                taskposting.SkillList = GetSkillList((int)jobid);
                 taskposting.JobId = (int)jobid;
+                taskposting.SkillList = GetSkillList((int)jobid);
             }
             return Ok(taskposting);
         }
 
         [Authorize]
         [HttpPost]
-        [Route("CreateTaskIndex")]
+        [Route("PostCreateTaskIndex")]
         public async Task<IHttpActionResult> CreateTaskIndex(WebApiModels.TaskDetailsViewModel model)
         {
             if (ModelState.IsValid)
@@ -150,12 +150,15 @@ namespace iAssist.WebApiControllers
                 userposttask.taskdet_name = model.TaskTitle;
                 userposttask.taskdet_desc = model.TaskDesc;
                 userposttask.taskdet_sched = model.taskdet_sched;
+                userposttask.taskdet_time = model.taskdet_time;
+                userposttask.Budget = model.Budget;
                 model.taskdet_Created_at = DateTime.Now;
                 userposttask.taskdet_Created_at = model.taskdet_Created_at;
                 userposttask.taskdet_Updated_at = userposttask.taskdet_Created_at;
                 userposttask.UserId = user;
                 db.TaskDetails.Add(userposttask);
                 db.SaveChanges();
+
                 var taskdetid = db.TaskDetails.OrderByDescending(p => p.taskdet_Created_at).First();
                 var check = db.TaskBook.Find(taskdetid.Id);
                 if (check == null)
@@ -208,6 +211,8 @@ namespace iAssist.WebApiControllers
                                     taskdesc = u.taskdet_desc,
                                     tasktype = (from td in db.Taskeds where td.TaskDetId == u.Id select td.TaskType).FirstOrDefault(),
                                     tasksched = u.taskdet_sched,
+                                    tasktime = u.taskdet_time,
+                                    budget = u.Budget,
                                     taskimage = u.TaskImage,
                                     taskaddress = u.Loc_Address,
                                     jobname = job.JobName,
@@ -219,6 +224,7 @@ namespace iAssist.WebApiControllers
                                     taskedTaskPayable = (from tp in db.Taskeds where tp.TaskDetId == u.Id select tp.TaskPayable).FirstOrDefault(),
                                     taskedWorkerfname = (from tp in db.Taskeds where tp.TaskDetId == u.Id join uw in db.RegistWork on tp.WorkerId equals uw.Id join us in db.UsersIdentities on uw.Userid equals us.Userid select us.Firstname).FirstOrDefault(),
                                     taskedWorkerlname = (from tp in db.Taskeds where tp.TaskDetId == u.Id join uw in db.RegistWork on tp.WorkerId equals uw.Id join us in db.UsersIdentities on uw.Userid equals us.Userid select us.Lastname).FirstOrDefault(),
+                                    workerphone = (from tp in db.Taskeds where tp.TaskDetId == u.Id join uw in db.RegistWork on tp.WorkerId equals uw.Id join us in db.Users on uw.Userid equals us.Id select us.PhoneNumber).FirstOrDefault(),
                                 }).ToList().Select(p => new TaskPostListView
                                 {
                                     Id = p.id,
@@ -226,10 +232,12 @@ namespace iAssist.WebApiControllers
                                     taskdet_name = p.taskname,
                                     taskdet_desc = p.taskdesc,
                                     taskdet_sched = p.tasksched,
+                                    taskdet_time = p.tasktime,
                                     TaskImage = p.taskimage,
                                     Loc_Address = p.taskaddress,
                                     jobid = p.jobid,
                                     Jobname = p.jobname,
+                                    budget = p.budget,
                                     UserId = p.userid,
                                     taskedWorkerfname = p.taskedWorkerfname,
                                     taskedWorkerlname = p.taskedWorkerlname,
@@ -238,7 +246,48 @@ namespace iAssist.WebApiControllers
                                     workerid = p.workerid,
                                     taskedTaskPayable = p.taskedTaskPayable,
                                     Tasktype = p.tasktype,
+                                    workerphone = p.workerphone,
+                                    taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                 });
+            foreach (var item in taskpostlist)
+            {
+                if (DateTime.Compare(DateTime.Now, item.taskdet_sched) > 0 && item.Taskbook_Status == 0 || DateTime.Compare(DateTime.Now, item.taskdet_sched) > 0 && item.Taskbook_Status == 1)
+                {
+                    if (DateTime.Compare(DateTime.Now, item.taskdet_time) > 0)
+                    {
+                        item.Taskbook_Status = 9;
+                        var task = db.TaskBook.Where(x => x.TaskDetId == item.Id).FirstOrDefault();
+                        task.Taskbook_Status = 9;
+                        db.SaveChanges();
+                        var userinfo = db.Users.Where(x => x.Id == user).FirstOrDefault();
+                        var notification = new NotificationModel
+                        {
+                            Receiver = userinfo.UserName,
+                            Title = $"The Task {item.taskdet_name} has expired",
+                            Details = $"The Task you created / Posted has expired you can create another one",
+                            DetailsURL = $"",
+                            Date = DateTime.Now,
+                            IsRead = false
+                        };
+                        db.Notifications.Add(notification);
+                        db.SaveChanges();
+                        if (item.taskedstatus == 4)
+                        {
+                            var notificationss = new NotificationModel
+                            {
+                                Receiver = userinfo.UserName,
+                                Title = $"Worker mark your task as Done",
+                                Details = $"Please don`t forget to mark the task as Completed so you can pay the worker",
+                                DetailsURL = $"/Task/ShowMyTaskPost",
+                                Date = DateTime.Now,
+                                IsRead = false
+                            };
+                            db.Notifications.Add(notificationss);
+                            db.SaveChanges();
+                        }
+                    }
+                }
+            }
             if (!String.IsNullOrEmpty(category))
             {
                 if (category == "Pending")
@@ -259,9 +308,11 @@ namespace iAssist.WebApiControllers
                                         taskdesc = u.taskdet_desc,
                                         tasktype = (from td in db.Taskeds where td.TaskDetId == u.Id select td.TaskType).FirstOrDefault(),
                                         tasksched = u.taskdet_sched,
+                                        tasktime = u.taskdet_time,
                                         taskimage = u.TaskImage,
                                         taskaddress = u.Loc_Address,
                                         jobname = job.JobName,
+                                        budget = u.Budget,
                                         jobid = job.Id,
                                         userid = u.UserId,
                                         specificworkerid = tu.workerId,
@@ -277,10 +328,12 @@ namespace iAssist.WebApiControllers
                                         taskdet_name = p.taskname,
                                         taskdet_desc = p.taskdesc,
                                         taskdet_sched = p.tasksched,
+                                        taskdet_time = p.tasktime,
                                         TaskImage = p.taskimage,
                                         Loc_Address = p.taskaddress,
                                         jobid = p.jobid,
                                         Jobname = p.jobname,
+                                        budget = p.budget,
                                         UserId = p.userid,
                                         taskedWorkerfname = p.taskedWorkerfname,
                                         taskedWorkerlname = p.taskedWorkerlname,
@@ -289,6 +342,7 @@ namespace iAssist.WebApiControllers
                                         workerid = p.workerid,
                                         taskedTaskPayable = p.taskedTaskPayable,
                                         Tasktype = p.tasktype,
+                                        taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                     });
                 }
                 if (category == "Posted")
@@ -309,9 +363,11 @@ namespace iAssist.WebApiControllers
                                         taskdesc = u.taskdet_desc,
                                         tasktype = (from td in db.Taskeds where td.TaskDetId == u.Id select td.TaskType).FirstOrDefault(),
                                         tasksched = u.taskdet_sched,
+                                        tasktime = u.taskdet_time,
                                         taskimage = u.TaskImage,
                                         taskaddress = u.Loc_Address,
                                         jobname = job.JobName,
+                                        budget = u.Budget,
                                         jobid = job.Id,
                                         userid = u.UserId,
                                         specificworkerid = tu.workerId,
@@ -327,10 +383,12 @@ namespace iAssist.WebApiControllers
                                         taskdet_name = p.taskname,
                                         taskdet_desc = p.taskdesc,
                                         taskdet_sched = p.tasksched,
+                                        taskdet_time = p.tasktime,
                                         TaskImage = p.taskimage,
                                         Loc_Address = p.taskaddress,
                                         jobid = p.jobid,
                                         Jobname = p.jobname,
+                                        budget = p.budget,
                                         UserId = p.userid,
                                         taskedWorkerfname = p.taskedWorkerfname,
                                         taskedWorkerlname = p.taskedWorkerlname,
@@ -339,6 +397,7 @@ namespace iAssist.WebApiControllers
                                         workerid = p.workerid,
                                         taskedTaskPayable = p.taskedTaskPayable,
                                         Tasktype = p.tasktype,
+                                        taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                     });
                 }
                 if (category == "Ongoing")
@@ -359,9 +418,11 @@ namespace iAssist.WebApiControllers
                                         taskdesc = u.taskdet_desc,
                                         tasktype = (from td in db.Taskeds where td.TaskDetId == u.Id select td.TaskType).FirstOrDefault(),
                                         tasksched = u.taskdet_sched,
+                                        tasktime = u.taskdet_time,
                                         taskimage = u.TaskImage,
                                         taskaddress = u.Loc_Address,
                                         jobname = job.JobName,
+                                        budget = u.Budget,
                                         jobid = job.Id,
                                         userid = u.UserId,
                                         specificworkerid = tu.workerId,
@@ -377,11 +438,13 @@ namespace iAssist.WebApiControllers
                                         taskdet_name = p.taskname,
                                         taskdet_desc = p.taskdesc,
                                         taskdet_sched = p.tasksched,
+                                        taskdet_time = p.tasktime,
                                         TaskImage = p.taskimage,
                                         Loc_Address = p.taskaddress,
                                         jobid = p.jobid,
                                         Jobname = p.jobname,
                                         UserId = p.userid,
+                                        budget = p.budget,
                                         taskedWorkerfname = p.taskedWorkerfname,
                                         taskedWorkerlname = p.taskedWorkerlname,
                                         taskedstatus = p.taskedstatus,
@@ -389,6 +452,7 @@ namespace iAssist.WebApiControllers
                                         workerid = p.workerid,
                                         taskedTaskPayable = p.taskedTaskPayable,
                                         Tasktype = p.tasktype,
+                                        taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                     });
                 }
                 if (category == "Completed")
@@ -409,7 +473,9 @@ namespace iAssist.WebApiControllers
                                         taskdesc = u.taskdet_desc,
                                         tasktype = (from td in db.Taskeds where td.TaskDetId == u.Id select td.TaskType).FirstOrDefault(),
                                         tasksched = u.taskdet_sched,
+                                        tasktime = u.taskdet_time,
                                         taskimage = u.TaskImage,
+                                        budget = u.Budget,
                                         taskaddress = u.Loc_Address,
                                         jobname = job.JobName,
                                         jobid = job.Id,
@@ -427,8 +493,10 @@ namespace iAssist.WebApiControllers
                                         taskdet_name = p.taskname,
                                         taskdet_desc = p.taskdesc,
                                         taskdet_sched = p.tasksched,
+                                        taskdet_time = p.tasktime,
                                         TaskImage = p.taskimage,
                                         Loc_Address = p.taskaddress,
+                                        budget = p.budget,
                                         jobid = p.jobid,
                                         Jobname = p.jobname,
                                         UserId = p.userid,
@@ -439,6 +507,7 @@ namespace iAssist.WebApiControllers
                                         workerid = p.workerid,
                                         taskedTaskPayable = p.taskedTaskPayable,
                                         Tasktype = p.tasktype,
+                                        taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                     });
                 }
                 if (category == "Cancelled")
@@ -447,7 +516,7 @@ namespace iAssist.WebApiControllers
                                     where u.UserId == user
                                     join
                                     tu in db.TaskBook on u.Id equals tu.TaskDetId
-                                    where tu.Taskbook_Status != 1 && tu.Taskbook_Status != 2 && tu.Taskbook_Status != 3 && tu.Taskbook_Status != 0
+                                    where tu.Taskbook_Status != 1 && tu.Taskbook_Status != 2 && tu.Taskbook_Status != 3 && tu.Taskbook_Status != 0 && tu.Taskbook_Status != 9
                                     join
                                     job in db.JobCategories on u.JobId equals job.Id
                                     orderby u.taskdet_Created_at descending
@@ -457,11 +526,13 @@ namespace iAssist.WebApiControllers
                                         taskbookstatus = tu.Taskbook_Status,
                                         taskname = u.taskdet_name,
                                         taskdesc = u.taskdet_desc,
+                                        tasktime = u.taskdet_time,
                                         tasktype = (from td in db.Taskeds where td.TaskDetId == u.Id select td.TaskType).FirstOrDefault(),
                                         tasksched = u.taskdet_sched,
                                         taskimage = u.TaskImage,
                                         taskaddress = u.Loc_Address,
                                         jobname = job.JobName,
+                                        budget = u.Budget,
                                         jobid = job.Id,
                                         userid = u.UserId,
                                         specificworkerid = tu.workerId,
@@ -477,10 +548,12 @@ namespace iAssist.WebApiControllers
                                         taskdet_name = p.taskname,
                                         taskdet_desc = p.taskdesc,
                                         taskdet_sched = p.tasksched,
+                                        taskdet_time = p.tasktime,
                                         TaskImage = p.taskimage,
                                         Loc_Address = p.taskaddress,
                                         jobid = p.jobid,
                                         Jobname = p.jobname,
+                                        budget = p.budget,
                                         UserId = p.userid,
                                         taskedWorkerfname = p.taskedWorkerfname,
                                         taskedWorkerlname = p.taskedWorkerlname,
@@ -489,6 +562,62 @@ namespace iAssist.WebApiControllers
                                         workerid = p.workerid,
                                         taskedTaskPayable = p.taskedTaskPayable,
                                         Tasktype = p.tasktype,
+                                        taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
+                                    });
+                }
+                if (category == "Expired")
+                {
+                    taskpostlist = (from u in db.TaskDetails
+                                    where u.UserId == user
+                                    join
+                                    tu in db.TaskBook on u.Id equals tu.TaskDetId
+                                    where tu.Taskbook_Status == 9
+                                    join
+                                    job in db.JobCategories on u.JobId equals job.Id
+                                    orderby u.taskdet_Created_at descending
+                                    select new
+                                    {
+                                        id = u.Id,
+                                        taskbookstatus = tu.Taskbook_Status,
+                                        taskname = u.taskdet_name,
+                                        taskdesc = u.taskdet_desc,
+                                        tasktime = u.taskdet_time,
+                                        tasktype = (from td in db.Taskeds where td.TaskDetId == u.Id select td.TaskType).FirstOrDefault(),
+                                        tasksched = u.taskdet_sched,
+                                        taskimage = u.TaskImage,
+                                        taskaddress = u.Loc_Address,
+                                        jobname = job.JobName,
+                                        budget = u.Budget,
+                                        jobid = job.Id,
+                                        userid = u.UserId,
+                                        specificworkerid = tu.workerId,
+                                        workerid = (from td in db.Taskeds where td.TaskDetId == u.Id select td.WorkerId).FirstOrDefault(),
+                                        taskedstatus = (from td in db.Taskeds where td.TaskDetId == u.Id select td.TaskStatus).FirstOrDefault(),
+                                        taskedTaskPayable = (from tp in db.Taskeds where tp.TaskDetId == u.Id select tp.TaskPayable).FirstOrDefault(),
+                                        taskedWorkerfname = (from tp in db.Taskeds where tp.TaskDetId == u.Id join uw in db.RegistWork on tp.WorkerId equals uw.Id join us in db.UsersIdentities on uw.Userid equals us.Userid select us.Firstname).FirstOrDefault(),
+                                        taskedWorkerlname = (from tp in db.Taskeds where tp.TaskDetId == u.Id join uw in db.RegistWork on tp.WorkerId equals uw.Id join us in db.UsersIdentities on uw.Userid equals us.Userid select us.Lastname).FirstOrDefault(),
+                                    }).ToList().Select(p => new TaskPostListView
+                                    {
+                                        Id = p.id,
+                                        Taskbook_Status = p.taskbookstatus,
+                                        taskdet_name = p.taskname,
+                                        taskdet_desc = p.taskdesc,
+                                        taskdet_sched = p.tasksched,
+                                        taskdet_time = p.tasktime,
+                                        TaskImage = p.taskimage,
+                                        Loc_Address = p.taskaddress,
+                                        jobid = p.jobid,
+                                        Jobname = p.jobname,
+                                        budget = p.budget,
+                                        UserId = p.userid,
+                                        taskedWorkerfname = p.taskedWorkerfname,
+                                        taskedWorkerlname = p.taskedWorkerlname,
+                                        taskedstatus = p.taskedstatus,
+                                        specificworkerid = p.specificworkerid,
+                                        workerid = p.workerid,
+                                        taskedTaskPayable = p.taskedTaskPayable,
+                                        Tasktype = p.tasktype,
+                                        taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                     });
                 }
             }
@@ -565,6 +694,7 @@ namespace iAssist.WebApiControllers
             taskpostlist.taskdet_sched = taskdetails.taskdet_sched;
             taskpostlist.JobId = taskdetails.JobId;
             taskpostlist.TaskDesc = taskdetails.taskdet_desc;
+            taskpostlist.Budget = taskdetails.Budget;
             taskpostlist.taskdet_Created_at = taskdetails.taskdet_Created_at;
             taskpostlist.UserId = taskdetails.UserId;
             taskpostlist.JobList = GetJobList();
@@ -597,6 +727,8 @@ namespace iAssist.WebApiControllers
                 userposttask.taskdet_name = model.TaskTitle;
                 userposttask.taskdet_desc = model.TaskDesc;
                 userposttask.taskdet_sched = model.taskdet_sched;
+                userposttask.taskdet_time = model.taskdet_time;
+                userposttask.Budget = model.Budget;
                 userposttask.taskdet_Updated_at = DateTime.Now;
 
                 if (model.SelectedSkills != null)
@@ -725,7 +857,7 @@ namespace iAssist.WebApiControllers
         }
         [HttpPost]
         [Route("RequestBooking")]
-        public async Task<IHttpActionResult> RequestBooking(WebApiModels.TaskDetailsViewModel model)
+        public async Task<IHttpActionResult> RequestBooking(WebApiModels.TaskDetailsViewModel model) //Unused
         {
             if (ModelState.IsValid)
             {
@@ -809,7 +941,7 @@ namespace iAssist.WebApiControllers
 
         [HttpGet]
         [Route("FindWorkerRequestBooking")]
-        public async Task<IHttpActionResult> FindWorkerRequestBooking(int? id, int? task)
+        public async Task<IHttpActionResult> FindWorkerRequestBooking(int? id, int? task) //Unused
         {
             if (id == null)
             {
@@ -866,6 +998,7 @@ namespace iAssist.WebApiControllers
                                      taskname = u.taskdet_name,
                                      taskdesc = u.taskdet_desc,
                                      tasksched = u.taskdet_sched,
+                                     tasktime = u.taskdet_time,
                                      taskimage = u.TaskImage,
                                      taskaddress = u.Loc_Address,
                                      jobname = job.JobName,
@@ -879,12 +1012,14 @@ namespace iAssist.WebApiControllers
                                      taskdet_name = p.taskname,
                                      taskdet_desc = p.taskdesc,
                                      taskdet_sched = p.tasksched,
+                                     taskdet_time = p.tasktime,
                                      TaskImage = p.taskimage,
                                      Loc_Address = p.taskaddress,
                                      Jobname = p.jobname,
                                      UserId = p.userid,
                                      Username = p.username,
                                      workerid = p.workerid,
+                                     taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                  });
             var taskpostlist2 = (from u in db.TaskDetails
                                  where u.UserId != user
@@ -894,7 +1029,7 @@ namespace iAssist.WebApiControllers
                                  where tu.Taskbook_Status == 1
                                  join
                                  bu in db.Bids on u.Id equals bu.TaskDetId
-                                 where bu.WorkerId == work.Id && bu.bid_status != 1 && bu.bid_status != 2
+                                 where bu.WorkerId == work.Id && bu.bid_status != 1 && bu.bid_status != 2 && bu.bid_status != -1
                                  join
                                 job in db.JobCategories on u.JobId equals job.Id
                                  orderby u.Geolocation.Distance(currentlocation)
@@ -905,6 +1040,8 @@ namespace iAssist.WebApiControllers
                                      taskname = u.taskdet_name,
                                      taskdesc = u.taskdet_desc,
                                      tasksched = u.taskdet_sched,
+                                     tasktime = u.taskdet_time,
+                                     budget = u.Budget,
                                      taskimage = u.TaskImage,
                                      taskaddress = u.Loc_Address,
                                      jobname = job.JobName,
@@ -918,12 +1055,15 @@ namespace iAssist.WebApiControllers
                                      taskdet_name = p.taskname,
                                      taskdet_desc = p.taskdesc,
                                      taskdet_sched = p.tasksched,
+                                     taskdet_time = p.tasktime,
+                                     budget = p.budget,
                                      TaskImage = p.taskimage,
                                      Loc_Address = p.taskaddress,
                                      Jobname = p.jobname,
                                      UserId = p.userid,
                                      Username = p.username,
                                      workerid = p.workerid,
+                                     taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                  });
             List<TaskPostListView> filteredtaskpostlist = (from e in taskpostlist1 where !(from m in taskpostlist2 select m.Id).Contains(e.Id) select e).ToList();
             var taskpostview = new taskViewPost();
@@ -949,7 +1089,7 @@ namespace iAssist.WebApiControllers
                                 where tu.Taskbook_Status == 1
                                 join
                                 bu in db.Bids on u.Id equals bu.TaskDetId
-                                where bu.WorkerId == work.Id && bu.bid_status != 1 && bu.bid_status != 2
+                                where bu.WorkerId == work.Id && bu.bid_status != 1 && bu.bid_status != 2 && bu.bid_status != -1
                                 join
                                 job in db.JobCategories on u.JobId equals job.Id
                                 orderby bu.Created_at descending
@@ -960,25 +1100,30 @@ namespace iAssist.WebApiControllers
                                     taskname = u.taskdet_name,
                                     taskdesc = u.taskdet_desc,
                                     tasksched = u.taskdet_sched,
+                                    tasktime = u.taskdet_time,
+                                    budget = u.Budget,
                                     taskimage = u.TaskImage,
                                     taskaddress = u.Loc_Address,
                                     jobname = job.JobName,
                                     userid = u.UserId,
                                     username = d.UserName,
                                     workerid = tu.workerId
-                                }).ToList().Select(p => new TaskPostListView
+                                }).ToList().Distinct().Select(p => new TaskPostListView
                                 {
                                     Id = p.id,
                                     Taskbook_Status = p.taskbookstatus,
                                     taskdet_name = p.taskname,
                                     taskdet_desc = p.taskdesc,
                                     taskdet_sched = p.tasksched,
+                                    taskdet_time = p.tasktime,
                                     TaskImage = p.taskimage,
+                                    budget = p.budget,
                                     Loc_Address = p.taskaddress,
                                     Jobname = p.jobname,
                                     UserId = p.userid,
                                     Username = p.username,
                                     workerid = p.workerid,
+                                    taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                 });
             var taskpostview = new taskViewPost();
             taskpostview.Taskpostlistview = taskpostlist;
@@ -1012,8 +1157,10 @@ namespace iAssist.WebApiControllers
                                     taskname = u.taskdet_name,
                                     taskdesc = u.taskdet_desc,
                                     tasksched = u.taskdet_sched,
+                                    tasktime = u.taskdet_time,
                                     taskimage = u.TaskImage,
                                     taskaddress = u.Loc_Address,
+                                    budget = u.Budget,
                                     jobname = job.JobName,
                                     userid = u.UserId,
                                     workerid = tu.workerId,
@@ -1029,6 +1176,7 @@ namespace iAssist.WebApiControllers
                                     taskdet_name = p.taskname,
                                     taskdet_desc = p.taskdesc,
                                     taskdet_sched = p.tasksched,
+                                    taskdet_time = p.tasktime,
                                     TaskImage = p.taskimage,
                                     Loc_Address = p.taskaddress,
                                     Jobname = p.jobname,
@@ -1036,9 +1184,11 @@ namespace iAssist.WebApiControllers
                                     taskedWorkerfname = p.taskedWorkerfname,
                                     taskedWorkerlname = p.taskedWorkerlname,
                                     taskedstatus = p.taskedstatus,
+                                    budget = p.budget,
                                     workerid = p.workerid,
                                     taskedid = p.taskedid,
-                                    taskedTaskPayable = p.taskedTaskPayable
+                                    taskedTaskPayable = p.taskedTaskPayable,
+                                    taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                 });
             var taskpostview = new taskViewPost();
             taskpostview.Taskpostlistview = taskpostlist;
@@ -1168,32 +1318,37 @@ namespace iAssist.WebApiControllers
             var user = User.Identity.GetUserId();
             var work = db.RegistWork.Where(x => x.Userid == user).FirstOrDefault();
             var worker = db.Locations.Where(x => x.UserId == user).FirstOrDefault();
-            var taskpostlist = (from u in db.TaskDetails
-                                where u.UserId == user && u.JobId == work.JobId
-                                join d in db.Users on u.UserId equals d.Id
+            var taskpostlist = (from u in db.Taskeds
+                                where u.WorkerId == work.Id
+                                join t in db.TaskDetails on u.TaskDetId equals t.Id
+                                join d in db.UsersIdentities on worker.UserId equals d.Userid
+                                join dw in db.Users on worker.UserId equals dw.Id
                                 join
-                                tu in db.TaskBook on u.Id equals tu.TaskDetId
+                                tu in db.TaskBook on u.TaskDetId equals tu.TaskDetId
                                 where tu.Taskbook_Status == 3
                                 join
-                                job in db.JobCategories on u.JobId equals job.Id
-                                orderby u.taskdet_Created_at descending
+                                job in db.JobCategories on work.JobId equals job.Id
+                                orderby u.TaskCreated_at descending
                                 select new
                                 {
                                     id = u.Id,
                                     taskbookstatus = tu.Taskbook_Status,
-                                    taskname = u.taskdet_name,
-                                    taskdesc = u.taskdet_desc,
-                                    tasksched = u.taskdet_sched,
-                                    taskimage = u.TaskImage,
-                                    taskaddress = u.Loc_Address,
+                                    taskname = t.taskdet_name,
+                                    taskdesc = t.taskdet_desc,
+                                    tasksched = t.taskdet_sched,
+                                    budget = t.Budget,
+                                    tasktime = t.taskdet_time,
+                                    taskimage = t.TaskImage,
+                                    taskaddress = t.Loc_Address,
                                     jobname = job.JobName,
-                                    userid = u.UserId,
+                                    userid = t.UserId,
                                     workerid = tu.workerId,
+                                    workerphone = dw.PhoneNumber,
                                     taskedid = (from td in db.Taskeds where td.TaskDetId == u.Id select td.Id).FirstOrDefault(),
-                                    taskedstatus = (from td in db.Taskeds where td.TaskDetId == u.Id select td.TaskStatus).FirstOrDefault(),
-                                    taskedTaskPayable = (from tp in db.Taskeds where tp.TaskDetId == u.Id select tp.TaskPayable).FirstOrDefault(),
-                                    taskedWorkerfname = (from tp in db.Taskeds where tp.TaskDetId == u.Id join uw in db.RegistWork on tp.WorkerId equals uw.Id join us in db.UsersIdentities on uw.Userid equals us.Userid select us.Firstname).FirstOrDefault(),
-                                    taskedWorkerlname = (from tp in db.Taskeds where tp.TaskDetId == u.Id join uw in db.RegistWork on tp.WorkerId equals uw.Id join us in db.UsersIdentities on uw.Userid equals us.Userid select us.Lastname).FirstOrDefault(),
+                                    taskedstatus = (from td in db.Taskeds where td.TaskDetId == t.Id select td.TaskStatus).FirstOrDefault(),
+                                    taskedTaskPayable = (from tp in db.Taskeds where tp.TaskDetId == t.Id select tp.TaskPayable).FirstOrDefault(),
+                                    taskedWorkerfname = (from tp in db.Taskeds where tp.TaskDetId == t.Id join uw in db.RegistWork on tp.WorkerId equals uw.Id join us in db.UsersIdentities on uw.Userid equals us.Userid select us.Firstname).FirstOrDefault(),
+                                    taskedWorkerlname = (from tp in db.Taskeds where tp.TaskDetId == t.Id join uw in db.RegistWork on tp.WorkerId equals uw.Id join us in db.UsersIdentities on uw.Userid equals us.Userid select us.Lastname).FirstOrDefault(),
                                 }).ToList().Select(p => new TaskPostListView
                                 {
                                     Id = p.id,
@@ -1201,16 +1356,20 @@ namespace iAssist.WebApiControllers
                                     taskdet_name = p.taskname,
                                     taskdet_desc = p.taskdesc,
                                     taskdet_sched = p.tasksched,
+                                    budget = p.budget,
+                                    taskdet_time = p.tasktime,
                                     TaskImage = p.taskimage,
                                     Loc_Address = p.taskaddress,
                                     Jobname = p.jobname,
                                     UserId = p.userid,
                                     taskedWorkerfname = p.taskedWorkerfname,
                                     taskedWorkerlname = p.taskedWorkerlname,
+                                    workerphone = p.workerphone,
                                     taskedstatus = p.taskedstatus,
                                     workerid = p.workerid,
                                     taskedid = p.taskedid,
-                                    taskedTaskPayable = p.taskedTaskPayable
+                                    taskedTaskPayable = p.taskedTaskPayable,
+                                    taskfiles = db.Taskfileses.Where(x => x.TaskId == p.id).ToList(),
                                 });
             var taskpostview = new taskViewPost();
             taskpostview.Taskpostlistview = taskpostlist;
@@ -1237,7 +1396,7 @@ namespace iAssist.WebApiControllers
                     saveevents.TaskId = item.Id;
                     saveevents.Description = taskdet.taskdet_desc;
                     saveevents.End = null;
-                    saveevents.Start = taskdet.taskdet_sched;
+                    saveevents.Start = taskdet.taskdet_time;
                     saveevents.Subject = taskdet.taskdet_name;
                     saveevents.IsFullDay = true;
                     saveevents.ThemeColor = "green";
